@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
+      <router-link to="/web3Example">Web3 Example</router-link> |
     </div>
     <router-view/>
   </div>
