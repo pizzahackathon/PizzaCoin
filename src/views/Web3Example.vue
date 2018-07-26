@@ -50,7 +50,7 @@
 
 <script>
 import Web3 from 'web3'
-import pizzaCoinAbi from './pizzaCoinAbi'
+import pizzaCoinAbi from '@/abi/pizzaCoinAbi'
 
 export default {
   name: 'Web3Example',
