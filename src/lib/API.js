@@ -21,18 +21,38 @@ const API_URL = [
   {
     'groupId': 'pzc2',
     'groupName': 'hacknooknook',
+    'score': 3,
     'detail': [
       {
         'name': 'Game',
-        'token': '0xxaabb'
+        'token': '0xxaaff'
       },
       {
         'name': 'Tot',
-        'token': '0xxaacc'
+        'token': '0xxaagg'
       },
       {
         'name': 'Bank',
-        'token': '0xxaaee'
+        'token': '0xxaahh'
+      }
+    ]
+  },
+  {
+    'groupId': 'pzc3',
+    'groupName': 'hackborbor',
+    'score': 3,
+    'detail': [
+      {
+        'name': 'Sittiphol',
+        'token': '0xxaaii'
+      },
+      {
+        'name': 'Zent',
+        'token': '0xxaakk'
+      },
+      {
+        'name': 'Phuwanai',
+        'token': '0xxaall'
       }
     ]
   }
