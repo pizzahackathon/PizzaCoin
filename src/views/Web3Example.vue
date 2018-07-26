@@ -39,6 +39,11 @@
         <button @click="createTeam()">
           Create
         </button>
+
+        <hr />
+        <strong> Logs </strong>
+        <br />
+        <b-table :data="newTeamLogs" :columns="columns"></b-table>
       </div>
   </div>
 </template>
@@ -53,18 +58,32 @@ export default {
     return {
       web3: null,
       userAddress: '',
-      pizzaCoinAddress: '0xb28bb961361e013a9eb8968991e2f6c84f213000',
+      pizzaCoinAddress: '0xf13695158166ecbaed23ed689873481159a873e8',
       pizzaCoinContract: null,
       pizzaCoinName: '',
       teamCount: 0,
       teamProfile: null,
       teamName: '',
       memberName: '',
-      newTeamLogs: null
+      newTeamLogs: [],
+
+      columns: [
+        {
+          field: 'name',
+          label: 'Name'
+        },
+        {
+          field: 'teamIndex',
+          label: 'Team Index'
+        },
+        {
+          field: 'userAddress',
+          label: 'User Address'
+        }
+      ]
     }
   },
   async mounted () {
-    this.$store.dispatch('getProposal')
     this.web3 = this.createWeb3()
     this.loadPizzaCoinContract()
     this.getPizzaCoinName()
@@ -122,7 +141,7 @@ export default {
         fromBlock: 0,
         toBlock: 'latest'
       })
-      console.log(logs)
+      this.newTeamLogs = logs.map(log => log.returnValues)
     }
   }
 }
