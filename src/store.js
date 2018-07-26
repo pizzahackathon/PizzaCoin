@@ -43,11 +43,11 @@ export default new Vuex.Store({
       // state.members.score++
     },
     removeMember (state, member) {
-      console.log(member.token)
+      console.log(member.address)
       state.proposals.map((proposal, index) => {
-        console.log((proposal.detail).indexOf(member.token))
+        console.log((proposal.detail).indexOf(member.address))
         proposal.detail.map((mem, idx) => {
-          if (proposal.detail[idx].token === member.token) {
+          if (proposal.detail[idx].address === member.address) {
             // state.proposals.detail[idx].splice(idx, 1)
             // console.log(state.proposals[index].detail[idx])
             console.log(state.proposals[index].detail.splice(idx, 1))
