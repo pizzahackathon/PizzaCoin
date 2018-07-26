@@ -28,17 +28,18 @@
         <hr />
         <strong> Create Team </strong>
         <br />
-        <div>
-          <label> Team Name </label>
-          <input v-model="teamName" type="text" />
+        <div class="container">
+          <b-field>
+            <b-input v-model="teamName" placeholder="Team Name" rounded></b-input>
+          </b-field>
+          <b-field>
+            <b-input v-model="memberName" placeholder="Member Name" rounded></b-input>
+          </b-field>
+
+          <p class="control">
+            <button class="button is-primary" @click="createTeam()">Create</button>
+          </p>
         </div>
-        <div>
-          <label> Member Name </label>
-          <input v-model="memberName" type="text" />
-        </div>
-        <button @click="createTeam()">
-          Create
-        </button>
 
         <hr />
         <strong> Logs </strong>
@@ -84,7 +85,7 @@ export default {
     }
   },
   async mounted () {
-    this.web3 = this.createWeb3()
+    this.web3 = await this.createWeb3()
     this.loadPizzaCoinContract()
     this.getPizzaCoinName()
     this.getTeamCount()
@@ -92,11 +93,14 @@ export default {
     this.getNewTeamLogs()
   },
   methods: {
-    createWeb3 () {
+    async createWeb3 () {
       // Load web3 direct-inject
       if (undefined !== window.web3) {
         let web3js = window.web3
         let web3 = new Web3(web3js.currentProvider)
+
+        let accounts = await web3.eth.getAccounts()
+        this.userAddress = accounts[0]
 
         return web3
       } else {
