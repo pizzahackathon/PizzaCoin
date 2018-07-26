@@ -1,12 +1,7 @@
 [
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_teamIndex",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "_teamIndex", "type": "uint256" }],
 		"name": "vote",
 		"outputs": [],
 		"payable": false,
@@ -17,12 +12,7 @@
 		"constant": true,
 		"inputs": [],
 		"name": "mintingFinished",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -31,12 +21,7 @@
 		"constant": true,
 		"inputs": [],
 		"name": "name",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
+		"outputs": [{ "name": "", "type": "string" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -45,28 +30,14 @@
 		"constant": true,
 		"inputs": [],
 		"name": "userCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_spender",
-				"type": "address"
-			},
-			{
-				"name": "_value",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" }],
 		"name": "approve",
 		"outputs": [],
 		"payable": false,
@@ -77,31 +48,16 @@
 		"constant": true,
 		"inputs": [],
 		"name": "totalSupply",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "name",
-				"type": "string"
-			}
-		],
+		"inputs": [{ "name": "name", "type": "string" }],
 		"name": "teamNameIndex",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -109,18 +65,9 @@
 	{
 		"constant": false,
 		"inputs": [
-			{
-				"name": "_from",
-				"type": "address"
-			},
-			{
-				"name": "_to",
-				"type": "address"
-			},
-			{
-				"name": "_value",
-				"type": "uint256"
-			}
+			{ "name": "_from", "type": "address" },
+			{ "name": "_to", "type": "address" },
+			{ "name": "_value", "type": "uint256" }
 		],
 		"name": "transferFrom",
 		"outputs": [],
@@ -130,19 +77,9 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "", "type": "address" }],
 		"name": "tokenDistributed",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -151,54 +88,25 @@
 		"constant": true,
 		"inputs": [],
 		"name": "decimals",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "", "type": "uint256" }],
 		"name": "users",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
+		"outputs": [{ "name": "", "type": "address" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "", "type": "uint256" }],
 		"name": "teams",
-		"outputs": [
-			{
-				"name": "memberCount",
-				"type": "uint256"
-			},
-			{
-				"name": "voteCount",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "memberCount", "type": "uint256" }, { "name": "voteCount", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -207,54 +115,25 @@
 		"constant": false,
 		"inputs": [],
 		"name": "unpause",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_to",
-				"type": "address"
-			},
-			{
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "_to", "type": "address" }, { "name": "_amount", "type": "uint256" }],
 		"name": "mint",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "", "type": "uint256" }],
 		"name": "teamNames",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
+		"outputs": [{ "name": "", "type": "string" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -263,28 +142,14 @@
 		"constant": true,
 		"inputs": [],
 		"name": "paused",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "beginIndex",
-				"type": "uint256"
-			},
-			{
-				"name": "endIndex",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "beginIndex", "type": "uint256" }, { "name": "endIndex", "type": "uint256" }],
 		"name": "distributeTokensToMembers",
 		"outputs": [],
 		"payable": false,
@@ -293,19 +158,9 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_owner",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "_owner", "type": "address" }],
 		"name": "balanceOf",
-		"outputs": [
-			{
-				"name": "balance",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "balance", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -314,28 +169,14 @@
 		"constant": false,
 		"inputs": [],
 		"name": "finishMinting",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_teamName",
-				"type": "string"
-			},
-			{
-				"name": "_memberName",
-				"type": "string"
-			}
-		],
+		"inputs": [{ "name": "_teamName", "type": "string" }, { "name": "_memberName", "type": "string" }],
 		"name": "newTeam",
 		"outputs": [],
 		"payable": false,
@@ -346,12 +187,7 @@
 		"constant": false,
 		"inputs": [],
 		"name": "pause",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [{ "name": "", "type": "bool" }],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -360,12 +196,7 @@
 		"constant": true,
 		"inputs": [],
 		"name": "teamCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -374,28 +205,14 @@
 		"constant": true,
 		"inputs": [],
 		"name": "owner",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
+		"outputs": [{ "name": "", "type": "address" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"name": "_teamIndex",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "_name", "type": "string" }, { "name": "_teamIndex", "type": "uint256" }],
 		"name": "newMember",
 		"outputs": [],
 		"payable": false,
@@ -406,12 +223,7 @@
 		"constant": true,
 		"inputs": [],
 		"name": "symbol",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
+		"outputs": [{ "name": "", "type": "string" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -427,35 +239,16 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "", "type": "address" }],
 		"name": "userAddressToTeamIndex",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_to",
-				"type": "address"
-			},
-			{
-				"name": "_value",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }],
 		"name": "transfer",
 		"outputs": [],
 		"payable": false,
@@ -473,26 +266,12 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_teamId",
-				"type": "uint256"
-			}
-		],
+		"inputs": [{ "name": "_teamId", "type": "uint256" }],
 		"name": "teamProfile",
 		"outputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"name": "_members",
-				"type": "address[]"
-			},
-			{
-				"name": "_voteCount",
-				"type": "uint256"
-			}
+			{ "name": "_name", "type": "string" },
+			{ "name": "_members", "type": "address[]" },
+			{ "name": "_voteCount", "type": "uint256" }
 		],
 		"payable": false,
 		"stateMutability": "view",
@@ -500,12 +279,7 @@
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "_memberAddress",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "_memberAddress", "type": "address" }],
 		"name": "kickMember",
 		"outputs": [],
 		"payable": false,
@@ -514,23 +288,9 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_owner",
-				"type": "address"
-			},
-			{
-				"name": "_spender",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "_owner", "type": "address" }, { "name": "_spender", "type": "address" }],
 		"name": "allowance",
-		"outputs": [
-			{
-				"name": "remaining",
-				"type": "uint256"
-			}
-		],
+		"outputs": [{ "name": "remaining", "type": "uint256" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
@@ -539,73 +299,36 @@
 		"constant": false,
 		"inputs": [],
 		"name": "votes",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
+		"outputs": [{ "name": "", "type": "uint256[]" }],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "", "type": "address" }],
 		"name": "userAddressToName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
+		"outputs": [{ "name": "", "type": "string" }],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
+		"inputs": [{ "name": "newOwner", "type": "address" }],
 		"name": "transferOwnership",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
+	{ "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" },
 	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": true,
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"name": "index",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "creator",
-				"type": "address"
-			}
+			{ "indexed": true, "name": "name", "type": "string" },
+			{ "indexed": true, "name": "index", "type": "uint256" },
+			{ "indexed": true, "name": "creator", "type": "address" }
 		],
 		"name": "NewTeam",
 		"type": "event"
@@ -613,21 +336,9 @@
 	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": true,
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"name": "teamIndex",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "userAddress",
-				"type": "address"
-			}
+			{ "indexed": true, "name": "name", "type": "string" },
+			{ "indexed": true, "name": "teamIndex", "type": "uint256" },
+			{ "indexed": true, "name": "userAddress", "type": "address" }
 		],
 		"name": "NewMember",
 		"type": "event"
@@ -635,56 +346,21 @@
 	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": true,
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "value",
-				"type": "uint256"
-			}
+			{ "indexed": true, "name": "to", "type": "address" },
+			{ "indexed": false, "name": "value", "type": "uint256" }
 		],
 		"name": "Mint",
 		"type": "event"
 	},
-	{
-		"anonymous": false,
-		"inputs": [],
-		"name": "MintFinished",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [],
-		"name": "Pause",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [],
-		"name": "Unpause",
-		"type": "event"
-	},
+	{ "anonymous": false, "inputs": [], "name": "MintFinished", "type": "event" },
+	{ "anonymous": false, "inputs": [], "name": "Pause", "type": "event" },
+	{ "anonymous": false, "inputs": [], "name": "Unpause", "type": "event" },
 	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": true,
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "value",
-				"type": "uint256"
-			}
+			{ "indexed": true, "name": "owner", "type": "address" },
+			{ "indexed": true, "name": "spender", "type": "address" },
+			{ "indexed": false, "name": "value", "type": "uint256" }
 		],
 		"name": "Approval",
 		"type": "event"
@@ -692,21 +368,9 @@
 	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": true,
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "value",
-				"type": "uint256"
-			}
+			{ "indexed": true, "name": "from", "type": "address" },
+			{ "indexed": true, "name": "to", "type": "address" },
+			{ "indexed": false, "name": "value", "type": "uint256" }
 		],
 		"name": "Transfer",
 		"type": "event"

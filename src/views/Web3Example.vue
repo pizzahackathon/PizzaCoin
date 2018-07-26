@@ -1,6 +1,6 @@
 <template>
     <div class="web3Example">
-      <div>
+      <div v-if="web3">
         web3 version {{ web3.version }}
       </div>
       <div>
@@ -59,7 +59,8 @@ export default {
       teamCount: 0,
       teamProfile: null,
       teamName: '',
-      memberName: ''
+      memberName: '',
+      newTeamLogs: null
     }
   },
   async mounted () {
@@ -69,6 +70,7 @@ export default {
     this.getPizzaCoinName()
     this.getTeamCount()
     this.getTeamProfile(1)
+    this.getNewTeamLogs()
   },
   methods: {
     createWeb3 () {
@@ -113,6 +115,14 @@ export default {
         from: this.userAddress
       }
       this.pizzaCoinContract.methods.newTeam(this.teamName, this.memberName).send(options)
+    },
+
+    async getNewTeamLogs () {
+      let logs = await this.pizzaCoinContract.getPastEvents('NewMember', {
+        fromBlock: 0,
+        toBlock: 'latest'
+      })
+      console.log(logs)
     }
   }
 }
