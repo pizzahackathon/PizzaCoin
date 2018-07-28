@@ -22,7 +22,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'home',
-  props: ['proposals'],
+  // props: ['proposals'],
   computed: mapGetters(['proposals']),
   components: {
     ProposalCard
