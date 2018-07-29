@@ -1,7 +1,6 @@
 <template>
     <div>
         <a class="button is-danger" @click="login()">Login With Google</a>
-        <a class="button is-danger" @click="logout()">Login With Google</a>
     </div>
 </template>
 

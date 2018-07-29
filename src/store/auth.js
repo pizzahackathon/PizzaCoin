@@ -2,17 +2,17 @@ import firebase from '@/firebase'
 
 const state = {
   user: {},
-  isLogginIn: false
+  isLoggedIn: false
 }
 
 const mutations = {
   setUser (state, user) {
     if (user) {
       state.user = user
-      state.isLogginIn = true
+      state.isLoggedIn = true
     } else {
       state.user = {}
-      state.isLogginIn = false
+      state.isLoggedIn = false
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            class="level is-mobile"
+            class="main level is-mobile"
              v-for="member in members.detail"
              :key="member.token"
                 >
@@ -15,16 +15,16 @@
                         <div>{{ member.token }}</div>
                     </div>
                 </div>
-                <div class="level-item has-text-centered">
+                <div class="level-item has-text-centered" v-if="isLoggedIn">
                     <div>
                         <button
                             class="button is-danger"
                             @click="removeMember(member)"
                             >
-                                Leave
+                                Kick
                             </button>
                     </div>
-            </div>
+                </div>
         </div>
         <button
             class="button is-primary"
@@ -33,10 +33,11 @@
     </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   props: ['members'],
+  computed: mapState('auth', ['user', 'isLoggedIn']),
   methods: {
     ...mapMutations(['removeMember']),
     onVote: function (members) {
@@ -45,3 +46,8 @@ export default {
   }
 }
 </script>
+<style>
+.main {
+    margin-top: 5em;
+}
+</style>
