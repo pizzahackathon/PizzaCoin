@@ -5,9 +5,9 @@
             <div>
                 <div class="columns is-multiline">
                         <ProposalCard
-                           v-for="proposal in proposals"
-                           :key="proposal.groupId"
-                           :proposal="proposal"
+                           v-for="member in members"
+                           :key="member.groupId"
+                           :proposal="member"
                           />
                 </div>
             </div>
@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'home',
   // props: ['proposals'],
-  computed: mapGetters(['proposals']),
+  computed: mapGetters(['members']),
   components: {
     ProposalCard
   },
