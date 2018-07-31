@@ -1,4 +1,9 @@
 import API from '@/lib/API'
+const uuid = require('uuid')
+
+console.log(uuid)
+
+// console.log(API.getProposal())
 
 const state = {
   members: []
@@ -15,13 +20,21 @@ const actions = {
     console.log(context)
     const proposals = await API.getProposal()
     console.log(proposals)
+    console.log('test')
+
     context.commit('setProposals', proposals)
+  },
+  creatTeam (context, teamname) {
+    context.commit('creatTeam', teamname)
+  },
+  addMember (context, memberName) {
+    context.commit('addMember', memberName)
   }
 }
-
 const mutations = {
   setProposals (state, proposals) {
     /* eslint-disable */
+
         state.members = proposals;
         /* eslint-enable */
   },
@@ -40,7 +53,7 @@ const mutations = {
     // state.members.score++
   },
   removeMember (state, team) {
-    console.log(team.token)
+    console.log(team.token + 'sss')
     state.members.map((member, index) => {
       console.log((member.detail).indexOf(team.token))
       member.detail.map((mem, idx) => {
@@ -50,6 +63,29 @@ const mutations = {
           console.log(state.members[index].detail.splice(idx, 1))
         }
       })
+    })
+  },
+  creatTeam (state, teamname) {
+    console.log(teamname)
+    console.log(state.members.push(
+      {
+        'groupId': teamname,
+        'groupName': teamname,
+        'score': 3,
+        'detail': [
+        ]
+      }
+    ))
+  },
+  addMember (state, {memberName, team}) {
+    console.log(team.groupName)
+    state.members.map((member, index) => {
+      if (member.groupId === team.groupId) {
+        console.log(state.members[index].detail.push({
+          name: memberName,
+          token: memberName
+        }))
+      }
     })
   }
 }

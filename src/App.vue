@@ -16,8 +16,18 @@
                 <a class="bd-tw-button button" @click="login()">
                     Login
                 </a>
-                </p>
-                <p class="control" v-if="isLoggedIn">
+              </p>
+              <p class="control" v-if="isLoggedIn">
+                <a class="bd-tw-button button">
+                    Freeze & Transfer
+                </a>
+              </p>
+              <p class="control" v-if="isLoggedIn">
+                <a class="bd-tw-button button">
+                    Start/Stop Vote
+                </a>
+              </p>
+              <p class="control" v-if="isLoggedIn">
                 <a class="bd-tw-button button" @click="logout()">
                     Logout
                 </a>
@@ -28,39 +38,35 @@
       </div>
       </nav>
     </div>
-    <span class="icon" @click="onCreateTeam('sss')">
-      <i class="fas fa-plus-circle fa fa-3x"></i>
-    </span>
      <section>
-        <button class="button is-primary is-medium"
-            @click="isComponentModalActive = true">
-            Launch component modal
-        </button>
+       <span class="icon" @click="isComponentModalActive = true">
+         <i class="fas fa-plus-circle fa fa-3x"></i>
+       </span>
 
         <b-modal :active.sync="isComponentModalActive" has-modal-card>
-            <modal-form>
+            <!-- <modal-form v-bind="teamname"> -->
                 <form @submit.prevent="onCreateTeam()">
                 <div class="modal-card" style="width: auto">
                     <header class="modal-card-head">
-                        <p class="modal-card-title">Login</p>
+                        <p class="modal-card-title">Place your name</p>
                     </header>
                     <section class="modal-card-body">
                         <b-field label="teamname">
                             <b-input
                                 type="text"
-                                :value="teamname"
+                                v-model="teamname"
                                 placeholder="Your team name"
                                 required>
                             </b-input>
                         </b-field>
                     </section>
                     <footer class="modal-card-foot">
-                        <button class="button" type="button" @click="$parent.close()">Cancel</button>
+                        <button class="button" type="button" @click="onCancel()">Cancel</button>
                         <button class="button is-primary">Submit</button>
                     </footer>
                 </div>
             </form>
-            </modal-form>
+            <!-- </modal-form> -->
         </b-modal>
     </section>
     <router-view class="main"/>
@@ -68,20 +74,25 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
-  data () {
-    return {
-      isComponentModalActive: false,
-      teamname: ''
-    }
-  },
+  data: () => ({
+    isComponentModalActive: false,
+    teamname: ''
+  }),
   computed: mapState('auth', ['user', 'isLoggedIn']),
   methods: {
     ...mapActions('auth', ['login', 'logout']),
-    ...mapMutations(['onCreateTeam']),
+    ...mapActions('team', ['creatTeam']),
     async onCreateTeam () {
-      console.log('this.teamname')
+      // console.log(this.teamname)
+      await this.creatTeam(this.teamname)
+      this.teamname = ''
+      this.isComponentModalActive = false
+    },
+    onCancel () {
+      this.teamname = ''
+      this.isComponentModalActive = false
     }
   }
 }

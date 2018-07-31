@@ -29,20 +29,58 @@
         <button
             class="button is-primary"
              @click="onVote(members)"
-            >VOTE</button>
+            >
+            VOTE
+        </button>
+        <button
+            class="button is-success"
+             @click="onJoin()"
+             v-if="isJoined"
+             :disabled="members.detail.length > 4"
+            >
+            Join
+        </button>
+        <form @submit.prevent="onAddMember(members)">
+            <b-input
+                v-if="!isJoined"
+                type="text"
+                v-model="memberName"
+                placeholder="Your name"
+                required>
+            </b-input>
+        </form>
     </div>
 </template>
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState, mapActions } from 'vuex'
 
 export default {
+  data: () => ({
+    isJoined: true,
+    memberName: ''
+  }),
   props: ['members'],
   computed: mapState('auth', ['user', 'isLoggedIn']),
   methods: {
-    ...mapMutations(['removeMember']),
+    ...mapActions('team', ['addMember']),
+    ...mapMutations('team', ['removeMember']),
+    ...mapMutations('team', ['addScore']),
     onVote: function (members) {
-      this.$store.commit('addScore', members)
+      this.addScore(members)
+    },
+    onJoin () {
+      this.isJoined = false
+    },
+    async onAddMember (members) {
+      const user = {
+        memberName: this.memberName,
+        team: members
+      }
+      await this.addMember(user)
+      this.memberName = ''
+      this.isJoined = true
     }
+
   }
 }
 </script>

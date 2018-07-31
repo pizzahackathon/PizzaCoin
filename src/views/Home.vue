@@ -18,17 +18,22 @@
 
 <script>
 import ProposalCard from '@/components/ProposalCard.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'home',
   // props: ['proposals'],
-  computed: mapGetters(['members']),
+  methods: {
+    ...mapActions('team', ['getProposal'])
+  },
+  computed: {
+    ...mapGetters('team', ['members'])
+  },
   components: {
     ProposalCard
   },
   async mounted () {
-    this.$store.dispatch('getProposal')
+    this.getProposal()
   }
 }
 </script>
