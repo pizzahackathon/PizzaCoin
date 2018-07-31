@@ -3,7 +3,7 @@
         <div
             class="main level is-mobile"
              v-for="member in members.detail"
-             :key="member.token"
+             :key="member.address"
                 >
             <div class="level-item has-text-centered">
                     <div>
@@ -12,7 +12,7 @@
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
-                        <div>{{ member.token }}</div>
+                        <div>{{ member.address }}</div>
                     </div>
                 </div>
                 <div class="level-item has-text-centered" v-if="isLoggedIn">

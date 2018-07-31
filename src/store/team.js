@@ -53,11 +53,11 @@ const mutations = {
     // state.members.score++
   },
   removeMember (state, team) {
-    console.log(team.token + 'sss')
+    console.log(team.address + 'sss')
     state.members.map((member, index) => {
-      console.log((member.detail).indexOf(team.token))
+      console.log((member.detail).indexOf(team.address))
       member.detail.map((mem, idx) => {
-        if (member.detail[idx].token === team.token) {
+        if (member.detail[idx].address === team.address) {
           // state.proposals.detail[idx].splice(idx, 1)
           // console.log(state.proposals[index].detail[idx])
           console.log(state.members[index].detail.splice(idx, 1))
@@ -83,7 +83,7 @@ const mutations = {
       if (member.groupId === team.groupId) {
         console.log(state.members[index].detail.push({
           name: memberName,
-          token: memberName
+          address: memberName
         }))
       }
     })

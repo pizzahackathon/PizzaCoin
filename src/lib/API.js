@@ -6,15 +6,15 @@ const API_URL = [
     'detail': [
       {
         'name': 'Game',
-        'token': '0xxaabb'
+        'address': '0xxaabb'
       },
       {
         'name': 'Tot',
-        'token': '0xxaacc'
+        'address': '0xxaacc'
       },
       {
         'name': 'Bank',
-        'token': '0xxaaee'
+        'address': '0xxaaee'
       }
     ]
   },
@@ -25,15 +25,15 @@ const API_URL = [
     'detail': [
       {
         'name': 'Game',
-        'token': '0xxaaff'
+        'address': '0xxaaff'
       },
       {
         'name': 'Tot',
-        'token': '0xxaagg'
+        'address': '0xxaagg'
       },
       {
         'name': 'Bank',
-        'token': '0xxaahh'
+        'address': '0xxaahh'
       }
     ]
   },
@@ -44,15 +44,15 @@ const API_URL = [
     'detail': [
       {
         'name': 'Sittiphol',
-        'token': '0xxaaii'
+        'address': '0xxaaii'
       },
       {
         'name': 'Zent',
-        'token': '0xxaakk'
+        'address': '0xxaakk'
       },
       {
         'name': 'Phuwanai',
-        'token': '0xxaall'
+        'address': '0xxaall'
       }
     ]
   }

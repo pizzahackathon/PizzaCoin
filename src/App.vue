@@ -37,6 +37,8 @@
         </div>
       </div>
       </nav>
+        <!-- <router-link to="/">Home</router-link> |
+        <router-link to="/web3Example">Web3 Example</router-link> | -->
     </div>
      <section>
        <span class="icon" @click="isComponentModalActive = true">
