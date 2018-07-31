@@ -5,9 +5,9 @@
             <div>
                 <div class="columns is-multiline">
                         <ProposalCard
-                           v-for="proposal in proposals"
-                           :key="proposal.groupId"
-                           :proposal="proposal"
+                           v-for="member in members"
+                           :key="member.groupId"
+                           :proposal="member"
                           />
                 </div>
             </div>
@@ -18,17 +18,22 @@
 
 <script>
 import ProposalCard from '@/components/ProposalCard.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'home',
-  props: ['proposals'],
-  computed: mapGetters(['proposals']),
+  // props: ['proposals'],
+  methods: {
+    ...mapActions('team', ['getProposal'])
+  },
+  computed: {
+    ...mapGetters('team', ['members'])
+  },
   components: {
     ProposalCard
   },
   async mounted () {
-    this.$store.dispatch('getProposal')
+    this.getProposal()
   }
 }
 </script>
