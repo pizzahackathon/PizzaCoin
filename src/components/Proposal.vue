@@ -49,6 +49,15 @@
                 required>
             </b-input>
         </form>
+
+        <h2>Pizza Coin</h2>
+        <div>
+          <label>Symbol </label>
+          {{ pizzaCoinSymbol }}
+          <br>
+          <label>Address </label>
+          {{ userAddress }}
+        </div>
     </div>
 </template>
 <script>
@@ -57,8 +66,14 @@ import { mapMutations, mapState, mapActions } from 'vuex'
 export default {
   data: () => ({
     isJoined: true,
-    memberName: ''
+    memberName: '',
+    pizzaCoin: null,
+    pizzaCoinSymbol: '',
+    userAddress: ''
   }),
+  async mounted () {
+    await this.loadPizzaCoinSymbol()
+  },
   props: ['members'],
   computed: mapState('auth', ['user', 'isLoggedIn']),
   methods: {
@@ -79,8 +94,12 @@ export default {
       await this.addMember(user)
       this.memberName = ''
       this.isJoined = true
-    }
+    },
 
+    async loadPizzaCoinSymbol () {
+      this.pizzaCoinSymbol = await this.$pizzaCoin.main.methods.symbol().call()
+      this.userAddress = this.$pizzaCoin.account
+    }
   }
 }
 </script>

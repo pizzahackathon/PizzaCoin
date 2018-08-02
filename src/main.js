@@ -8,7 +8,9 @@ import Buefy from 'buefy'
 import firebase from './firebase'
 import auth from './auth'
 /* eslint-disable */
+import Pizzacoin from '@/PizzaCoin'
 
+Vue.prototype.$pizzaCoin = new Pizzacoin()
 Vue.use(Buefy)
 
 Vue.config.productionTip = false

@@ -53,6 +53,14 @@
                         <p class="modal-card-title">Place your name</p>
                     </header>
                     <section class="modal-card-body">
+                        <b-field label="User name">
+                            <b-input
+                                type="text"
+                                v-model="creatorName"
+                                placeholder="Your name"
+                                required>
+                            </b-input>
+                        </b-field>
                         <b-field label="teamname">
                             <b-input
                                 type="text"
@@ -80,6 +88,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data: () => ({
     isComponentModalActive: false,
+    creatorName: '',
     teamname: ''
   }),
   computed: mapState('auth', ['user', 'isLoggedIn']),
@@ -87,10 +96,12 @@ export default {
     ...mapActions('auth', ['login', 'logout']),
     ...mapActions('team', ['creatTeam']),
     async onCreateTeam () {
-      // console.log(this.teamname)
-      await this.creatTeam(this.teamname)
-      this.teamname = ''
-      this.isComponentModalActive = false
+      // // console.log(this.teamname)
+      // await this.creatTeam(this.teamname)
+      // this.teamname = ''
+      // this.isComponentModalActive = false
+
+      this.$pizzaCoin.createTeam(this.creatorName, this.teamname)
     },
     onCancel () {
       this.teamname = ''
