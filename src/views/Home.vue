@@ -7,7 +7,7 @@
                         <ProposalCard
                            v-for="member in members"
                            :key="member.groupId"
-                           :proposal="member"
+                           :team="member"
                           />
                 </div>
             </div>

@@ -2,7 +2,7 @@
     <div>
         <div
             class="main level is-mobile"
-             v-for="member in members.detail"
+             v-for="member in team.members"
              :key="member.address"
                 >
             <div class="level-item has-text-centered">
@@ -28,7 +28,7 @@
         </div>
         <button
             class="button is-primary"
-             @click="onVote(members)"
+             @click="onVote(team)"
             >
             VOTE
         </button>
@@ -36,11 +36,11 @@
             class="button is-success"
              @click="onJoin()"
              v-if="isJoined"
-             :disabled="members.detail.length > 4"
+             :disabled="team.members.length > 4"
             >
             Join
         </button>
-        <form @submit.prevent="onAddMember(members)">
+        <form @submit.prevent="onAddMember(team)">
             <b-input
                 v-if="!isJoined"
                 type="text"
@@ -74,22 +74,22 @@ export default {
   async mounted () {
     await this.loadPizzaCoinSymbol()
   },
-  props: ['members'],
+  props: ['team'],
   computed: mapState('auth', ['user', 'isLoggedIn']),
   methods: {
     ...mapActions('team', ['addMember']),
     ...mapMutations('team', ['removeMember']),
     ...mapMutations('team', ['addScore']),
-    onVote: function (members) {
-      this.addScore(members)
+    onVote: function (team) {
+      this.addScore(team)
     },
     onJoin () {
       this.isJoined = false
     },
-    async onAddMember (members) {
+    async onAddMember (team) {
       const user = {
         memberName: this.memberName,
-        teamMebers: members
+        teamMebers: team
       }
       await this.addMember(user)
       this.memberName = ''

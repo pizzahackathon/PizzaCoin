@@ -3,7 +3,7 @@ const API_URL = [
     'groupId': 'pzc1',
     'groupName': 'hackmunmun',
     'score': 3,
-    'detail': [
+    'members': [
       {
         'name': 'Game',
         'address': '0xxaabb'
@@ -22,7 +22,7 @@ const API_URL = [
     'groupId': 'pzc2',
     'groupName': 'hacknooknook',
     'score': 3,
-    'detail': [
+    'members': [
       {
         'name': 'Game',
         'address': '0xxaaff'
@@ -41,7 +41,7 @@ const API_URL = [
     'groupId': 'pzc3',
     'groupName': 'hackborbor',
     'score': 3,
-    'detail': [
+    'members': [
       {
         'name': 'Sittiphol',
         'address': '0xxaaii'
