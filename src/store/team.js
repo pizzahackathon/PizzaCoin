@@ -77,10 +77,10 @@ const mutations = {
       }
     ))
   },
-  addMember (state, {memberName, team}) {
-    console.log(team.groupName)
+  addMember (state, {memberName, teamMebers}) {
+    console.log(teamMebers.groupName)
     state.members.map((member, index) => {
-      if (member.groupId === team.groupId) {
+      if (member.groupId === teamMebers.groupId) {
         console.log(state.members[index].detail.push({
           name: memberName,
           address: memberName
