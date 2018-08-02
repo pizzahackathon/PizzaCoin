@@ -74,7 +74,7 @@ export default {
     async onAddMember (members) {
       const user = {
         memberName: this.memberName,
-        team: members
+        teamMebers: members
       }
       await this.addMember(user)
       this.memberName = ''
