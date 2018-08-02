@@ -6,12 +6,12 @@ console.log(uuid)
 // console.log(API.getProposal())
 
 const state = {
-  members: []
+  teams: []
 }
 
 const getters = {
-  members (state) {
-    return state.members
+  teams (state) {
+    return state.teams
   }
 }
 
@@ -35,16 +35,16 @@ const mutations = {
   setProposals (state, proposals) {
     /* eslint-disable */
 
-        state.members = proposals;
+        state.teams = proposals;
         /* eslint-enable */
   },
   addScore (state, team) {
     // console.log(state.proposals.indexOf(members.groupId))
     console.log(team.groupId)
     // const score = state.proposals.filter(proposal => proposal.groupId === 'pzc1')
-    state.members.map((member, index) => {
+    state.teams.map((member, index) => {
       if (member.groupId === team.groupId) {
-        console.log(state.members[index].score++)
+        console.log(state.teams[index].score++)
       }
     })
 
@@ -54,20 +54,20 @@ const mutations = {
   },
   removeMember (state, team) {
     console.log(team.address + 'sss')
-    state.members.map((member, index) => {
+    state.teams.map((member, index) => {
       console.log((member.detail).indexOf(team.address))
       member.detail.map((mem, idx) => {
         if (member.detail[idx].address === team.address) {
           // state.proposals.detail[idx].splice(idx, 1)
           // console.log(state.proposals[index].detail[idx])
-          console.log(state.members[index].detail.splice(idx, 1))
+          console.log(state.teams[index].detail.splice(idx, 1))
         }
       })
     })
   },
   creatTeam (state, teamname) {
     console.log(teamname)
-    console.log(state.members.push(
+    console.log(state.teams.push(
       {
         'groupId': teamname,
         'groupName': teamname,
@@ -79,9 +79,9 @@ const mutations = {
   },
   addMember (state, {memberName, teamMebers}) {
     console.log(teamMebers.groupName)
-    state.members.map((member, index) => {
+    state.teams.map((member, index) => {
       if (member.groupId === teamMebers.groupId) {
-        console.log(state.members[index].detail.push({
+        console.log(state.teams[index].detail.push({
           name: memberName,
           address: memberName
         }))

@@ -5,9 +5,9 @@
             <div>
                 <div class="columns is-multiline">
                         <ProposalCard
-                           v-for="member in members"
-                           :key="member.groupId"
-                           :team="member"
+                           v-for="team in teams"
+                           :key="team.groupId"
+                           :team="team"
                           />
                 </div>
             </div>
@@ -27,7 +27,7 @@ export default {
     ...mapActions('team', ['getProposal'])
   },
   computed: {
-    ...mapGetters('team', ['members'])
+    ...mapGetters('team', ['teams'])
   },
   components: {
     ProposalCard
