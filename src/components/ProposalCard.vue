@@ -5,7 +5,7 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="message-header has-text-centered">
-                            {{team.groupName}}
+                            {{team.name}}
                             <button class="button is-primary">{{ team.score }}</button>
                         </div>
                         <br>

@@ -106,5 +106,6 @@ export default {
 <style>
 .main {
     margin-top: 5em;
+    font-size: 10px;
 }
 </style>

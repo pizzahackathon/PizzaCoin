@@ -1,5 +1,6 @@
 import Web3 from 'web3'
-import PizzaCoinAbi from '../abi/PizzaCoinAbi'
+// import PizzaCoinAbi from '../abi/PizzaCoinAbi'
+import PizzaCoinAbi from '../abi/pizzaCoinAbi.json'
 import PizzaCoinStaffAbi from '../abi/PizzaCoinStaffAbi'
 import PizzaCoinTeamAbi from '../abi/PizzaCoinTeamAbi'
 import PizzaCoinPlayerAbi from '../abi/PizzaCoinPlayerAbi'
@@ -24,6 +25,8 @@ class PizzaCoin {
     this.staff = new this.web3.eth.Contract(PizzaCoinStaffAbi, this.pizzaCoinStaffAddr)
     this.team = new this.web3.eth.Contract(PizzaCoinTeamAbi, this.pizzaCoinTeamAddr)
     this.player = new this.web3.eth.Contract(PizzaCoinPlayerAbi, this.pizzaCoinPlayerAddr)
+
+    console.log(this.player.methods)
   }
 
   async loadUserAddress () {
@@ -60,7 +63,8 @@ class PizzaCoin {
   async getTeamsProfile () {
     let totalTeams = await this.getTeamCount()
     console.log('totalTeams: ' + totalTeams + '\n')
-
+    let data
+    let dataTeams = []
     // this.team.methods.getTotalPlayerInTeam(teamName)
 
     // this.team.methods.getFirstFoundPlayerInTeam(index)
@@ -82,39 +86,45 @@ class PizzaCoin {
       console.log('teamName: ' + teamName)
       console.log('totalVoted: ' + totalVoted + '\n')
 
-      await this.getPlayersProfile(teamName)
+      data = await this.getPlayersProfile(teamName)
+      dataTeams.push({
+        name: teamName,
+        members: data
+      })
+      console.log('profile >> ' + JSON.stringify(data))
     }
 
-    let teams = [
-      {
-        name: 'PizzaHack',
-        members: [
-          {
-            name: 'Tot',
-            address: '0xabc'
-          },
-          {
-            name: 'Byte',
-            address: '0x1122'
-          }
-        ]
-      },
-      {
-        name: 'KX',
-        members: [
-          {
-            name: 'Joy',
-            address: '0xee222'
-          },
-          {
-            name: 'Game',
-            address: '0x5566'
-          }
-        ]
-      }
-    ]
+    // let teams = [
+    //   {
+    //     name: 'PizzaHack',
+    //     members: [
+    //       {
+    //         name: 'Tot',
+    //         address: '0xabc'
+    //       },
+    //       {
+    //         name: 'Byte',
+    //         address: '0x1122'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     name: 'KX',
+    //     members: [
+    //       {
+    //         name: 'Joy',
+    //         address: '0xee222'
+    //       },
+    //       {
+    //         name: 'Game',
+    //         address: '0x5566'
+    //       }
+    //     ]
+    //   }
+    // ]
+    console.log('dataTeams >>  ' + JSON.stringify(dataTeams))
 
-    return teams
+    return dataTeams
   }
 
   async getFirstFoundTeamInfo (startSearchingIndex) {
@@ -136,7 +146,7 @@ class PizzaCoin {
   async getPlayersProfile (teamName) {
     let playerCount = await this.getPlayerCountInTeam(teamName)
     console.log(`playerCount: ${playerCount}`)
-
+    let teams = []
     // this.team.methods.getTotalPlayerInTeam(teamName)
 
     // this.team.methods.getFirstFoundPlayerInTeam(teamName, index)
@@ -150,14 +160,21 @@ class PizzaCoin {
         nextStartSearchingIndex,
         playerAddress
       ] = await this.getFirstFoundPlayer(teamName, nextStartSearchingIndex)
+      console.log(`endOfList >> ${endOfList}`)
 
       if (endOfList) {
         break
       }
-      console.log('player: ' + playerAddress)
-      let name = await this.getPlayerName(playerAddress)
-      console.log(`name: ${name}`)
+      console.log('playerAddress >> : ' + playerAddress)
+      let playerName = await this.getPlayerName(playerAddress)
+      console.log(`playerName >> : ${playerName}`)
+      teams.push({
+        'name': playerName,
+        'address': playerAddress
+      })
     }
+    console.log('teams >> ' + teams)
+    return teams
   }
 
   async getFirstFoundPlayer (teamName, playerIndex) {

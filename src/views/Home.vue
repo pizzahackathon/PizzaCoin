@@ -6,7 +6,7 @@
                 <div class="columns is-multiline">
                         <ProposalCard
                            v-for="team in teams"
-                           :key="team.groupId"
+                           :key="team.name"
                            :team="team"
                           />
                 </div>
@@ -45,6 +45,7 @@ export default {
     this.teamCount = await this.$pizzaCoin.getTeamCount()
 
     this.teams = await this.$pizzaCoin.getTeamsProfile()
+    console.log(this.teams[0].name)
   }
 }
 </script>
