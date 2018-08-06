@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // import API from '@/lib/API'
-import auth from './auth'
+import auth from '@/store/auth'
 import team from './team'
 
 Vue.use(Vuex)

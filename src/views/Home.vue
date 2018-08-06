@@ -45,7 +45,7 @@ export default {
     this.teamCount = await this.$pizzaCoin.getTeamCount()
 
     this.teams = await this.$pizzaCoin.getTeamsProfile()
-    console.log(this.teams[0].name)
+    // console.log(this.teams[0].name)
   }
 }
 </script>

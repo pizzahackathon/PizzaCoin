@@ -3,13 +3,13 @@
 * Github: https://github.com/serial-coder
 * Contact us: mr[dot]thummavet[at]gmail[dot]com
 */
+/* eslint-disable */
 
 pragma solidity ^0.4.23;
 
 import "./SafeMath.sol";
 import "./BasicStringUtils.sol";
 import "./Owned.sol";
-
 
 // ------------------------------------------------------------------------
 // Interface for exporting external functions of PizzaCoinTeam contract

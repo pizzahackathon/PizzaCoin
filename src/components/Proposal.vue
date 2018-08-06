@@ -40,11 +40,11 @@
             >
             Join
         </button>
-        <form @submit.prevent="onAddMember(team)">
+        <form @submit.prevent="onAddPlayer(team)">
             <b-input
                 v-if="!isJoined"
                 type="text"
-                v-model="memberName"
+                v-model="playerName"
                 placeholder="Your name"
                 required>
             </b-input>
@@ -66,7 +66,7 @@ import { mapMutations, mapState, mapActions } from 'vuex'
 export default {
   data: () => ({
     isJoined: true,
-    memberName: '',
+    playerName: '',
     pizzaCoin: null,
     pizzaCoinSymbol: '',
     userAddress: ''
@@ -84,16 +84,26 @@ export default {
       this.addScore(team)
     },
     onJoin () {
+      this.playerName = ''
       this.isJoined = false
     },
-    async onAddMember (team) {
-      const user = {
-        memberName: this.memberName,
-        teamMebers: team
-      }
-      await this.addMember(user)
-      this.memberName = ''
+    async onAddPlayer ({name}) {
       this.isJoined = true
+      console.log('onAddPlayer --> ' + await name)
+      console.log('playerName --> ' + this.playerName)
+      const registerPlayerData = {
+        playerAddr: this.$pizzaCoin.account,
+        playerName: this.playerName,
+        teamName: name
+      }
+      try {
+        await this.$pizzaCoin.registerPlayer(registerPlayerData)
+        this.isJoined = true
+      } catch (error) {
+        console.error(error)
+      }
+
+      //   await this.addMember(user)
     },
 
     async loadPizzaCoinSymbol () {

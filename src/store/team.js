@@ -1,9 +1,4 @@
 import API from '@/lib/API'
-const uuid = require('uuid')
-
-console.log(uuid)
-
-// console.log(API.getProposal())
 
 const state = {
   teams: []

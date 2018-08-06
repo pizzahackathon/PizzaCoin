@@ -26,12 +26,14 @@ class PizzaCoin {
     this.team = new this.web3.eth.Contract(PizzaCoinTeamAbi, this.pizzaCoinTeamAddr)
     this.player = new this.web3.eth.Contract(PizzaCoinPlayerAbi, this.pizzaCoinPlayerAddr)
 
-    console.log(this.player.methods)
+    console.log(this.main.methods)
   }
 
   async loadUserAddress () {
-    let accoutns = await this.web3.eth.getAccounts()
-    return accoutns[0]
+    let accounts = await this.web3.eth.getAccounts()
+    console.log('loadUserAddress >> ' + accounts[0])
+
+    return accounts[0]
   }
 
   async createTeam (creatorName, teamName) {
@@ -140,6 +142,22 @@ class PizzaCoin {
     ]
   }
 
+  async registerPlayerToTeam (registrarAddr, staffAddr, staffName) {
+    console.log('\nRegistering a staff --> "' + staffAddr + '" ...')
+    // Register a staff
+    try {
+      const res = await PizzaCoin.methods.registerPlayerToTeam(staffAddr, staffName).send({
+        from: registrarAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+      console.log(res)
+    } catch (error) {
+      console.error(error)
+    }
+    console.log('... succeeded')
+  }
+
   // ///////////////// //
   // ---- PLAYER ----  //
   // ///////////////// //
@@ -161,7 +179,7 @@ class PizzaCoin {
         playerAddress
       ] = await this.getFirstFoundPlayer(teamName, nextStartSearchingIndex)
       console.log(`endOfList >> ${endOfList}`)
-
+      console.log(`myAccount >> ${this.account}`)
       if (endOfList) {
         break
       }
@@ -173,7 +191,11 @@ class PizzaCoin {
         'address': playerAddress
       })
     }
-    console.log('teams >> ' + teams)
+    // let staffName = await this.getStaffName(this.account)
+    // console.log(`getStaffName >> ${staffName}`)
+    // let isStaff = await this.isStaff(this.account)
+    // console.log(`isStaff >> ${isStaff}`)
+    // console.log('teams >> ' + teams)
     return teams
   }
 
@@ -195,6 +217,53 @@ class PizzaCoin {
     // console.log('... succeeded');
 
     return name
+  }
+
+  async registerPlayer ({playerAddr, playerName, teamName}) {
+    console.log('\nRegistering a player --> "' + teamName + '" ...')
+    // Register a player
+    try {
+      await this.main.methods.registerPlayer(playerName, teamName).send({
+        from: playerAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+
+      console.log('... succeeded')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  // async registerPlayer (playerAddr, playerName, teamName) {
+  //   console.log('\nRegistering a player --> "' + playerAddr + '" ...')
+  //   // Register a player
+  //   try {
+  //     await this.main.methods.registerPlayer(playerName, teamName).send({
+  //       from: playerAddr,
+  //       gas: 6500000,
+  //       gasPrice: 10000000000
+  //     })
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+  // ///////////////// //
+  // ---- STAFF ----  //
+  // ///////////////// //
+
+  async getStaffName (address) {
+    let name = await this.staff.methods.getStaffName(this.account).call()
+
+    return name
+  }
+  async isStaff (address) {
+    console.log(`ddd >> ${address}`)
+
+    let isStaff = await this.staff.methods.isStaff(address).call()
+    console.log(`dddIs >> ${isStaff}`)
+
+    return isStaff
   }
 }
 
