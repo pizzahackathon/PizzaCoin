@@ -235,19 +235,19 @@ class PizzaCoin {
     }
   }
 
-  // async registerPlayer (playerAddr, playerName, teamName) {
-  //   console.log('\nRegistering a player --> "' + playerAddr + '" ...')
-  //   // Register a player
-  //   try {
-  //     await this.main.methods.registerPlayer(playerName, teamName).send({
-  //       from: playerAddr,
-  //       gas: 6500000,
-  //       gasPrice: 10000000000
-  //     })
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+  async kickPlayer ({kickerAddr, playerAddr, teamName}) {
+    console.log('\nKicking a player --> "' + playerAddr + '" ...')
+    try {
+      await this.main.methods.kickPlayer(playerAddr, teamName).send({
+        from: kickerAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // ///////////////// //
   // ---- STAFF ----  //
   // ///////////////// //

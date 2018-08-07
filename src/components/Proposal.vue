@@ -19,7 +19,7 @@
                     <div>
                         <button
                             class="button is-danger"
-                            @click="removeMember(member)"
+                            @click="removePlayer(team, member)"
                             >
                                 Kick
                             </button>
@@ -78,7 +78,7 @@ export default {
   computed: mapState('auth', ['user', 'isLoggedIn']),
   methods: {
     ...mapActions('team', ['addMember']),
-    ...mapMutations('team', ['removeMember']),
+    // ...mapMutations('team', ['removeMember']),
     ...mapMutations('team', ['addScore']),
     onVote: function (team) {
       this.addScore(team)
@@ -105,10 +105,19 @@ export default {
 
       //   await this.addMember(user)
     },
-
     async loadPizzaCoinSymbol () {
       this.pizzaCoinSymbol = await this.$pizzaCoin.main.methods.symbol().call()
       this.userAddress = this.$pizzaCoin.account
+    },
+    async removePlayer ({name}, {address}) {
+      console.log(`removePlayer --> ${address} in team ${name}`)
+      // this.$store.dispatch('team/removePlayer', player)
+      const removePlayerData = {
+        kickerAddr: this.$pizzaCoin.account,
+        playerAddr: address,
+        teamName: name
+      }
+      await this.$pizzaCoin.kickPlayer(removePlayerData)
     }
   }
 }

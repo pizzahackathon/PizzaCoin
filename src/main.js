@@ -8,6 +8,7 @@ import Pizzacoin from '@/PizzaCoin'
 
 const pizzaCoin = new Pizzacoin()
 Vue.prototype.$pizzaCoin = pizzaCoin
+Vue.prototype.$store = store
 
 setInterval(async function () {
   let account = pizzaCoin.account

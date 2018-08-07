@@ -24,8 +24,17 @@ const actions = {
   },
   addMember (context, memberName) {
     context.commit('addMember', memberName)
+  },
+  removePlayer (context, player) {
+    console.log(`removePlayer --> ${player.address}`)
+    context.commit('removePlayer', player)
   }
 }
+
+// ///////////////// //
+// ---- MUTATION ----  //
+// ///////////////// //
+
 const mutations = {
   setProposals (state, proposals) {
     /* eslint-disable */
@@ -47,18 +56,8 @@ const mutations = {
 
     // state.members.score++
   },
-  removeMember (state, team) {
-    console.log(team.address + 'sss')
-    state.teams.map((member, index) => {
-      console.log((member.detail).indexOf(team.address))
-      member.detail.map((mem, idx) => {
-        if (member.detail[idx].address === team.address) {
-          // state.proposals.detail[idx].splice(idx, 1)
-          // console.log(state.proposals[index].detail[idx])
-          console.log(state.teams[index].detail.splice(idx, 1))
-        }
-      })
-    })
+  removePlayer (state, team) {
+    console.log(team.address)
   },
   creatTeam (state, teamname) {
     console.log(teamname)
