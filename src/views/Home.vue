@@ -20,32 +20,32 @@
 
 <script>
 import ProposalCard from '@/components/ProposalCard.vue'
-import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   data () {
     return {
-      teamCount: '',
-      teams: []
+      teamCount: ''
     }
   },
   name: 'home',
   // props: ['proposals'],
-  methods: {
-    ...mapActions('team', ['getProposal'])
+  computed: {
+    ...mapState('team', ['teams'])
   },
-  // computed: {
-  //   ...mapGetters('team', ['teams'])
-  // },
+  methods: {
+    // ...mapActions('team', ['getProposal'])
+  },
   components: {
     ProposalCard
   },
   async mounted () {
-    this.getProposal()
-    this.teamCount = await this.$pizzaCoin.getTeamCount()
-
-    this.teams = await this.$pizzaCoin.getTeamsProfile()
-    // console.log(this.teams[0].name)
+    try {
+      this.teamCount = await this.$pizzaCoin.getTeamCount()
+      this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 </script>

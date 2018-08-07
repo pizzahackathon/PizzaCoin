@@ -1,4 +1,4 @@
-import API from '@/lib/API'
+// import API from '@/lib/API'
 
 const state = {
   teams: []
@@ -11,13 +11,9 @@ const getters = {
 }
 
 const actions = {
-  async getProposal (context) {
-    console.log(context)
-    const proposals = await API.getProposal()
-    console.log(proposals)
-    console.log('test')
-
-    context.commit('setProposals', proposals)
+  async getTeamsProfile (context, teams) {
+    console.log('action --> getTeamsProfile')
+    context.commit('getTeamsProfile', teams)
   },
   creatTeam (context, teamname) {
     context.commit('creatTeam', teamname)
@@ -36,10 +32,10 @@ const actions = {
 // ///////////////// //
 
 const mutations = {
-  setProposals (state, proposals) {
+  getTeamsProfile (state, teams) {
     /* eslint-disable */
-
-        state.teams = proposals;
+    console.log('mutations --> getTeamsProfile')
+        state.teams = teams;
         /* eslint-enable */
   },
   addScore (state, team) {

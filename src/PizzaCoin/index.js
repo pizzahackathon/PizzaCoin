@@ -96,34 +96,6 @@ class PizzaCoin {
       console.log('profile >> ' + JSON.stringify(data))
     }
 
-    // let teams = [
-    //   {
-    //     name: 'PizzaHack',
-    //     members: [
-    //       {
-    //         name: 'Tot',
-    //         address: '0xabc'
-    //       },
-    //       {
-    //         name: 'Byte',
-    //         address: '0x1122'
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     name: 'KX',
-    //     members: [
-    //       {
-    //         name: 'Joy',
-    //         address: '0xee222'
-    //       },
-    //       {
-    //         name: 'Game',
-    //         address: '0x5566'
-    //       }
-    //     ]
-    //   }
-    // ]
     console.log('dataTeams >>  ' + JSON.stringify(dataTeams))
 
     return dataTeams
@@ -268,3 +240,32 @@ class PizzaCoin {
 }
 
 export default PizzaCoin
+
+// let teams = [
+//   {
+//     name: 'PizzaHack',
+//     members: [
+//       {
+//         name: 'Tot',
+//         address: '0xabc'
+//       },
+//       {
+//         name: 'Byte',
+//         address: '0x1122'
+//       }
+//     ]
+//   },
+//   {
+//     name: 'KX',
+//     members: [
+//       {
+//         name: 'Joy',
+//         address: '0xee222'
+//       },
+//       {
+//         name: 'Game',
+//         address: '0x5566'
+//       }
+//     ]
+//   }
+// ]

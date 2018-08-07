@@ -75,10 +75,11 @@ export default {
     await this.loadPizzaCoinSymbol()
   },
   props: ['team'],
-  computed: mapState('auth', ['user', 'isLoggedIn']),
+  computed: {
+    ...mapState('auth', ['user', 'isLoggedIn'])
+  },
   methods: {
     ...mapActions('team', ['addMember']),
-    // ...mapMutations('team', ['removeMember']),
     ...mapMutations('team', ['addScore']),
     onVote: function (team) {
       this.addScore(team)
@@ -99,6 +100,7 @@ export default {
       try {
         await this.$pizzaCoin.registerPlayer(registerPlayerData)
         this.isJoined = true
+        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       } catch (error) {
         console.error(error)
       }
@@ -117,7 +119,12 @@ export default {
         playerAddr: address,
         teamName: name
       }
-      await this.$pizzaCoin.kickPlayer(removePlayerData)
+      try {
+        const res = await this.$pizzaCoin.kickPlayer(removePlayerData)
+        console.log(`After delete ->> ${res}`)
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

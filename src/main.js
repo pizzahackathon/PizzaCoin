@@ -21,6 +21,8 @@ setInterval(async function () {
   }
 }, 3000)
 
+// store.dispatch('team/getTeamsProfile')
+
 console.log('service >> ' + pizzaCoin.account)
 
 Vue.use(Buefy)
