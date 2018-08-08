@@ -25,7 +25,7 @@ library PizzaCoinCodeLib {
     function registerStaff(address _staff, string _staffName, address _staffContract) public {
         assert(_staffContract != address(0));
 
-        // Get a contract instance from the deployed addresses
+        // Get a contract instance from the deployed address
         IStaffContract staffContractInstance = IStaffContract(_staffContract);
 
         staffContractInstance.registerStaff(_staff, _staffName);
@@ -34,20 +34,11 @@ library PizzaCoinCodeLib {
     // ------------------------------------------------------------------------
     // Remove a specific staff
     // ------------------------------------------------------------------------
-    function kickStaff(address _staff, address _staffContract) public 
-    returns (
-        string _staffName, 
-        address _kicker, 
-        string _kickerName
-    ) {
+    function kickStaff(address _staff, address _staffContract) public {
         assert(_staffContract != address(0));
 
-        // Get a contract instance from the deployed addresses
+        // Get a contract instance from the deployed address
         IStaffContract staffContractInstance = IStaffContract(_staffContract);
-
-        _kicker = msg.sender;
-        _staffName = staffContractInstance.getStaffName(_staff);
-        _kickerName = staffContractInstance.getStaffName(_kicker);
 
         staffContractInstance.kickStaff(_staff);
     }
@@ -67,7 +58,7 @@ library PizzaCoinCodeLib {
 
         playerContractInstance.registerPlayer(player, _playerName, _teamName);
 
-        // Add a player to a team he/she associates with
+        // Add a player to a team that he/she is associating with
         teamContractInstance.registerPlayerToTeam(player, _teamName);
     }
 
@@ -78,7 +69,7 @@ library PizzaCoinCodeLib {
         assert(_playerContract != address(0));
         assert(_teamContract != address(0));
 
-        // Get a contract instance from the deployed addresses
+        // Get a contract instance from the deployed address
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
         
         // Create a new team
@@ -89,8 +80,9 @@ library PizzaCoinCodeLib {
     }
 
     // ------------------------------------------------------------------------
-    // Allow only a staff transfer the state from Initial to Registration
-    // Revert a transaction if the contract does not get initialized completely
+    // Allow only a staff transfer the state from Initial to Registration and
+    // revert a transaction if the contract as well as its child contracts 
+    // do not get initialized completely
     // ------------------------------------------------------------------------
     function isContractCompletelyInitialized(
         address _staff, 
@@ -115,30 +107,28 @@ library PizzaCoinCodeLib {
             "The team contract did not get initialized"
         );
 
-        // Get a contract instance from the deployed addresses
+        // Get a contract instance from the deployed address
         IStaffContract staffContractInstance = IStaffContract(_staffContract);
 
         // Only a staff is allowed to call this function
         require(
-            staffContractInstance.isStaff(_staff) == true,
+            staffContractInstance.isStaff(_staff),
             "This address is not a staff."
         );
     }
 
     // ------------------------------------------------------------------------
-    // Remove the first found player in a particular team 
+    // Remove the first found player of a particular team 
     // (start searching at _startSearchingIndex)
     // ------------------------------------------------------------------------
     function kickFirstFoundPlayerInTeam(
         string _teamName, 
         uint256 _startSearchingIndex,
-        address _staffContract,
         address _playerContract,
         address _teamContract
     ) 
-    public returns (uint256 _nextStartSearchingIndex) 
+        public returns (uint256 _nextStartSearchingIndex) 
     {
-        assert(_staffContract != address(0));
         assert(_playerContract != address(0));
         assert(_teamContract != address(0));
 
@@ -146,7 +136,7 @@ library PizzaCoinCodeLib {
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
-        // Get the array length of players in the specific team,
+        // Get the array length of players in the specific team, 
         // including all ever removal players
         uint256 noOfAllEverTeamPlayers = teamContractInstance.getArrayLengthOfPlayersInTeam(_teamName);
 
@@ -164,9 +154,9 @@ library PizzaCoinCodeLib {
             (endOfList, player) = teamContractInstance.getPlayerInTeamAtIndex(_teamName, i);
             
             // player == address(0) if a player was kicked previously
-            if (player != address(0) && playerContractInstance.isPlayerInTeam(player, _teamName) == true) {
+            if (player != address(0) && playerContractInstance.isPlayerInTeam(player, _teamName)) {
                 // Remove a specific player
-                kickPlayer(player, _teamName, _staffContract, _playerContract, _teamContract);
+                kickPlayer(player, _teamName, _playerContract, _teamContract);
 
                 // Start next searching at the next array element
                 _nextStartSearchingIndex = i + 1;
@@ -178,30 +168,13 @@ library PizzaCoinCodeLib {
     // ------------------------------------------------------------------------
     // Remove a specific player from a particular team
     // ------------------------------------------------------------------------
-    function kickPlayer(
-        address _player, 
-        string _teamName, 
-        address _staffContract,
-        address _playerContract,
-        address _teamContract
-    ) 
-    public returns (
-        string _playerName,
-        string _kickerName
-    )
-    {
-        assert(_staffContract != address(0));
+    function kickPlayer(address _player, string _teamName, address _playerContract, address _teamContract) public {
         assert(_playerContract != address(0));
         assert(_teamContract != address(0));
 
         // Get contract instances from the deployed addresses
-        IStaffContract staffContractInstance = IStaffContract(_staffContract);
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
-
-        address kicker = msg.sender;
-        _playerName = playerContractInstance.getPlayerName(_player);
-        _kickerName = staffContractInstance.getStaffName(kicker);
 
         // Remove a player from the player list
         playerContractInstance.kickPlayer(_player, _teamName);
@@ -213,20 +186,13 @@ library PizzaCoinCodeLib {
     // ------------------------------------------------------------------------
     // Remove a specific team (the team must be empty of players)
     // ------------------------------------------------------------------------
-    function kickTeam(string _teamName, address _staffContract, address _teamContract) 
-    public returns (string _kickerName)
-    {
-        assert(_staffContract != address(0));
+    function kickTeam(string _teamName, address _teamContract) public {
         assert(_teamContract != address(0));
 
-        // Get contract instances from the deployed addresses
-        IStaffContract staffContractInstance = IStaffContract(_staffContract);
+        // Get a contract instance from the deployed address
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
         teamContractInstance.kickTeam(_teamName);
-
-        address kicker = msg.sender;
-        _kickerName = staffContractInstance.getStaffName(kicker);
     }
 
     // ------------------------------------------------------------------------
@@ -239,8 +205,9 @@ library PizzaCoinCodeLib {
         address _playerContract,
         address _teamContract
     ) 
-    public 
+        public returns (uint256 _totalVoted) 
     {
+
         assert(_staffContract != address(0));
         assert(_teamContract != address(0));
 
@@ -249,7 +216,7 @@ library PizzaCoinCodeLib {
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
         require(
-            _teamName.isEmpty() == false,
+            _teamName.isNotEmpty(),
             "'_teamName' might not be empty."
         );
 
@@ -259,15 +226,17 @@ library PizzaCoinCodeLib {
         );
 
         require(
-            teamContractInstance.doesTeamExist(_teamName) == true,
+            teamContractInstance.doesTeamExist(_teamName),
             "Cannot find the specified team."
         );
 
         if (staffContractInstance.isStaff(msg.sender)) {
-            voteTeamByStaff(_teamName, _votingWeight, _staffContract, _teamContract);  // a staff
+            // Voter is a staff
+            return voteTeamByStaff(_teamName, _votingWeight, _staffContract, _teamContract);
         }
         else {
-            voteTeamByDifferentTeamPlayer(_teamName, _votingWeight, _playerContract, _teamContract);  // a team player
+            // Voter is a team player
+            return voteTeamByDifferentTeamPlayer(_teamName, _votingWeight, _playerContract, _teamContract);
         }
     }
 
@@ -280,8 +249,9 @@ library PizzaCoinCodeLib {
         address _staffContract,
         address _teamContract
     ) 
-    internal
+        internal returns (uint256 _totalVoted) 
     {
+
         assert(_staffContract != address(0));
         assert(_teamContract != address(0));
 
@@ -290,9 +260,9 @@ library PizzaCoinCodeLib {
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
         address voter = msg.sender;
-        assert(_teamName.isEmpty() == false);
+        assert(_teamName.isNotEmpty());
         assert(_votingWeight > 0);
-        assert(teamContractInstance.doesTeamExist(_teamName) == true);
+        assert(teamContractInstance.doesTeamExist(_teamName));
         assert(staffContractInstance.isStaff(voter));
 
         require(
@@ -300,9 +270,12 @@ library PizzaCoinCodeLib {
             "Insufficient voting balance."
         );
 
-        // Staff commits to vote to a team
-        staffContractInstance.commitToVote(voter, _votingWeight, _teamName);
+        // Staff commits to vote to the team
+        staffContractInstance.commitToVote(_teamName, voter, _votingWeight);
         teamContractInstance.voteToTeam(_teamName, voter, _votingWeight);
+
+        // Get a current voting point for the team
+        _totalVoted = teamContractInstance.getVotingPointForTeam(_teamName);
     }
 
     // ------------------------------------------------------------------------
@@ -314,7 +287,7 @@ library PizzaCoinCodeLib {
         address _playerContract,
         address _teamContract
     ) 
-    internal
+        internal returns (uint256 _totalVoted) 
     {
         assert(_playerContract != address(0));
         assert(_teamContract != address(0));
@@ -324,14 +297,14 @@ library PizzaCoinCodeLib {
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
         
         address voter = msg.sender;
-        assert(_teamName.isEmpty() == false);
+        assert(_teamName.isNotEmpty());
         assert(_votingWeight > 0);
-        assert(teamContractInstance.doesTeamExist(_teamName) == true);
+        assert(teamContractInstance.doesTeamExist(_teamName));
         assert(playerContractInstance.isPlayer(voter));
 
         require(
             playerContractInstance.isPlayerInTeam(voter, _teamName) == false,
-            "A player does not allow to vote to his/her own team."
+            "A player is not permitted to vote to his/her own team."
         );
 
         require(
@@ -339,8 +312,11 @@ library PizzaCoinCodeLib {
             "Insufficient voting balance."
         );
 
-        // Player commits to vote to a team
-        playerContractInstance.commitToVote(voter, _votingWeight, _teamName);
+        // Player commits to vote to the team
+        playerContractInstance.commitToVote(_teamName, voter, _votingWeight);
         teamContractInstance.voteToTeam(_teamName, voter, _votingWeight);
+
+        // Get a current voting point for the team
+        _totalVoted = teamContractInstance.getVotingPointForTeam(_teamName);
     }
 }

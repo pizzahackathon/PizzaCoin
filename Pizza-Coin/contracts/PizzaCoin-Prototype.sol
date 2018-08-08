@@ -62,7 +62,10 @@ contract Owned {
     // Guarantee that msg.sender must be a contract owner
     // ------------------------------------------------------------------------
     modifier onlyOwner {
-        require(msg.sender == owner);
+        require(
+            msg.sender == owner,
+            "This address is not a contract owner."
+        );
         _;
     }
 }
@@ -335,7 +338,7 @@ contract PizzaCoin is ERC20Interface, Owned {
         );
 
         bool found;
-        uint staffIndex;
+        uint256 staffIndex;
 
         (found, staffIndex) = getStaffIndex(_staff);
         if (!found) {
@@ -523,7 +526,7 @@ contract PizzaCoin is ERC20Interface, Owned {
         );
 
         bool found;
-        uint playerIndex;
+        uint256 playerIndex;
 
         (found, playerIndex) = getPlayerIndex(_player);
         if (!found) {
@@ -615,7 +618,7 @@ contract PizzaCoin is ERC20Interface, Owned {
         }
 
         bool found;
-        uint teamIndex;
+        uint256 teamIndex;
 
         (found, teamIndex) = getTeamIndex(_teamName);
         if (!found) {
