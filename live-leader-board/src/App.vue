@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <ChartComponent/>
+    <!-- <ChartComponent/> -->
+    <TwitterComponent/>
   </div>
 </template>
 
 <script>
-import ChartComponent from './components/charts/Charts.vue'
+// import ChartComponent from './components/charts/Charts.vue'
+import TwitterComponent from './components/twitter/Twitter'
 
 export default {
   name: 'app',
   components: {
-    ChartComponent
+    // ChartComponent,
+    TwitterComponent
   }
 }
 </script>
