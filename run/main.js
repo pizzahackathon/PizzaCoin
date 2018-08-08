@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
 * Copyright (c) 2018, Phuwanai Thummavet (serial-coder). All rights reserved.
 * Github: https://github.com/serial-coder
@@ -14,14 +16,15 @@ var Web3               = require('web3'),
     PizzaCoinTeamJson = require('../build/contracts/PizzaCoinTeam.json'),
     pe = require('parse-error');
 
-
-var web3 = new Web3('http://localhost:7545');
-//var web3 = new Web3('http://localhost:8545');
+var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:7545'));    // Ganache
+//var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'));  // Rinkeby
+//var web3 = new Web3('http://localhost:7545');  // Ganache
+//var web3 = new Web3('http://localhost:8545');  // Rinkeby
 
 var PizzaCoin = new web3.eth.Contract(
     PizzaCoinJson.abi,
-    PizzaCoinJson.networks[5777].address
-    //PizzaCoinJson.networks[4].address
+    PizzaCoinJson.networks[5777].address    // Ganache
+    //PizzaCoinJson.networks[4].address     // Rinkeby
 );
 
 main();
@@ -33,10 +36,6 @@ function callContractFunction(contractFunction) {
         })
         .catch(err => {
             return [pe(err), null];
-            /*console.log('**********');
-            console.log(pe(err));
-            console.log('**********');
-            [pe(err)];*/
         });
 }
 
@@ -46,6 +45,9 @@ async function main() {
     console.log('Project deployer address: ' + ethAccounts[0]);
 
     try {
+        // Subscribe to 'TeamVoted' event (this requires a web3-websocket provider)
+        let subscription = subscribeEvent();
+
         // Initialized contracts
         let [
             staffContractAddr, 
@@ -54,8 +56,8 @@ async function main() {
         ] = await initContracts(ethAccounts[0]);
 
         console.log('\nInitializing contracts succeeded...');
-        console.log('PizzaCoin address: ' + PizzaCoinJson.networks[5777].address);
-        //console.log('PizzaCoin address: ' + PizzaCoinJson.networks[4].address);
+        console.log('PizzaCoin address: ' + PizzaCoinJson.networks[5777].address);  // Ganache
+        //console.log('PizzaCoin address: ' + PizzaCoinJson.networks[4].address);   // Rinkeby
         console.log('PizzaCoinStaff address: ' + staffContractAddr);
         console.log('PizzaCoinPlayer address: ' + playerContractAddr);
         console.log('PizzaCoinTeam address: ' + teamContractAddr);
@@ -156,12 +158,12 @@ async function main() {
         // Change all contracts' state from Voting to VotingFinished
         await stopVoting(ethAccounts[0]);
 
-        // Get a maximum voting points
-        let maxTeamVotingPoints = await getMaxTeamVotingPoints(PizzaCoinTeam);
-        console.log('maxTeamVotingPoints: ' + maxTeamVotingPoints);
+        // Get a maximum voting point
+        let maxTeamVotingPoint = await getMaxTeamVotingPoint(PizzaCoinTeam);
+        console.log('maxTeamVotingPoint: ' + maxTeamVotingPoint);
 
-        // Get a total number of team winners
-        let totalWinners = await getTotalTeamWinners(PizzaCoinTeam);
+        // Get a total number of winner teams
+        let totalWinners = await getTotalWinnerTeams(PizzaCoinTeam);
         console.log('totalWinners: ' + totalWinners + '\n');
 
         let startSearchingIndex = 0;
@@ -173,7 +175,7 @@ async function main() {
                 startSearchingIndex, 
                 teamName, 
                 totalVoted
-            ] = await getFirstFoundTeamWinner(PizzaCoinTeam, startSearchingIndex);
+            ] = await getFirstFoundWinnerTeam(PizzaCoinTeam, startSearchingIndex);
 
             if (endOfList) {
                 break;
@@ -181,23 +183,54 @@ async function main() {
             console.log('teamName: ' + teamName);
             console.log('totalVoted: ' + totalVoted + '\n');
         }
+
+        // Unsubscribes the event subscription (this does not work!!)
+        unsubscribeEvent(subscription);
     }
     catch (err) {
         return console.error(err);
     }
-
-
-
-    // TO DO: Event subscription
 }
 
-async function getFirstFoundTeamWinner(PizzaCoinTeam, startSearchingIndex) {
+function subscribeEvent() {
+    // Subscribe to 'TeamVoted' event (this requires a web3-websocket provider)
+    // See: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events
+    let subscription = PizzaCoin.events.TeamVoted(null, (err, result) => {
+        if (err) {
+            throw new Error(err);
+        }
+        
+        let teamName, totalVoted;
+        teamName = result.returnValues._teamName;
+        totalVoted = result.returnValues._totalVoted;
+
+        console.log('***** Event catched *****');
+        console.log('teamName: ' + teamName);
+        console.log('totalVoted: ' + totalVoted);
+    });
+
+    return subscription;
+}
+
+function unsubscribeEvent(subscription) {
+    // Unsubscribes the event subscription (this does not work!!)
+    subscription.unsubscribe((err, success) => {
+        if (err) {
+            throw new Error(err);
+        }
+            
+        console.log('***** Successfully unsubscribed! *****');
+        console.log(success);
+    });
+}
+
+async function getFirstFoundWinnerTeam(PizzaCoinTeam, startSearchingIndex) {
     let err;
     let tupleReturned;
 
-    //console.log('\nQuerying for the first found team winner (by the index of voters) ...');
+    //console.log('\nQuerying for the first found winner team (by the index of voters) ...');
     [err, tupleReturned] = await callContractFunction(
-        PizzaCoinTeam.methods.getFirstFoundTeamWinner(startSearchingIndex).call({})
+        PizzaCoinTeam.methods.getFirstFoundWinnerTeam(startSearchingIndex).call({})
     );
 
     if (err) {
@@ -213,12 +246,12 @@ async function getFirstFoundTeamWinner(PizzaCoinTeam, startSearchingIndex) {
     ];
 }
 
-async function getTotalTeamWinners(PizzaCoinTeam) {
+async function getTotalWinnerTeams(PizzaCoinTeam) {
     let err, totalWinners;
 
-    console.log('\nQuerying for a total number of team winners ...');
+    console.log('\nQuerying for a total number of winner teams ...');
     [err, totalWinners] = await callContractFunction(
-        PizzaCoinTeam.methods.getTotalTeamWinners().call({})
+        PizzaCoinTeam.methods.getTotalWinnerTeams().call({})
     );
 
     if (err) {
@@ -228,12 +261,12 @@ async function getTotalTeamWinners(PizzaCoinTeam) {
     return totalWinners;
 }
 
-async function getMaxTeamVotingPoints(PizzaCoinTeam) {
+async function getMaxTeamVotingPoint(PizzaCoinTeam) {
     let err, maxTeamVotingPoints;
 
-    console.log('\nQuerying for a maximum voting points ...');
+    console.log('\nQuerying for a maximum voting point ...');
     [err, maxTeamVotingPoints] = await callContractFunction(
-        PizzaCoinTeam.methods.getMaxTeamVotingPoints().call({})
+        PizzaCoinTeam.methods.getMaxTeamVotingPoint().call({})
     );
 
     if (err) {

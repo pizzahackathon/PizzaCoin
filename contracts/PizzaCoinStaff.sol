@@ -19,7 +19,7 @@ interface IStaffContract {
     function startVoting() external;
     function stopVoting() external;
     function getTotalSupply() external view returns (uint256 _totalSupply);
-    function isStaff(address _user) external view returns (bool bStaff);
+    function isStaff(address _user) external view returns (bool _bStaff);
     function getStaffName(address _staff) external view returns (string _name);
     function registerStaff(address _staff, string _staffName) external;
     function kickStaff(address _staff) external;
@@ -33,7 +33,7 @@ interface IStaffContract {
             string _name,
             uint256 _tokensBalance
         );
-    function getTotalVotesByStaff(address _staff) external view returns (uint256 _total);
+    function getTotalTeamsVotedByStaff(address _staff) external view returns (uint256 _total);
     function getVoteResultAtIndexByStaff(address _staff, uint256 _votingIndex) 
         external view
         returns (
@@ -42,7 +42,7 @@ interface IStaffContract {
             uint256 _voteWeight
         );
     function getTokenBalance(address _staff) external view returns (uint256 _tokenBalance);
-    function commitToVote(address _staff, uint256 _votingWeight, string _teamName) external;
+    function commitToVote(string _teamName, address _staff, uint256 _votingWeight) external;
 }
 
 
@@ -62,16 +62,19 @@ contract PizzaCoinStaff is IStaffContract, Owned {
 
 
     struct StaffInfo {
-        bool wasRegistered;    // Check if a specific staff is being registered
+        bool wasRegistered;    // Check if a specific staff is being registered or not
         string name;
         uint256 tokensBalance; // Amount of tokens left for voting
         string[] teamsVoted;   // Record all the teams voted by this staff
         
         // mapping(team => votes)
         mapping(string => uint256) votesWeight;  // A collection of teams with voting weight approved by this staff
+
+        // The following is used to reduce the potential gas cost consumption when kicking a staff
+        uint256 id;  // A pointing index to a particular staff on the 'staffs' array
     }
 
-    address[] private staffs;                          // The first staff is the contract owner
+    address[] private staffs;                          // staffs[0] denotes a project deployer (i.e., PizzaCoin's owner)
     mapping(address => StaffInfo) private staffsInfo;  // mapping(staff => StaffInfo)
 
     uint256 private voterInitialTokens;
@@ -104,17 +107,10 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     // Guarantee that msg.sender must be a contract deployer (i.e., PizzaCoin address)
     // ------------------------------------------------------------------------
     modifier onlyPizzaCoin {
-        require(msg.sender == owner);  // owner == PizzaCoin address
-        _;
-    }
-
-    // ------------------------------------------------------------------------
-    // Guarantee that msg.sender must be a staff
-    // ------------------------------------------------------------------------
-    modifier onlyStaff {
+        // owner == PizzaCoin address
         require(
-            staffsInfo[msg.sender].wasRegistered == true || msg.sender == owner,
-            "This address is not a staff."
+            msg.sender == owner,
+            "This address is not PizzaCoin contract"
         );
         _;
     }
@@ -194,7 +190,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     // ------------------------------------------------------------------------
     // Determine if _user is a project deployer (i.e., PizzaCoin's owner) or not
     // ------------------------------------------------------------------------
-    function isProjectDeployer(address _user) internal view onlyPizzaCoin returns (bool bDeployer) {
+    function isProjectDeployer(address _user) internal view returns (bool _bDeployer) {
         /*
         * Owner of the contract is PizzaCoin contract, 
         * not a project deployer (or PizzaCoin's owner)
@@ -205,20 +201,20 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         assert(_user != address(0));
 
         address deployer = staffs[0];
-        return deployer == _user && staffsInfo[deployer].wasRegistered == true;
+        return deployer == _user && staffsInfo[deployer].wasRegistered;
     }
 
     // ------------------------------------------------------------------------
     // Determine if _user is a staff or not (external)
     // ------------------------------------------------------------------------
-    function isStaff(address _user) external view returns (bool bStaff) {
+    function isStaff(address _user) external view returns (bool _bStaff) {
         return __isStaff(_user);
     }
 
     // ------------------------------------------------------------------------
     // Determine if _user is a staff or not (internal)
     // ------------------------------------------------------------------------
-    function __isStaff(address _user) internal view returns (bool bStaff) {
+    function __isStaff(address _user) internal view returns (bool _bStaff) {
         require(
             _user != address(0),
             "'_user' contains an invalid address."
@@ -237,7 +233,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            __isStaff(_staff) == true,
+            __isStaff(_staff),
             "Cannot find the specified staff."
         );
 
@@ -254,7 +250,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            _staffName.isEmpty() == false,
+            _staffName.isNotEmpty(),
             "'_staffName' might not be empty."
         );
 
@@ -269,10 +265,11 @@ contract PizzaCoinStaff is IStaffContract, Owned {
             wasRegistered: true,
             name: _staffName,
             tokensBalance: voterInitialTokens,
-            teamsVoted: new string[](0)
+            teamsVoted: new string[](0),
             /*
                 Omit 'votesWeight'
             */
+            id: staffs.length - 1
         });
 
         totalSupply = totalSupply.add(voterInitialTokens);
@@ -288,7 +285,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            staffsInfo[_staff].wasRegistered == true,
+            staffsInfo[_staff].wasRegistered,
             "Cannot find the specified staff."
         );
 
@@ -298,38 +295,31 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         bool found;
-        uint staffIndex;
+        uint256 staffIndex;
 
         (found, staffIndex) = getStaffIndex(_staff);
         if (!found) {
             revert("Cannot find the specified staff.");
         }
 
-        // Reset an element to 0 but the array length never decrease (beware!!)
+        // Reset the element pointed by staffIndex to 0. However,
+        // that array element never get really removed. (beware!!)
         delete staffs[staffIndex];
 
-        // Remove a specified staff from a mapping
+        // Remove the specified staff from a mapping
         delete staffsInfo[_staff];
 
         totalSupply = totalSupply.sub(voterInitialTokens);
     }
 
     // ------------------------------------------------------------------------
-    // Get the index of a specific staff found in the array 'staffs'
+    // Get an index pointed to a specific staff on the mapping 'staffsInfo'
     // ------------------------------------------------------------------------
-    function getStaffIndex(address _staff) internal view onlyPizzaCoin returns (bool _found, uint256 _staffIndex) {
+    function getStaffIndex(address _staff) internal view returns (bool _found, uint256 _staffIndex) {
         assert(_staff != address(0));
 
-        _found = false;
-        _staffIndex = 0;
-
-        for (uint256 i = 0; i < staffs.length; i++) {
-            if (staffs[i] == _staff) {
-                _found = true;
-                _staffIndex = i;
-                return;
-            }
-        }
+        _found = staffsInfo[_staff].wasRegistered;
+        _staffIndex = staffsInfo[_staff].id;
     }
 
     // ------------------------------------------------------------------------
@@ -338,8 +328,8 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     function getTotalStaffs() external view returns (uint256 _total) {
         _total = 0;
         for (uint256 i = 0; i < staffs.length; i++) {
-            // Staff was not removed before
-            if (staffs[i] != address(0) && staffsInfo[staffs[i]].wasRegistered == true) {
+            // Staff might not be removed before
+            if (staffs[i] != address(0) && staffsInfo[staffs[i]].wasRegistered) {
                 _total++;
             }
         }
@@ -372,8 +362,8 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         for (uint256 i = _startSearchingIndex; i < staffs.length; i++) {
             address staff = staffs[i];
 
-            // Staff was not removed before
-            if (staff != address(0) && staffsInfo[staff].wasRegistered == true) {
+            // Staff might not be removed before
+            if (staff != address(0) && staffsInfo[staff].wasRegistered) {
                 _endOfList = false;
                 _nextStartSearchingIndex = i + 1;
                 _staff = staff;
@@ -385,16 +375,16 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get a total number of the votes ('teamsVoted' array) made by the specified staff
+    // Get a total number of teams voted by the specified staff
     // ------------------------------------------------------------------------
-    function getTotalVotesByStaff(address _staff) external view returns (uint256 _total) {
+    function getTotalTeamsVotedByStaff(address _staff) external view returns (uint256 _total) {
         require(
             _staff != address(0),
             "'_staff' contains an invalid address."
         );
 
         require(
-            staffsInfo[_staff].wasRegistered == true,
+            staffsInfo[_staff].wasRegistered,
             "Cannot find the specified staff."
         );
 
@@ -402,7 +392,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get a team voting result (at the index of 'teamsVoted' array) made by the specified staff
+    // Get a voting result to a team pointed by _votingIndex committed by the specified staff
     // ------------------------------------------------------------------------
     function getVoteResultAtIndexByStaff(address _staff, uint256 _votingIndex) 
         external view
@@ -418,7 +408,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            staffsInfo[_staff].wasRegistered == true,
+            staffsInfo[_staff].wasRegistered,
             "Cannot find the specified staff."
         );
 
@@ -444,7 +434,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            staffsInfo[_staff].wasRegistered == true,
+            staffsInfo[_staff].wasRegistered,
             "Cannot find the specified staff."
         );
 
@@ -452,9 +442,16 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Allow a staff to give a vote to the specified team
+    // Allow a staff give a vote to the specified team
     // ------------------------------------------------------------------------
-    function commitToVote(address _staff, uint256 _votingWeight, string _teamName) external onlyVotingState onlyPizzaCoin {
+    function commitToVote(string _teamName, address _staff, uint256 _votingWeight) 
+        external onlyVotingState onlyPizzaCoin 
+    {
+        require(
+            _teamName.isNotEmpty(),
+            "'_teamName' might not be empty."
+        );
+
         require(
             _staff != address(0),
             "'_staff' contains an invalid address."
@@ -466,12 +463,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            _teamName.isEmpty() == false,
-            "'_teamName' might not be empty."
-        );
-
-        require(
-            staffsInfo[_staff].wasRegistered == true,
+            staffsInfo[_staff].wasRegistered,
             "Cannot find the specified staff."
         );
 
@@ -485,7 +477,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         // If staffsInfo[_staff].votesWeight[_teamName] > 0 is true, this implies that 
         // the staff was used to give a vote to the specified team previously
         if (staffsInfo[_staff].votesWeight[_teamName] == 0) {
-            // The staff has never been given a vote to the specified team before
+            // The staff has never given a vote to the specified team before
             // We, therefore, have to add a new team to the 'teamsVoted' array
             staffsInfo[_staff].teamsVoted.push(_teamName);
         }
