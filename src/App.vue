@@ -18,7 +18,7 @@
                 </a>
               </p>
               <p class="control" v-if="isLoggedIn">
-                <a class="bd-tw-button button">
+                <a class="bd-tw-button button" @click="startVote()">
                     Start/Stop Vote
                 </a>
               </p>
@@ -83,21 +83,34 @@ export default {
     teamname: '',
     account: null
   }),
+  async mounted () {
+  },
   computed: mapState('auth', ['isLoggedIn']),
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
     ...mapActions('team', ['creatTeam']),
     async onCreateTeam () {
-      // // console.log(this.teamname)
-      // await this.creatTeam(this.teamname)
-      // this.teamname = ''
-      // this.isComponentModalActive = false
-
-      await this.$pizzaCoin.createTeam(this.creatorName, this.teamname)
+      try {
+        this.isComponentModalActive = false
+        await this.$pizzaCoin.createTeam(this.creatorName, this.teamname)
+        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
+        this.creatorName = ''
+        this.teamname = ''
+      } catch (error) {
+        console.error(error)
+      }
     },
     onCancel () {
       this.teamname = ''
       this.isComponentModalActive = false
+    },
+    async startVote () {
+      console.log('start vote' + this.$pizzaCoin.account)
+      try {
+        await this.$pizzaCoin.startVoting(await this.$pizzaCoin.account)
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

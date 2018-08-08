@@ -29,12 +29,10 @@ export default {
     }
   },
   name: 'home',
-  // props: ['proposals'],
   computed: {
     ...mapState('team', ['teams'])
   },
   methods: {
-    // ...mapActions('team', ['getProposal'])
   },
   components: {
     ProposalCard

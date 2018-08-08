@@ -27,6 +27,9 @@ class PizzaCoin {
     this.player = new this.web3.eth.Contract(PizzaCoinPlayerAbi, this.pizzaCoinPlayerAddr)
 
     console.log(this.main.methods)
+    console.log(this.staff.methods)
+    console.log(this.team.methods)
+    console.log(this.player.methods)
   }
 
   async loadUserAddress () {
@@ -67,11 +70,6 @@ class PizzaCoin {
     console.log('totalTeams: ' + totalTeams + '\n')
     let data
     let dataTeams = []
-    // this.team.methods.getTotalPlayerInTeam(teamName)
-
-    // this.team.methods.getFirstFoundPlayerInTeam(index)
-    // this.player.methods.getPlayerName(address)
-
     let nextStartSearchingIndex = 0
     let endOfList, teamName, totalVoted
     while (true) {
@@ -88,12 +86,20 @@ class PizzaCoin {
       console.log('teamName: ' + teamName)
       console.log('totalVoted: ' + totalVoted + '\n')
 
-      data = await this.getPlayersProfile(teamName)
-      dataTeams.push({
-        name: teamName,
-        members: data
-      })
-      console.log('profile >> ' + JSON.stringify(data))
+      try {
+        data = {
+          member: await this.getPlayersProfile(teamName),
+          score: await this.getTotalVotersToTeam(teamName)
+        }
+        dataTeams.push({
+          name: teamName,
+          members: data.member,
+          score: data.score
+        })
+        console.log('profile >> ' + JSON.stringify(data))
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     console.log('dataTeams >>  ' + JSON.stringify(dataTeams))
@@ -130,6 +136,61 @@ class PizzaCoin {
     console.log('... succeeded')
   }
 
+  async getTotalVotersToTeam (teamName) {
+    let totalVoters = 0
+
+    console.log('\nQuerying for a total number of voters to the specific team --> "' + teamName + '" ...')
+    try {
+      totalVoters = await this.team.methods.getTotalVotersToTeam(teamName).call({})
+    } catch (error) {
+      console.error(error)
+    }
+    return totalVoters
+  }
+
+  async startVoting (projectDeployerAddr) {
+    let state
+
+    // Change all contracts' state from RegistrationLocked to Voting
+    console.log("\nChanging the contracts' state to Voting ...")
+    try {
+      await this.team.methods.startVoting().send({
+        from: projectDeployerAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+      console.log('... succeeded')
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      // Check the contracts' state
+      console.log("\nValidating the contracts' state ...")
+      state = await this.main.methods.getContractState().call({
+        from: projectDeployerAddr
+      })
+      console.log('... succeeded --> ' + state)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async voteTeam ({voterAddr, teamName, votingWeight}) {
+    console.log('\nVoting to a team -->  team: "' + teamName + '" weight: "' + votingWeight + '" form ' + voterAddr)
+    // Vote to a team
+    try {
+      await this.main.methods.voteTeam(teamName, parseInt(votingWeight)).send({
+        from: voterAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+      console.log('... succeeded voteTeam')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // ///////////////// //
   // ---- PLAYER ----  //
   // ///////////////// //
@@ -137,10 +198,6 @@ class PizzaCoin {
     let playerCount = await this.getPlayerCountInTeam(teamName)
     console.log(`playerCount: ${playerCount}`)
     let teams = []
-    // this.team.methods.getTotalPlayerInTeam(teamName)
-
-    // this.team.methods.getFirstFoundPlayerInTeam(teamName, index)
-    // this.player.methods.getPlayerName(address)
 
     let nextStartSearchingIndex = 0
     let endOfList, playerAddress

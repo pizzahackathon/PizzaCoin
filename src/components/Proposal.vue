@@ -81,8 +81,19 @@ export default {
   methods: {
     ...mapActions('team', ['addMember']),
     ...mapMutations('team', ['addScore']),
-    onVote: function (team) {
-      this.addScore(team)
+    async onVote ({name}) {
+      console.log('onVote --> ' + await name)
+      try {
+        const voteTeamData = {
+          voterAddr: this.userAddress,
+          teamName: name,
+          votingWeight: 1
+        }
+        await this.$pizzaCoin.voteTeam(voteTeamData)
+        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
+      } catch (error) {
+        console.error(error)
+      }
     },
     onJoin () {
       this.playerName = ''
@@ -93,7 +104,7 @@ export default {
       console.log('onAddPlayer --> ' + await name)
       console.log('playerName --> ' + this.playerName)
       const registerPlayerData = {
-        playerAddr: this.$pizzaCoin.account,
+        playerAddr: this.userAddress,
         playerName: this.playerName,
         teamName: name
       }
@@ -104,24 +115,26 @@ export default {
       } catch (error) {
         console.error(error)
       }
-
-      //   await this.addMember(user)
     },
     async loadPizzaCoinSymbol () {
-      this.pizzaCoinSymbol = await this.$pizzaCoin.main.methods.symbol().call()
-      this.userAddress = this.$pizzaCoin.account
+      try {
+        this.pizzaCoinSymbol = await this.$pizzaCoin.main.methods.symbol().call()
+        this.userAddress = await this.$pizzaCoin.account
+      } catch (error) {
+        console.log(error)
+      }
     },
     async removePlayer ({name}, {address}) {
       console.log(`removePlayer --> ${address} in team ${name}`)
-      // this.$store.dispatch('team/removePlayer', player)
       const removePlayerData = {
-        kickerAddr: this.$pizzaCoin.account,
+        kickerAddr: this.userAddress,
         playerAddr: address,
         teamName: name
       }
       try {
         const res = await this.$pizzaCoin.kickPlayer(removePlayerData)
         console.log(`After delete ->> ${res}`)
+        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       } catch (error) {
         console.error(error)
       }

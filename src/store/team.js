@@ -1,13 +1,8 @@
 // import API from '@/lib/API'
 
 const state = {
-  teams: []
-}
-
-const getters = {
-  teams (state) {
-    return state.teams
-  }
+  teams: [],
+  test: 'test'
 }
 
 const actions = {
@@ -24,6 +19,9 @@ const actions = {
   removePlayer (context, player) {
     console.log(`removePlayer --> ${player.address}`)
     context.commit('removePlayer', player)
+  },
+  voteTeam (context, teamname) {
+    console.log('voteTeam --> ' + teamname)
   }
 }
 
@@ -37,6 +35,9 @@ const mutations = {
     console.log('mutations --> getTeamsProfile')
         state.teams = teams;
         /* eslint-enable */
+  },
+  voteTeam (state, teamname) {
+
   },
   addScore (state, team) {
     // console.log(state.proposals.indexOf(members.groupId))
@@ -83,7 +84,6 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   actions,
   mutations
 }
