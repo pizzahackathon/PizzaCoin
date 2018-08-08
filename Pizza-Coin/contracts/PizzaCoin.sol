@@ -36,7 +36,7 @@ contract PizzaCoin is ERC20, Owned {
     event PlayerKicked();
     event FirstFoundPlayerInTeamKicked(uint256 _nextStartSearchingIndex);
     event TeamKicked();
-    event TeamVoted();
+    event TeamVoted(string _teamName, uint256 _totalVoted);
 
 
     // Token info
@@ -62,9 +62,8 @@ contract PizzaCoin is ERC20, Owned {
     // Constructor
     // ------------------------------------------------------------------------
     constructor(string _ownerName, uint256 _voterInitialTokens) public {
-
         require(
-            _ownerName.isEmpty() == false,
+            _ownerName.isNotEmpty(),
             "'_ownerName' might not be empty."
         );
 
@@ -89,7 +88,7 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Guarantee that msg.sender has not been registered before
+    // Guarantee that _user has not been registered before
     // ------------------------------------------------------------------------
     modifier notRegistered(address _user) {
         require(
@@ -101,12 +100,12 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Guarantee that msg.sender has been already registered
+    // Guarantee that msg.sender has already been registered
     // ------------------------------------------------------------------------
     modifier onlyRegistered {
         require(
-            PizzaCoinCodeLib2.isStaff(msg.sender, staffContract) == true ||
-            PizzaCoinCodeLib2.isPlayer(msg.sender, playerContract) == true,
+            PizzaCoinCodeLib2.isStaff(msg.sender, staffContract) ||
+            PizzaCoinCodeLib2.isPlayer(msg.sender, playerContract),
             "This address was not being registered."
         );
         _;
@@ -117,7 +116,7 @@ contract PizzaCoin is ERC20, Owned {
     // ------------------------------------------------------------------------
     modifier onlyStaff {
         require(
-            PizzaCoinCodeLib2.isStaff(msg.sender, staffContract) == true || msg.sender == owner,
+            PizzaCoinCodeLib2.isStaff(msg.sender, staffContract) || msg.sender == owner,
             "This address is not a staff."
         );
         _;
@@ -200,18 +199,21 @@ contract PizzaCoin is ERC20, Owned {
     // Allow a staff transfer the state from Initial to Registration
     // ------------------------------------------------------------------------
     function startRegistration() public onlyInitialState {
+        // isContractCompletelyInitialized() eventually checks if 
+        // the msg.sender is a real staff or not
         address staff = msg.sender;
 
-        // Allow only a staff transfer the state from Initial to Registration
-        // Revert a transaction if the contract does not get initialized completely
+        // Allow only a staff transfer the state from Initial to Registration and
+        // revert a transaction if the contract as well as its child contracts 
+        // do not get initialized completely
         PizzaCoinCodeLib.isContractCompletelyInitialized(
             staff, staffContract, playerContract, teamContract
         );
 
         state = State.Registration;
 
-        // The state of child contracts does not need to do transfer because 
-        // their state was set to Registration state once they were created
+        // The state of child contracts do not need to do transfer because 
+        // their state were set to Registration state once they were created
 
         emit StateChanged();
     }
@@ -223,7 +225,11 @@ contract PizzaCoin is ERC20, Owned {
         state = State.RegistrationLocked;
 
         // Transfer the state of child contracts
-        PizzaCoinCodeLib2.signalChildContractsToLockRegistration(staffContract, playerContract, teamContract);
+        PizzaCoinCodeLib2.signalChildContractsToLockRegistration(
+            staffContract, 
+            playerContract, 
+            teamContract
+        );
 
         emit StateChanged();
     }
@@ -235,7 +241,11 @@ contract PizzaCoin is ERC20, Owned {
         state = State.Voting;
 
         // Transfer the state of child contracts
-        PizzaCoinCodeLib2.signalChildContractsToVoting(staffContract, playerContract, teamContract);
+        PizzaCoinCodeLib2.signalChildContractsToStartVoting(
+            staffContract, 
+            playerContract, 
+            teamContract
+        );
 
         emit StateChanged();
     }
@@ -247,7 +257,11 @@ contract PizzaCoin is ERC20, Owned {
         state = State.VotingFinished;
 
         // Transfer the state of child contracts
-        PizzaCoinCodeLib2.signalChildContractsToStopVoting(staffContract, playerContract, teamContract);
+        PizzaCoinCodeLib2.signalChildContractsToStopVoting(
+            staffContract, 
+            playerContract, 
+            teamContract
+        );
 
         emit StateChanged();
     }
@@ -264,28 +278,13 @@ contract PizzaCoin is ERC20, Owned {
         // Create a staff contract
         staffContract = PizzaCoinStaffDeployer.deployContract(voterInitialTokens);
 
-        // Register an owner as a staff. We cannot use calling to registerStaff() 
-        // because the contract state is Initial.
+        // Register an owner as a staff. Note that, we cannot make a call to 
+        // PizzaCoin.registerStaff() directly at this moment because 
+        // the contract state is Initial.
         PizzaCoinCodeLib.registerStaff(owner, ownerName, staffContract);
 
         emit ChildContractCreated(staffContract);
         return staffContract;
-    }
-
-    // ------------------------------------------------------------------------
-    // Register a new staff
-    // ------------------------------------------------------------------------
-    function registerStaff(address _newStaff, string _newStaffName) public onlyRegistrationState onlyStaff notRegistered(_newStaff) {
-        PizzaCoinCodeLib.registerStaff(_newStaff, _newStaffName, staffContract);
-        emit StaffRegistered();
-    }
-
-    // ------------------------------------------------------------------------
-    // Remove a specific staff
-    // ------------------------------------------------------------------------
-    function kickStaff(address _staff) public onlyRegistrationState onlyOwner {
-        PizzaCoinCodeLib.kickStaff(_staff, staffContract);
-        emit StaffKicked();
     }
 
     // ------------------------------------------------------------------------
@@ -305,14 +304,6 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Register a player
-    // ------------------------------------------------------------------------
-    function registerPlayer(string _playerName, string _teamName) public onlyRegistrationState notRegistered(msg.sender) {
-        PizzaCoinCodeLib.registerPlayer(_playerName, _teamName, playerContract, teamContract);
-        emit PlayerRegistered();
-    }
-
-    // ------------------------------------------------------------------------
     // Create a team contract
     // ------------------------------------------------------------------------
     function createTeamContract() public onlyInitialState onlyOwner returns (address _contract) {
@@ -329,56 +320,93 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
+    // Register a new staff
+    // ------------------------------------------------------------------------
+    function registerStaff(address _newStaff, string _newStaffName) 
+        public onlyRegistrationState onlyStaff notRegistered(_newStaff) 
+    {
+        PizzaCoinCodeLib.registerStaff(_newStaff, _newStaffName, staffContract);
+        emit StaffRegistered();
+    }
+
+    // ------------------------------------------------------------------------
+    // Remove a specific staff
+    // ------------------------------------------------------------------------
+    function kickStaff(address _staff) public onlyRegistrationState onlyOwner {
+        PizzaCoinCodeLib.kickStaff(_staff, staffContract);
+        emit StaffKicked();
+    }
+
+    // ------------------------------------------------------------------------
     // Team leader creates a team
     // ------------------------------------------------------------------------
-    function createTeam(string _teamName, string _creatorName) public onlyRegistrationState notRegistered(msg.sender) {
+    function createTeam(string _teamName, string _creatorName) 
+        public onlyRegistrationState notRegistered(msg.sender) 
+    {
         PizzaCoinCodeLib.createTeam(_teamName, _creatorName, playerContract, teamContract);
         emit TeamCreated();
-    }
-
-    // ------------------------------------------------------------------------
-    // Remove the first found player in a particular team 
-    // (start searching at _startSearchingIndex)
-    // ------------------------------------------------------------------------
-    function kickFirstFoundPlayerInTeam(string _teamName, uint256 _startSearchingIndex) 
-        public onlyRegistrationState onlyStaff returns (uint256 _nextStartSearchingIndex) {
-
-        _nextStartSearchingIndex = PizzaCoinCodeLib.kickFirstFoundPlayerInTeam(
-            _teamName, _startSearchingIndex, staffContract, playerContract, teamContract);
-
-        emit PlayerKicked();
-        emit FirstFoundPlayerInTeamKicked(_nextStartSearchingIndex);
-    }
-
-    // ------------------------------------------------------------------------
-    // Remove a specific player from a particular team
-    // ------------------------------------------------------------------------
-    function kickPlayer(address _player, string _teamName) public onlyRegistrationState onlyStaff {
-        PizzaCoinCodeLib.kickPlayer(_player, _teamName, staffContract, playerContract, teamContract);
-        emit PlayerKicked();
     }
 
     // ------------------------------------------------------------------------
     // Remove a specific team (the team must be empty of players)
     // ------------------------------------------------------------------------
     function kickTeam(string _teamName) public onlyRegistrationState onlyStaff {
-        PizzaCoinCodeLib.kickTeam(_teamName, staffContract, teamContract);
+        PizzaCoinCodeLib.kickTeam(_teamName, teamContract);
         emit TeamKicked();
+    }
+
+    // ------------------------------------------------------------------------
+    // Register a player
+    // ------------------------------------------------------------------------
+    function registerPlayer(string _playerName, string _teamName) 
+        public onlyRegistrationState notRegistered(msg.sender) 
+    {
+        PizzaCoinCodeLib.registerPlayer(_playerName, _teamName, playerContract, teamContract);
+        emit PlayerRegistered();
+    }
+
+    // ------------------------------------------------------------------------
+    // Remove a specific player from a particular team
+    // ------------------------------------------------------------------------
+    function kickPlayer(address _player, string _teamName) public onlyRegistrationState onlyStaff {
+        PizzaCoinCodeLib.kickPlayer(_player, _teamName, playerContract, teamContract);
+        emit PlayerKicked();
+    }
+
+    // ------------------------------------------------------------------------
+    // Remove the first found player of a particular team 
+    // (start searching at _startSearchingIndex)
+    // ------------------------------------------------------------------------
+    function kickFirstFoundPlayerInTeam(string _teamName, uint256 _startSearchingIndex) 
+        public onlyRegistrationState onlyStaff returns (uint256 _nextStartSearchingIndex) {
+
+        _nextStartSearchingIndex = PizzaCoinCodeLib.kickFirstFoundPlayerInTeam(
+            _teamName, _startSearchingIndex, playerContract, teamContract);
+
+        emit PlayerKicked();
+        emit FirstFoundPlayerInTeamKicked(_nextStartSearchingIndex);
     }
 
     // ------------------------------------------------------------------------
     // Allow any staff or any player in other different teams to vote to a team
     // ------------------------------------------------------------------------
     function voteTeam(string _teamName, uint256 _votingWeight) public onlyVotingState onlyRegistered {
-        PizzaCoinCodeLib.voteTeam(_teamName, _votingWeight, staffContract, playerContract, teamContract);
-        emit TeamVoted();
+        uint256 totalVoted;
+        totalVoted = PizzaCoinCodeLib.voteTeam(
+            _teamName, 
+            _votingWeight, 
+            staffContract, 
+            playerContract, 
+            teamContract
+        );
+        emit TeamVoted(_teamName, totalVoted);
     }
 
 
     /*
     *
-    * This contract partially complies with ERC token standard #20 interface.
-    * That is, only the balanceOf() and totalSupply() will be used.
+    * This contract is partially compatible with ERC token standard #20 interface.
+    * That is, only the balanceOf() and totalSupply() would be implemented.
     *
     */
 
@@ -392,43 +420,39 @@ contract PizzaCoin is ERC20, Owned {
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function balanceOf(address tokenOwner) public view returns (uint256 balance) {
-        return PizzaCoinCodeLib2.balanceOf(tokenOwner, staffContract, playerContract);
+    function balanceOf(address _tokenOwner) public view returns (uint256 _balance) {
+        return PizzaCoinCodeLib2.balanceOf(_tokenOwner, staffContract, playerContract);
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function allowance(address tokenOwner, address spender) public view returns (uint256) {
-        
-        // This function is never used
-        PizzaCoinCodeLib2.allowance(tokenOwner, spender);
+    function allowance(address _tokenOwner, address _spender) public view returns (uint256) {
+        // This function does nothing, just revert a transaction
+        PizzaCoinCodeLib2.allowance(_tokenOwner, _spender);
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function transfer(address to, uint256 tokens) public returns (bool) {
-
-        // This function is never used
-        PizzaCoinCodeLib2.transfer(to, tokens);
+    function transfer(address _to, uint256 _tokens) public returns (bool) {
+        // This function does nothing, just revert a transaction
+        PizzaCoinCodeLib2.transfer(_to, _tokens);
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function approve(address spender, uint256 tokens) public returns (bool) {
-        
-        // This function is never used
-        PizzaCoinCodeLib2.approve(spender, tokens);
+    function approve(address _spender, uint256 _tokens) public returns (bool) {
+        // This function does nothing, just revert a transaction
+        PizzaCoinCodeLib2.approve(_spender, _tokens);
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function transferFrom(address from, address to, uint256 tokens) public returns (bool) {
-        
-        // This function is never used
-        PizzaCoinCodeLib2.transferFrom(from, to, tokens);
+    function transferFrom(address _from, address _to, uint256 _tokens) public returns (bool) {
+        // This function does nothing, just revert a transaction
+        PizzaCoinCodeLib2.transferFrom(_from, _to, _tokens);
     }
 }

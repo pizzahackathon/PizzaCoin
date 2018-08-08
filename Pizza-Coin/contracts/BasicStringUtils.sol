@@ -22,8 +22,8 @@ library BasicStringUtils {
     // ------------------------------------------------------------------------
     // Determine if the string is empty or not
     // ------------------------------------------------------------------------
-    function isEmpty(string self) internal pure returns (bool bEmpty) {
+    function isNotEmpty(string self) internal pure returns (bool bEmpty) {
         bytes memory selfInBytes = bytes(self);
-        return selfInBytes.length == 0;
+        return selfInBytes.length != 0;
     }
 }
