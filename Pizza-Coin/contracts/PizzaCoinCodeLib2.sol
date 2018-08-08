@@ -25,7 +25,7 @@ library PizzaCoinCodeLib2 {
     function isStaff(address _user, address _staffContract) public view returns (bool bStaff) {
         assert(_staffContract != address(0));
 
-        // Get a contract instance from the deployed addresses
+        // Get a contract instance from the deployed address
         IStaffContract staffContractInstance = IStaffContract(_staffContract);
 
         return staffContractInstance.isStaff(_user);
@@ -37,7 +37,7 @@ library PizzaCoinCodeLib2 {
     function isPlayer(address _user, address _playerContract) public view returns (bool bPlayer) {
         assert(_playerContract != address(0));
 
-        // Get a contract instance from the deployed addresses
+        // Get a contract instance from the deployed address
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
 
         return playerContractInstance.isPlayer(_user);
@@ -71,7 +71,7 @@ library PizzaCoinCodeLib2 {
     // ------------------------------------------------------------------------
     // Transfer the state of child contracts from RegistrationLocked to Voting state
     // ------------------------------------------------------------------------
-    function signalChildContractsToVoting(
+    function signalChildContractsToStartVoting(
         address _staffContract,
         address _playerContract,
         address _teamContract
@@ -120,15 +120,17 @@ library PizzaCoinCodeLib2 {
 
     /*
     *
-    * Our PizzaCoin contract partially complies with ERC token standard #20 interface.
-    * That is, only the balanceOf() and totalSupply() will be used.
+    * This contract is partially compatible with ERC token standard #20 interface.
+    * That is, only the balanceOf() and totalSupply() would be implemented.
     *
     */
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function totalSupply(address _staffContract, address _playerContract) public view returns (uint256 _totalSupply) {
+    function totalSupply(address _staffContract, address _playerContract) 
+        public view returns (uint256 _totalSupply) 
+    {
         assert(_staffContract != address(0));
         assert(_playerContract != address(0));
 
@@ -145,12 +147,12 @@ library PizzaCoinCodeLib2 {
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
     function balanceOf(
-        address tokenOwner, 
+        address _tokenOwner, 
         address _staffContract, 
         address _playerContract
     ) 
-    public view 
-    returns (uint256 balance) 
+        public view 
+        returns (uint256 _balance) 
     {
         assert(_staffContract != address(0));
         assert(_playerContract != address(0));
@@ -159,11 +161,11 @@ library PizzaCoinCodeLib2 {
         IStaffContract staffContractInstance = IStaffContract(_staffContract);
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
 
-        if (staffContractInstance.isStaff(tokenOwner)) {
-            return staffContractInstance.getTokenBalance(tokenOwner);
+        if (staffContractInstance.isStaff(_tokenOwner)) {
+            return staffContractInstance.getTokenBalance(_tokenOwner);
         }
-        else if (playerContractInstance.isPlayer(tokenOwner)) {
-            return playerContractInstance.getTokenBalance(tokenOwner);
+        else if (playerContractInstance.isPlayer(_tokenOwner)) {
+            return playerContractInstance.getTokenBalance(_tokenOwner);
         }
         else {
             revert("The specified address was not being registered.");
@@ -173,49 +175,49 @@ library PizzaCoinCodeLib2 {
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function allowance(address tokenOwner, address spender) public pure returns (uint256) {
-        // This function is never used
+    function allowance(address _tokenOwner, address _spender) public pure returns (uint256) {
+        // This function does nothing, just revert a transaction
         revert("We don't implement this function.");
 
         // These statements do nothing, just use to stop compilation warnings
-        tokenOwner == tokenOwner;
-        spender == spender;
+        _tokenOwner == _tokenOwner;
+        _spender == _spender;
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function transfer(address to, uint256 tokens) public pure returns (bool) {
-        // This function is never used
+    function transfer(address _to, uint256 _tokens) public pure returns (bool) {
+        // This function does nothing, just revert a transaction
         revert("We don't implement this function.");
 
         // These statements do nothing, just use to stop compilation warnings
-        to == to;
-        tokens == tokens;
+        _to == _to;
+        _tokens == _tokens;
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function approve(address spender, uint256 tokens) public pure returns (bool) {
-        // This function is never used
+    function approve(address _spender, uint256 _tokens) public pure returns (bool) {
+        // This function does nothing, just revert a transaction
         revert("We don't implement this function.");
 
         // These statements do nothing, just use to stop compilation warnings
-        spender == spender;
-        tokens == tokens;
+        _spender == _spender;
+        _tokens == _tokens;
     }
 
     // ------------------------------------------------------------------------
     // Standard function of ERC token standard #20
     // ------------------------------------------------------------------------
-    function transferFrom(address from, address to, uint256 tokens) public pure returns (bool) {
-        // This function is never used
+    function transferFrom(address _from, address _to, uint256 _tokens) public pure returns (bool) {
+        // This function does nothing, just revert a transaction
         revert("We don't implement this function.");
 
         // These statements do nothing, just use to stop compilation warnings
-        from == from;
-        to == to;
-        tokens == tokens;
+        _from == _from;
+        _to == _to;
+        _tokens == _tokens;
     }
 }

@@ -1,5 +1,6 @@
 <template>
     <div class="column is-4">
+        <!-- <vcl-instagram v-if="!team"></vcl-instagram> -->
         <div class="box">
             <article class="media">
                 <div class="media-content">

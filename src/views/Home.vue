@@ -4,11 +4,11 @@
         <div class="is-mobile">
             <div>
                 <div class="columns is-multiline">
-                        <ProposalCard
-                           v-for="team in teams"
-                           :key="team.name"
-                           :team="team"
-                          />
+                    <ProposalCard
+                        v-for="team in teams"
+                        :key="team.name"
+                        :team="team"
+                      />
                 </div>
             </div>
         </div>
@@ -29,15 +29,16 @@ export default {
     }
   },
   name: 'home',
-  // props: ['proposals'],
   computed: {
     ...mapState('team', ['teams'])
   },
   methods: {
-    // ...mapActions('team', ['getProposal'])
   },
   components: {
     ProposalCard
+  },
+  async created () {
+    console.log('mounted' + this.teams)
   },
   async mounted () {
     try {
