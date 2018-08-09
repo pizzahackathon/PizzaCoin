@@ -1,409 +1,428 @@
 [
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "payable": true,
-      "stateMutability": "payable",
-      "type": "fallback"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "lockRegistration",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "startVoting",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "stopVoting",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "doesTeamExist",
-      "outputs": [
-        {
-          "name": "bTeamExist",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "createTeam",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_player",
-          "type": "address"
-        },
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "registerPlayerToTeam",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "kickTeam",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_player",
-          "type": "address"
-        },
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "kickPlayerOutOffTeam",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "getArrayLengthOfPlayersInTeam",
-      "outputs": [
-        {
-          "name": "_length",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "getTotalPlayersInTeam",
-      "outputs": [
-        {
-          "name": "_total",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        },
-        {
-          "name": "_startSearchingIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getFirstFoundPlayerInTeam",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_nextStartSearchingIndex",
-          "type": "uint256"
-        },
-        {
-          "name": "_player",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        },
-        {
-          "name": "_playerIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPlayerInTeamAtIndex",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_player",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getTotalTeams",
-      "outputs": [
-        {
-          "name": "_total",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_startSearchingIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getFirstFoundTeamInfo",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_nextStartSearchingIndex",
-          "type": "uint256"
-        },
-        {
-          "name": "_teamName",
-          "type": "string"
-        },
-        {
-          "name": "_totalVoted",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "getTotalVotersToTeam",
-      "outputs": [
-        {
-          "name": "_total",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        },
-        {
-          "name": "_voterIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getVoteResultAtIndexToTeam",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_voter",
-          "type": "address"
-        },
-        {
-          "name": "_voteWeight",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_teamName",
-          "type": "string"
-        },
-        {
-          "name": "_voter",
-          "type": "address"
-        },
-        {
-          "name": "_votingWeight",
-          "type": "uint256"
-        }
-      ],
-      "name": "voteToTeam",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getMaxTeamVotingPoints",
-      "outputs": [
-        {
-          "name": "_maxTeamVotingPoints",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getTotalTeamWinners",
-      "outputs": [
-        {
-          "name": "_total",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_startSearchingIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getFirstFoundTeamWinner",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_nextStartSearchingIndex",
-          "type": "uint256"
-        },
-        {
-          "name": "_teamName",
-          "type": "string"
-        },
-        {
-          "name": "_totalVoted",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    }
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "lockRegistration",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "startVoting",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "stopVoting",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "doesTeamExist",
+    "outputs": [
+      {
+        "name": "bTeamExist",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "createTeam",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_player",
+        "type": "address"
+      },
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "registerPlayerToTeam",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "kickTeam",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_player",
+        "type": "address"
+      },
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "kickPlayerOutOffTeam",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "getArrayLengthOfPlayersInTeam",
+    "outputs": [
+      {
+        "name": "_length",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "getTotalPlayersInTeam",
+    "outputs": [
+      {
+        "name": "_total",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_startSearchingIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFirstFoundPlayerInTeam",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_nextStartSearchingIndex",
+        "type": "uint256"
+      },
+      {
+        "name": "_player",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_playerIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPlayerInTeamAtIndex",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_player",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getTotalTeams",
+    "outputs": [
+      {
+        "name": "_total",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_startSearchingIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFirstFoundTeamInfo",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_nextStartSearchingIndex",
+        "type": "uint256"
+      },
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_totalVoted",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "getVotingPointForTeam",
+    "outputs": [
+      {
+        "name": "_totalVoted",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      }
+    ],
+    "name": "getTotalVotersToTeam",
+    "outputs": [
+      {
+        "name": "_total",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_voterIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getVoteResultAtIndexToTeam",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_voter",
+        "type": "address"
+      },
+      {
+        "name": "_voteWeight",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_voter",
+        "type": "address"
+      },
+      {
+        "name": "_votingWeight",
+        "type": "uint256"
+      }
+    ],
+    "name": "voteToTeam",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getMaxTeamVotingPoint",
+    "outputs": [
+      {
+        "name": "_maxTeamVotingPoint",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getTotalWinnerTeams",
+    "outputs": [
+      {
+        "name": "_total",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_startSearchingIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFirstFoundWinnerTeam",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_nextStartSearchingIndex",
+        "type": "uint256"
+      },
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_totalVoted",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
 ]

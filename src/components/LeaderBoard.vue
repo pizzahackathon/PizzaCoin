@@ -18,13 +18,13 @@ export default {
       pizzaCoin: null
     }
   },
-  async mounted () {
+  mounted () {
     this.createWeb3()
     this.createChart('leader-board-chart', this.leaderBoardData)
     this.subscribeEvent()
   },
   methods: {
-    async createWeb3 () {
+    createWeb3 () {
       var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/_ws'))
       // var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/v3/4e81201d04f84222a663fa0efe57270e'))
       this.pizzaCoin = new web3.eth.Contract(

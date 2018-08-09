@@ -1,283 +1,283 @@
 [
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "name": "_voterInitialTokens",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "payable": true,
-      "stateMutability": "payable",
-      "type": "fallback"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "lockRegistration",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "startVoting",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [],
-      "name": "stopVoting",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getTotalSupply",
-      "outputs": [
-        {
-          "name": "_totalSupply",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_user",
-          "type": "address"
-        }
-      ],
-      "name": "isStaff",
-      "outputs": [
-        {
-          "name": "bStaff",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        }
-      ],
-      "name": "getStaffName",
-      "outputs": [
-        {
-          "name": "_name",
-          "type": "string"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        },
-        {
-          "name": "_staffName",
-          "type": "string"
-        }
-      ],
-      "name": "registerStaff",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        }
-      ],
-      "name": "kickStaff",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "getTotalStaffs",
-      "outputs": [
-        {
-          "name": "_total",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_startSearchingIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getFirstFoundStaffInfo",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_nextStartSearchingIndex",
-          "type": "uint256"
-        },
-        {
-          "name": "_staff",
-          "type": "address"
-        },
-        {
-          "name": "_name",
-          "type": "string"
-        },
-        {
-          "name": "_tokensBalance",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        }
-      ],
-      "name": "getTotalVotesByStaff",
-      "outputs": [
-        {
-          "name": "_total",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        },
-        {
-          "name": "_votingIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "getVoteResultAtIndexByStaff",
-      "outputs": [
-        {
-          "name": "_endOfList",
-          "type": "bool"
-        },
-        {
-          "name": "_team",
-          "type": "string"
-        },
-        {
-          "name": "_voteWeight",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        }
-      ],
-      "name": "getTokenBalance",
-      "outputs": [
-        {
-          "name": "_tokenBalance",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_staff",
-          "type": "address"
-        },
-        {
-          "name": "_votingWeight",
-          "type": "uint256"
-        },
-        {
-          "name": "_teamName",
-          "type": "string"
-        }
-      ],
-      "name": "commitToVote",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_voterInitialTokens",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "lockRegistration",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "startVoting",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "stopVoting",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getTotalSupply",
+    "outputs": [
+      {
+        "name": "_totalSupply",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "isStaff",
+    "outputs": [
+      {
+        "name": "_bStaff",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_staff",
+        "type": "address"
+      }
+    ],
+    "name": "getStaffName",
+    "outputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_staff",
+        "type": "address"
+      },
+      {
+        "name": "_staffName",
+        "type": "string"
+      }
+    ],
+    "name": "registerStaff",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_staff",
+        "type": "address"
+      }
+    ],
+    "name": "kickStaff",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getTotalStaffs",
+    "outputs": [
+      {
+        "name": "_total",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_startSearchingIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFirstFoundStaffInfo",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_nextStartSearchingIndex",
+        "type": "uint256"
+      },
+      {
+        "name": "_staff",
+        "type": "address"
+      },
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_tokensBalance",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_staff",
+        "type": "address"
+      }
+    ],
+    "name": "getTotalTeamsVotedByStaff",
+    "outputs": [
+      {
+        "name": "_total",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_staff",
+        "type": "address"
+      },
+      {
+        "name": "_votingIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getVoteResultAtIndexByStaff",
+    "outputs": [
+      {
+        "name": "_endOfList",
+        "type": "bool"
+      },
+      {
+        "name": "_team",
+        "type": "string"
+      },
+      {
+        "name": "_voteWeight",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_staff",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenBalance",
+    "outputs": [
+      {
+        "name": "_tokenBalance",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_teamName",
+        "type": "string"
+      },
+      {
+        "name": "_staff",
+        "type": "address"
+      },
+      {
+        "name": "_votingWeight",
+        "type": "uint256"
+      }
+    ],
+    "name": "commitToVote",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ]
