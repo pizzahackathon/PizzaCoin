@@ -121,7 +121,12 @@ export default {
       }
     },
     async stopVote () {
-
+      console.log('stop vote' + this.$pizzaCoin.account)
+      try {
+        await this.$pizzaCoin.stopVoting(await this.$pizzaCoin.account)
+      } catch (error) {
+        console.error(error)
+      }
     },
     async lockRegistration () {
       try {
