@@ -1,4 +1,4 @@
-# Pizza-Coin used for the 1st Thailand blockchain hackathon (Pizza Hackathon 2018)
+# Pizza Coin developed for the 1st Thailand's blockchain hackathon (Pizza Hackathon 2018)
 
 ## To compile PizzaCoin contract and its dependencies
 ```
