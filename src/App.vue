@@ -11,7 +11,7 @@
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <a class="bd-tw-button button">Leader board</a>
+            <a href="/leader-board" class="bd-tw-button button">Leader board</a>
           </div>
         </div>
         <div class="navbar-end">
