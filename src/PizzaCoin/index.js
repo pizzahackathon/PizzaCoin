@@ -12,10 +12,10 @@ class PizzaCoin {
     }
 
     this.web3 = new Web3(window.web3.currentProvider)
-    this.pizzaCoinAddr = '0xe9c5c311c9fed290fcc246c93877292d525dc528'
-    this.pizzaCoinStaffAddr = '0x31B82DD3eff8DA9FFC219A19a3506a9bF8D594d9'
-    this.pizzaCoinTeamAddr = '0x50f2790E368745EcA659836A685875d19fBf2019'
-    this.pizzaCoinPlayerAddr = '0x0d1c4B71fD15C56eB3E2aDEe030f9Dba55129376'
+    this.pizzaCoinAddr = '0xa549dc3136f369281d42d25d33f4f1df9b2416e5'
+    this.pizzaCoinStaffAddr = '0x04c9cbbAfa8b632A2De409AbEbf260227Ba0D4Ee'
+    this.pizzaCoinTeamAddr = '0xC3557980171116C3c67127CD4b2521F4e731c8f6'
+    this.pizzaCoinPlayerAddr = '0x27bA426a96d78deB8491EA20A6249Ba30Cfa3910'
 
     this.loadUserAddress().then(account => {
       this.account = account
