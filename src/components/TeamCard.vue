@@ -12,7 +12,7 @@
                         <br>
                         <hr>
                         <div>
-                            <Proposal
+                            <TeamProfile
                                 :team="team"
                             />
                         </div>
@@ -24,13 +24,13 @@
 </template>
 
 <script>
-import Proposal from '@/components/Proposal.vue'
+import TeamProfile from '@/components/TeamProfile.vue'
 
 export default {
-  name: 'proposalcard',
+  name: 'TeamProfileCard',
   props: ['team'],
   components: {
-    Proposal
+    TeamProfile
   }
 }
 </script>

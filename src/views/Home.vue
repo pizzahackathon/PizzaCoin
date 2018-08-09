@@ -4,7 +4,7 @@
         <div class="is-mobile">
             <div>
                 <div class="columns is-multiline">
-                    <ProposalCard
+                    <TeamCard
                         v-for="team in teams"
                         :key="team.name"
                         :team="team"
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import ProposalCard from '@/components/ProposalCard.vue'
+import TeamCard from '@/components/TeamCard.vue'
 import { mapState } from 'vuex'
 
 export default {
@@ -35,7 +35,7 @@ export default {
   methods: {
   },
   components: {
-    ProposalCard
+    TeamCard
   },
   async created () {
     console.log('mounted' + this.teams)
