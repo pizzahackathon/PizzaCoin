@@ -154,7 +154,35 @@ class PizzaCoin {
     // Change all contracts' state from RegistrationLocked to Voting
     console.log("\nChanging the contracts' state to Voting ...")
     try {
-      await this.team.methods.startVoting().send({
+      await this.staff.methods.startVoting().send({
+        from: projectDeployerAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+      console.log('... succeeded')
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      // Check the contracts' state
+      console.log("\nValidating the contracts' state ...")
+      state = await this.main.methods.getContractState().call({
+        from: projectDeployerAddr
+      })
+      console.log('... succeeded --> ' + state)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async stopVoting (projectDeployerAddr) {
+    let state
+
+    // Change all contracts' state from RegistrationLocked to Voting
+    console.log("\nChanging the contracts' state to Voting ...")
+    try {
+      await this.staff.methods.stopVoting().send({
         from: projectDeployerAddr,
         gas: 6500000,
         gasPrice: 10000000000
@@ -293,6 +321,18 @@ class PizzaCoin {
     console.log(`dddIs >> ${isStaff}`)
 
     return isStaff
+  }
+  async lockRegistration (projectDeployerAddr) {
+    console.log('lockRegis')
+    try {
+      await this.staff.methods.lockRegistration().send({
+        from: projectDeployerAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 
