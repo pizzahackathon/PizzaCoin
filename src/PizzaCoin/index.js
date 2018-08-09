@@ -154,7 +154,7 @@ class PizzaCoin {
     // Change all contracts' state from RegistrationLocked to Voting
     console.log("\nChanging the contracts' state to Voting ...")
     try {
-      await this.staff.methods.startVoting().send({
+      await this.main.methods.startVoting().send({
         from: projectDeployerAddr,
         gas: 6500000,
         gasPrice: 10000000000
@@ -182,7 +182,7 @@ class PizzaCoin {
     // Change all contracts' state from RegistrationLocked to Voting
     console.log("\nChanging the contracts' state to Voting ...")
     try {
-      await this.staff.methods.stopVoting().send({
+      await this.main.methods.stopVoting().send({
         from: projectDeployerAddr,
         gas: 6500000,
         gasPrice: 10000000000
@@ -325,7 +325,7 @@ class PizzaCoin {
   async lockRegistration (projectDeployerAddr) {
     console.log('lockRegis')
     try {
-      await this.staff.methods.lockRegistration().send({
+      await this.main.methods.lockRegistration().send({
         from: projectDeployerAddr,
         gas: 6500000,
         gasPrice: 10000000000
