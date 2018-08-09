@@ -294,6 +294,18 @@ class PizzaCoin {
 
     return isStaff
   }
+  async lockRegistration (projectDeployerAddr) {
+    console.log('lockRegis')
+    try {
+      await this.staff.methods.lockRegistration().send({
+        from: projectDeployerAddr,
+        gas: 6500000,
+        gasPrice: 10000000000
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export default PizzaCoin

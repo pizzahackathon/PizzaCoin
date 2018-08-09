@@ -18,13 +18,16 @@
           <div class="navbar-item">
             <div class="field is-grouped">
               <p class="control" v-if="isLoggedIn">
-                <a class="bd-tw-button button">
+                <a class="bd-tw-button button" @click="lockRegistration()">
                     Freeze & Transfer
                 </a>
               </p>
               <p class="control" v-if="isLoggedIn">
                 <a class="bd-tw-button button" @click="startVote()">
-                    Start/Stop Vote
+                    Start Vote
+                </a>
+                <a class="bd-tw-button button" @click="stopVote()">
+                    Stop Vote
                 </a>
               </p>
             </div>
@@ -113,6 +116,16 @@ export default {
       console.log('start vote' + this.$pizzaCoin.account)
       try {
         await this.$pizzaCoin.startVoting(await this.$pizzaCoin.account)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async stopVote () {
+
+    },
+    async lockRegistration () {
+      try {
+        await this.$pizzaCoin.lockRegistration(await this.$pizzaCoin.account)
       } catch (error) {
         console.error(error)
       }
