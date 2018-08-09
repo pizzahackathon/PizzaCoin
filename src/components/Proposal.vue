@@ -49,15 +49,6 @@
                 required>
             </b-input>
         </form>
-
-        <h2>Pizza Coin</h2>
-        <div>
-          <label>Symbol </label>
-          {{ pizzaCoinSymbol }}
-          <br>
-          <label>Address </label>
-          {{ userAddress }}
-        </div>
     </div>
 </template>
 <script>
