@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 // import PizzaCoinAbi from '../abi/PizzaCoinAbi'
-import PizzaCoinAbi from '../abi/pizzaCoinAbi.json'
+import PizzaCoinAbi from '../abi/PizzaCoinAbi.json'
 import PizzaCoinStaffAbi from '../abi/PizzaCoinStaffAbi'
 import PizzaCoinTeamAbi from '../abi/PizzaCoinTeamAbi'
 import PizzaCoinPlayerAbi from '../abi/PizzaCoinPlayerAbi'
