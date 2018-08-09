@@ -154,7 +154,7 @@ class PizzaCoin {
     // Change all contracts' state from RegistrationLocked to Voting
     console.log("\nChanging the contracts' state to Voting ...")
     try {
-      await this.team.methods.startVoting().send({
+      await this.staff.methods.startVoting().send({
         from: projectDeployerAddr,
         gas: 6500000,
         gasPrice: 10000000000
