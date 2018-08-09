@@ -9,12 +9,12 @@
 'use strict';
 
 // Import libraries
-var Web3               = require('web3'),
-    PizzaCoinJson      = require('../build/contracts/PizzaCoin.json'),
-    PizzaCoinStaffJson = require('../build/contracts/PizzaCoinStaff.json'),
+var Web3                = require('web3'),
+    PizzaCoinJson       = require('../build/contracts/PizzaCoin.json'),
+    PizzaCoinStaffJson  = require('../build/contracts/PizzaCoinStaff.json'),
     PizzaCoinPlayerJson = require('../build/contracts/PizzaCoinPlayer.json'),
-    PizzaCoinTeamJson = require('../build/contracts/PizzaCoinTeam.json'),
-    pe = require('parse-error');
+    PizzaCoinTeamJson   = require('../build/contracts/PizzaCoinTeam.json'),
+    pe                  = require('parse-error');
 
 var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:7545'));    // Ganache
 //var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'));  // Rinkeby
@@ -28,16 +28,6 @@ var PizzaCoin = new web3.eth.Contract(
 );
 
 main();
-
-function callContractFunction(contractFunction) {
-    return contractFunction
-        .then(receipt => {
-            return [null, receipt];
-        })
-        .catch(err => {
-            return [pe(err), null];
-        });
-}
 
 async function main() {
     let ethAccounts = await web3.eth.getAccounts();
@@ -184,7 +174,7 @@ async function main() {
             console.log('totalVoted: ' + totalVoted + '\n');
         }
 
-        // Unsubscribes the event subscription (this does not work!!)
+        // Unsubscribe to 'TeamVoted' event (this is not working??)
         unsubscribeEvent(subscription);
     }
     catch (err) {
@@ -213,7 +203,7 @@ function subscribeEvent() {
 }
 
 function unsubscribeEvent(subscription) {
-    // Unsubscribes the event subscription (this does not work!!)
+    // Unsubscribes the event subscription (this is not working??)
     subscription.unsubscribe((err, success) => {
         if (err) {
             throw new Error(err);
@@ -648,4 +638,14 @@ async function initContracts(projectDeployerAddr) {
     console.log('... succeeded');
 
     return [staffContractAddr, playerContractAddr, teamContractAddr];
+}
+
+function callContractFunction(contractFunction) {
+    return contractFunction
+        .then(receipt => {
+            return [null, receipt];
+        })
+        .catch(err => {
+            return [pe(err), null];
+        });
 }
