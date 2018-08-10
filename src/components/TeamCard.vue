@@ -35,5 +35,8 @@ export default {
 }
 </script>
 
-<style>
+<style scped>
+.message-header {
+  font-size: 2em;
+}
 </style>
