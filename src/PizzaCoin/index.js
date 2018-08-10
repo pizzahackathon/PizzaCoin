@@ -7,11 +7,13 @@ import PizzaCoinPlayerAbi from '../abi/PizzaCoinPlayerAbi'
 class PizzaCoin {
   constructor () {
     // connect with web3-compatible like Metamask, Cipher, Trust wallet
-    if (window.web3 === 'undefined') {
-      console.error('No metamask or web3 wallet found!')
+    if (typeof window.web3 === 'undefined') {
+      // console.error('No metamask or web3 wallet found!')
+      this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/_ws'))
+    } else {
+      this.web3 = new Web3(window.web3.currentProvider)
     }
 
-    this.web3 = new Web3(window.web3.currentProvider)
     this.pizzaCoinAddr = '0xa549dc3136f369281d42d25d33f4f1df9b2416e5'
     this.pizzaCoinStaffAddr = '0x04c9cbbAfa8b632A2De409AbEbf260227Ba0D4Ee'
     this.pizzaCoinTeamAddr = '0xC3557980171116C3c67127CD4b2521F4e731c8f6'
@@ -333,6 +335,14 @@ class PizzaCoin {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  // /////////////////// //
+  // ---- ETHEREUM ----  //
+  // /////////////////// //
+  async getNetworkName () {
+    const network = await this.web3.eth.net.getNetworkType()
+    return network
   }
 }
 
