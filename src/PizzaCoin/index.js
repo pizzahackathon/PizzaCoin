@@ -71,45 +71,61 @@ class PizzaCoin {
   // ---- TEAM ----  //
   // /////////////// //
   async getTeamsProfile () {
-    let totalTeams = await this.getTeamCount()
-    console.log('totalTeams: ' + totalTeams + '\n')
-    let data
-    let dataTeams = []
-    let nextStartSearchingIndex = 0
-    let endOfList, teamName, totalVoted
-    while (true) {
-      [
-        endOfList,
-        nextStartSearchingIndex,
-        teamName,
-        totalVoted
-      ] = await this.getFirstFoundTeamInfo(nextStartSearchingIndex)
+    try {
+      let totalTeams = await this.getTeamCount()
+      console.log('totalTeams: ' + totalTeams + '\n')
+      let data
+      // let nextStartSearchingIndex = 0
+      // let endOfList, teamName, totalVoted
 
-      if (endOfList) {
-        break
+      let teamInfoTasks = []
+
+      // FIX THIS: This doesn't work for kicked team
+      for (var i = 0; i < totalTeams; i++) {
+        teamInfoTasks.push(this.getFirstFoundTeamInfo(i))
       }
-      console.log('teamName: ' + teamName)
-      console.log('totalVoted: ' + totalVoted + '\n')
+      let teamInfos = await Promise.all(teamInfoTasks)
+      // console.log(`teamInfos ${teamInfos}`)
+      let teamProfiles = teamInfos.map(async (teamInfo) => {
+        // console.log(`teamInfo ${teamInfo}`)
+        let [
+          endOfList,
+          nextStartSearchingIndex,
+          teamName,
+          totalVoted
+        ] = teamInfo
 
-      try {
+        console.log(`nextStartSearchingIndex ${nextStartSearchingIndex}`)
+
+        if (endOfList) {
+          console.log(`endOfList ${endOfList}`)
+        }
+        console.log('teamName: ' + teamName)
+        console.log('totalVoted: ' + totalVoted + '\n')
+
         data = {
           member: await this.getPlayersProfile(teamName),
           score: await this.getTotalVotersToTeam(teamName)
         }
-        dataTeams.push({
+        const teamProfile = {
           name: teamName,
           members: data.member,
           score: data.score
-        })
-        console.log('profile >> ' + JSON.stringify(data))
-      } catch (error) {
-        console.error(error)
-      }
+        }
+        console.log('profile >> ' + JSON.stringify(teamProfile))
+
+        return teamProfile
+      })
+      const dataTeams = await Promise.all(teamProfiles)
+
+      // dataTeams = teamProfiles
+
+      console.log('dataTeams >>  ' + JSON.stringify(dataTeams))
+
+      return dataTeams
+    } catch (error) {
+      console.error(error)
     }
-
-    console.log('dataTeams >>  ' + JSON.stringify(dataTeams))
-
-    return dataTeams
   }
 
   async getFirstFoundTeamInfo (startSearchingIndex) {
