@@ -15,7 +15,7 @@
                         <div>{{ member.address }}</div>
                     </div>
                 </div>
-                <div class="level-item has-text-centered" v-if="isLoggedIn">
+                <div class="level-item has-text-centered" v-if="isLoggedIn && stateContract === 'Registration'">
                     <div>
                         <button
                             class="button is-danger"
@@ -29,26 +29,29 @@
         <button
             class="button is-primary"
              @click="onVote(team)"
+             v-if="stateContract === 'Voting'"
             >
             VOTE
         </button>
-        <button
+        <div v-if="stateContract === 'Registration'">
+          <button
             class="button is-success"
              @click="onJoin()"
              v-if="isJoined"
              :disabled="team.members.length > 4"
             >
             Join
-        </button>
-        <form @submit.prevent="onAddPlayer(team)">
-            <b-input
-                v-if="!isJoined"
-                type="text"
-                v-model="playerName"
-                placeholder="Your name"
-                required>
-            </b-input>
-        </form>
+          </button>
+          <form @submit.prevent="onAddPlayer(team)">
+              <b-input
+                  v-if="!isJoined"
+                  type="text"
+                  v-model="playerName"
+                  placeholder="Your name"
+                  required>
+              </b-input>
+          </form>
+        </div>
     </div>
 </template>
 <script>
@@ -67,7 +70,8 @@ export default {
   },
   props: ['team'],
   computed: {
-    ...mapState('auth', ['user', 'isLoggedIn'])
+    ...mapState('auth', ['user', 'isLoggedIn']),
+    ...mapState('staff', ['stateContract'])
   },
   methods: {
     ...mapActions('team', ['addMember']),

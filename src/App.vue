@@ -13,20 +13,23 @@
           <div class="navbar-item">
             <a href="/leader-board" class="bd-tw-button button">Leader board</a>
           </div>
+          <div class="navbar-item">
+            <a href="/leader-board" class="bd-tw-button button is-info">Token</a>
+          </div>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="field is-grouped">
-              <p class="control" v-if="isLoggedIn">
-                <a class="bd-tw-button button" @click="lockRegistration()">
+              <p class="control" v-if="isLoggedIn && stateContract === 'Registration'">
+                <a class="bd-tw-button button"  @click="lockRegistration()">
                     Freeze & Transfer
                 </a>
               </p>
-              <p class="control" v-if="isLoggedIn">
-                <a class="bd-tw-button button" @click="startVote()">
+              <p class="control">
+                <a class="bd-tw-button button" @click="startVote()" v-if="isLoggedIn && stateContract === 'Registration Locked'">
                     Start Vote
                 </a>
-                <a class="bd-tw-button button" @click="stopVote()">
+                <a class="bd-tw-button button" @click="stopVote()" v-if="isLoggedIn && stateContract === 'Voting'">
                     Stop Vote
                 </a>
               </p>
@@ -92,8 +95,14 @@ export default {
     account: null
   }),
   async mounted () {
+    console.log('check state --> ')
+    let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
+    console.log('check state --> ' + state)
+    this.$store.dispatch('staff/getContractState', state)
   },
-  computed: mapState('auth', ['isLoggedIn']),
+  computed: {
+    ...mapState('auth', ['isLoggedIn']),
+    ...mapState('staff', ['stateContract'])},
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
     ...mapActions('team', ['creatTeam']),
@@ -113,7 +122,7 @@ export default {
       this.isComponentModalActive = false
     },
     async startVote () {
-      console.log('start vote' + this.$pizzaCoin.account)
+      console.log('start vote' + await this.$pizzaCoin.account)
       try {
         await this.$pizzaCoin.startVoting(await this.$pizzaCoin.account)
       } catch (error) {
