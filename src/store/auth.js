@@ -15,9 +15,13 @@ const mutations = {
     console.log(` payload >> ${payload}`)
     state.isLoggedIn = payload
   },
-  getTokenBalance (state, tokenBalance) {
-    console.log(` getTokenBalance >> ${typeof tokenBalance}`)
-    state.tokenBalance = tokenBalance
+  getTokenBalance (state, {isPlayer, tokenBalance}) {
+    console.log(` isPlayer >> ${isPlayer}`)
+    if (isPlayer) {
+      state.tokenBalance = tokenBalance
+    } else {
+      state.tokenBalance = 0
+    }
   }
 }
 
@@ -29,9 +33,9 @@ const actions = {
   async setIsLoading ({ commit }, value) {
     commit('setLoading', value)
   },
-  getTokenBalance ({commit}, tokenBalance) {
-    console.log(` getTokenBalance >> ${tokenBalance}`)
-    commit('getTokenBalance', tokenBalance)
+  getTokenBalance ({commit}, payload) {
+    console.log(` getTokenBalance >> ${payload}`)
+    commit('getTokenBalance', payload)
   }
 }
 

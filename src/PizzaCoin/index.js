@@ -293,6 +293,14 @@ class PizzaCoin {
     return teams
   }
 
+  async isPlayer (address) {
+    console.log(`ddd >> ${address}`)
+
+    let isPlayer = await this.player.methods.isPlayer(address).call()
+    console.log(`dddIs >> ${isPlayer}`)
+
+    return isPlayer
+  }
   async getFirstFoundPlayer (teamName, playerIndex) {
     // console.log('\nQuerying for the first found team winner (by the index of voters) ...');
     let tupleReturned = await this.team.methods.getFirstFoundPlayerInTeam(teamName, playerIndex).call()
