@@ -4,6 +4,9 @@ import PizzaCoinAbi from '../abi/PizzaCoinAbi.json'
 import PizzaCoinStaffAbi from '../abi/PizzaCoinStaffAbi'
 import PizzaCoinTeamAbi from '../abi/PizzaCoinTeamAbi'
 import PizzaCoinPlayerAbi from '../abi/PizzaCoinPlayerAbi'
+
+import validateConnection from './validateConnection'
+
 class PizzaCoin {
   constructor () {
     // connect with web3-compatible like Metamask, Cipher, Trust wallet
@@ -345,6 +348,8 @@ class PizzaCoin {
     return network
   }
 }
+
+Object.setPrototypeOf(PizzaCoin.prototype, {...validateConnection})
 
 export default PizzaCoin
 

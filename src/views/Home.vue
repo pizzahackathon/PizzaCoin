@@ -33,55 +33,6 @@ export default {
     ...mapState('team', ['teams'])
   },
   methods: {
-    async showToastSuccess (text) {
-      this.$toast.open({
-        message: text,
-        type: 'is-success'
-      })
-    },
-    async showToastError (text, duration = 5000) {
-      this.$toast.open({
-        duration: duration,
-        message: text,
-        // position: 'is-bottom',
-        type: 'is-danger'
-      })
-    },
-    async validateWeb3Connection () {
-      // Check Web3 wallet connection
-      if (typeof window.web3 === 'undefined') {
-        const errorText = 'Please install MetaMask, Cipher or Trust wallet.'
-        this.showToastError(errorText, 60000)
-        throw Error(errorText)
-      }
-
-      // Check Network
-      let currentNetwork = await this.$pizzaCoin.getNetworkName()
-      console.log(`currentNetwork ${currentNetwork}`)
-      if (currentNetwork !== 'rinkeby') {
-        const errorText = 'Wrong network! Please switch to **Rinkeby** on Metamask.'
-        this.showToastError(errorText, 60000)
-        throw Error(errorText)
-      }
-    },
-    async validateWallet () {
-      let accounts = await this.$pizzaCoin.web3.eth.getAccounts()
-      console.log(`accounts ${accounts}`)
-      if (accounts.length === 0) {
-        // Loop check if user unlocked then refresh
-        setInterval(async () => {
-          let accounts = await this.$pizzaCoin.web3.eth.getAccounts()
-          if (accounts.length > 0) {
-            console.log('refresh')
-            location.reload()
-          }
-        }, 100)
-
-        const errorText = 'Please unlock your MetaMask.'
-        this.showToastError(errorText, 60000)
-        throw Error(errorText)
-      }
-    }
   },
   components: {
     TeamCard
@@ -92,8 +43,8 @@ export default {
   async mounted () {
     try {
       // Web3 and Wallet validation
-      await this.validateWeb3Connection()
-      await this.validateWallet()
+      await this.$pizzaCoin.validateWeb3Connection(this.$toast)
+      await this.$pizzaCoin.validateWallet(this.$toast)
 
       this.teamCount = await this.$pizzaCoin.getTeamCount()
       this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
