@@ -49,6 +49,17 @@ class PizzaCoin {
     return accounts[0]
   }
 
+  async getTokenBalance (playerAddr) {
+    let tokenBalance
+    try {
+      tokenBalance = await this.main.methods.balanceOf(playerAddr).call()
+      console.log('playerAddr -->' + playerAddr + ': tokenBalance = ' + tokenBalance)
+    } catch (error) {
+      console.error(error)
+    }
+    return tokenBalance
+  }
+
   async createTeam (creatorName, teamName) {
     console.log('Creating a new team --> "' + teamName + '" ...')
 

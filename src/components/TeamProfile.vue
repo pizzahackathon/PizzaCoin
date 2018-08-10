@@ -70,24 +70,28 @@ export default {
   },
   props: ['team'],
   computed: {
-    ...mapState('auth', ['user', 'isLoggedIn']),
+    ...mapState('auth', ['user', 'isLoggedIn', 'tokenBalance']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {
     ...mapActions('team', ['addMember']),
     ...mapMutations('team', ['addScore']),
     async onVote ({name}) {
-      console.log('onVote --> ' + await name)
-      try {
-        const voteTeamData = {
-          voterAddr: this.userAddress,
-          teamName: name,
-          votingWeight: 1
+      console.log('onVote --> ' + name)
+      if (this.tokenBalance < 1) {
+        alert('Your toker is not enough.')
+      } else {
+        try {
+          const voteTeamData = {
+            voterAddr: this.userAddress,
+            teamName: name,
+            votingWeight: 1
+          }
+          await this.$pizzaCoin.voteTeam(voteTeamData)
+          this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
+        } catch (error) {
+          console.error(error)
         }
-        await this.$pizzaCoin.voteTeam(voteTeamData)
-        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
-      } catch (error) {
-        console.error(error)
       }
     },
     onJoin () {

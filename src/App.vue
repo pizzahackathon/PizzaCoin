@@ -14,7 +14,7 @@
             <a href="/leader-board" class="bd-tw-button button">Leader board</a>
           </div>
           <div class="navbar-item">
-            <a href="/leader-board" class="bd-tw-button button is-info">Token</a>
+            <a href="/leader-board" class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</a>
           </div>
         </div>
         <div class="navbar-end">
@@ -96,12 +96,16 @@ export default {
   }),
   async mounted () {
     console.log('check state --> ')
-    let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
-    console.log('check state --> ' + state)
-    this.$store.dispatch('staff/getContractState', state)
+    try {
+      let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
+      console.log('check state --> ' + state)
+      this.$store.dispatch('staff/getContractState', state)
+    } catch (error) {
+      console.error(error)
+    }
   },
   computed: {
-    ...mapState('auth', ['isLoggedIn']),
+    ...mapState('auth', ['isLoggedIn', 'tokenBalance']),
     ...mapState('staff', ['stateContract'])},
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
