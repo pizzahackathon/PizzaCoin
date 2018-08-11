@@ -44,9 +44,9 @@ library PizzaCoinCodeLib2 {
     }
 
     // ------------------------------------------------------------------------
-    // Transfer the state of child contracts from Registration to RegistrationLocked state
+    // Transfer the state of children contracts from Registration to RegistrationLocked state
     // ------------------------------------------------------------------------
-    function signalChildContractsToLockRegistration(
+    function signalChildrenContractsToLockRegistration(
         address _staffContract,
         address _playerContract,
         address _teamContract
@@ -62,16 +62,16 @@ library PizzaCoinCodeLib2 {
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
-        // Transfer the state of child contracts
+        // Transfer the state of children contracts
         staffContractInstance.lockRegistration();
         playerContractInstance.lockRegistration();
         teamContractInstance.lockRegistration();
     }
 
     // ------------------------------------------------------------------------
-    // Transfer the state of child contracts from RegistrationLocked to Voting state
+    // Transfer the state of children contracts from RegistrationLocked to Voting state
     // ------------------------------------------------------------------------
-    function signalChildContractsToStartVoting(
+    function signalChildrenContractsToStartVoting(
         address _staffContract,
         address _playerContract,
         address _teamContract
@@ -87,16 +87,16 @@ library PizzaCoinCodeLib2 {
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
-        // Transfer the state of child contracts
+        // Transfer the state of children contracts
         staffContractInstance.startVoting();
         playerContractInstance.startVoting();
         teamContractInstance.startVoting();
     }
 
     // ------------------------------------------------------------------------
-    // Transfer the state of child contracts from Voting to VotingFinished state
+    // Transfer the state of children contracts from Voting to VotingFinished state
     // ------------------------------------------------------------------------
-    function signalChildContractsToStopVoting(
+    function signalChildrenContractsToStopVoting(
         address _staffContract,
         address _playerContract,
         address _teamContract
@@ -112,7 +112,7 @@ library PizzaCoinCodeLib2 {
         IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
-        // Transfer the state of child contracts
+        // Transfer the state of children contracts
         staffContractInstance.stopVoting();
         playerContractInstance.stopVoting();
         teamContractInstance.stopVoting();

@@ -204,7 +204,7 @@ contract PizzaCoin is ERC20, Owned {
         address staff = msg.sender;
 
         // Allow only a staff transfer the state from Initial to Registration and
-        // revert a transaction if the contract as well as its child contracts 
+        // revert a transaction if the contract as well as its children contracts 
         // do not get initialized completely
         PizzaCoinCodeLib.isContractCompletelyInitialized(
             staff, staffContract, playerContract, teamContract
@@ -212,7 +212,7 @@ contract PizzaCoin is ERC20, Owned {
 
         state = State.Registration;
 
-        // The state of child contracts do not need to do transfer because 
+        // The state of children contracts do not need to do transfer because 
         // their state were set to Registration state once they were created
 
         emit StateChanged();
@@ -224,8 +224,8 @@ contract PizzaCoin is ERC20, Owned {
     function lockRegistration() public onlyRegistrationState onlyStaff {
         state = State.RegistrationLocked;
 
-        // Transfer the state of child contracts
-        PizzaCoinCodeLib2.signalChildContractsToLockRegistration(
+        // Transfer the state of children contracts
+        PizzaCoinCodeLib2.signalChildrenContractsToLockRegistration(
             staffContract, 
             playerContract, 
             teamContract
@@ -240,8 +240,8 @@ contract PizzaCoin is ERC20, Owned {
     function startVoting() public onlyRegistrationLockedState onlyStaff {
         state = State.Voting;
 
-        // Transfer the state of child contracts
-        PizzaCoinCodeLib2.signalChildContractsToStartVoting(
+        // Transfer the state of children contracts
+        PizzaCoinCodeLib2.signalChildrenContractsToStartVoting(
             staffContract, 
             playerContract, 
             teamContract
@@ -256,8 +256,8 @@ contract PizzaCoin is ERC20, Owned {
     function stopVoting() public onlyVotingState onlyStaff {
         state = State.VotingFinished;
 
-        // Transfer the state of child contracts
-        PizzaCoinCodeLib2.signalChildContractsToStopVoting(
+        // Transfer the state of children contracts
+        PizzaCoinCodeLib2.signalChildrenContractsToStopVoting(
             staffContract, 
             playerContract, 
             teamContract

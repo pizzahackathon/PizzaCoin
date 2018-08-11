@@ -81,7 +81,7 @@ library PizzaCoinCodeLib {
 
     // ------------------------------------------------------------------------
     // Allow only a staff transfer the state from Initial to Registration and
-    // revert a transaction if the contract as well as its child contracts 
+    // revert a transaction if the contract as well as its children contracts 
     // do not get initialized completely
     // ------------------------------------------------------------------------
     function isContractCompletelyInitialized(
