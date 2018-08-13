@@ -1,18 +1,26 @@
 <template>
   <div id="app">
-    <!-- <ChartComponent/> -->
-    <TwitterComponent/>
+    <div class="container is-fluid">
+      <div class="columns is-mobile is-desktop is-widescreen is-fullhd">
+        <div class="column in-one-half">
+            <ChartComponent/>
+        </div>
+        <div class="column in-one-half">
+          <TwitterComponent/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// import ChartComponent from './components/charts/Charts.vue'
+import ChartComponent from './components/charts/Charts.vue'
 import TwitterComponent from './components/twitter/Twitter'
 
 export default {
   name: 'app',
   components: {
-    // ChartComponent,
+    ChartComponent,
     TwitterComponent
   }
 }
@@ -20,7 +28,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

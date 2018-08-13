@@ -77,7 +77,7 @@ export default {
     for (let i = 0; i <= 10; i++) {
       this.loadData(instance)
       await this.sleep(10)
-      console.log('i: ', i)
+      // console.log('i: ', i)
     }
   },
   methods: {
