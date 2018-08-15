@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     async loadTweets (instance) {
-      const response = await instance.get('/loadTweets')
+      const response = await instance.get('/loadTweets/%23pizzahackathon')
       console.log(response.data.statuses)
       this.twitterDatas = response.data.statuses
       _.forEach(this.twitterDatas, (tweet) => {
