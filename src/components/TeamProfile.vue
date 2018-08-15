@@ -29,7 +29,7 @@
         <button
             class="button is-primary"
              @click="onVote(team)"
-             v-if="stateContract === 'Voting' && parseInt(tokenBalance) !== 0"
+             v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0"
             >
             VOTE
         </button>
