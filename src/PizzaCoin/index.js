@@ -102,12 +102,20 @@ class PizzaCoin {
 
       let teamInfoTasks = []
 
-      // FIX THIS: This doesn't work for kicked team
       for (var i = 0; i < teamArrayLength; i++) {
         teamInfoTasks.push(this.getFirstFoundTeamInfo(i))
       }
 
       let teamInfos = await Promise.all(teamInfoTasks)
+
+      // Remove team empty name
+      teamInfos = teamInfos.filter(teamInfo => {
+        let teamName = teamInfo[2]
+        return teamName !== ''
+      })
+
+      console.log(`teamInfos ${JSON.stringify(teamInfos)}`)
+
       // Not end list yet
       if (teamInfos.length > 0) {
         let endOfList = teamInfos[teamInfos.length - 1][0]
@@ -125,6 +133,8 @@ class PizzaCoin {
           teamInfos = uniqueTeamInfos
         }
       }
+
+      console.log(`unique teamInfos ${JSON.stringify(teamInfos)}`)
 
       // console.log(`teamInfos ${teamInfos}`)
       let teamProfiles = teamInfos.map(async (teamInfo) => {
