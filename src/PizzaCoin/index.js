@@ -71,7 +71,7 @@ class PizzaCoin {
     // Create a new team
     let result = await this.main.methods.createTeam(teamName, creatorName).send({
       from: this.account,
-      gas: 6500000,
+      gas: 500000,
       gasPrice: 10000000000
     })
     console.log('... succeeded')
@@ -168,7 +168,7 @@ class PizzaCoin {
     try {
       const res = await PizzaCoin.methods.registerPlayerToTeam(staffAddr, staffName).send({
         from: registrarAddr,
-        gas: 6500000,
+        gas: 350000,
         gasPrice: 10000000000
       })
       console.log(res)
@@ -210,7 +210,7 @@ class PizzaCoin {
     try {
       await this.main.methods.startVoting().send({
         from: projectDeployerAddr,
-        gas: 6500000,
+        gas: 1000000,
         gasPrice: 10000000000
       })
       console.log('... succeeded')
@@ -238,7 +238,7 @@ class PizzaCoin {
     try {
       await this.main.methods.stopVoting().send({
         from: projectDeployerAddr,
-        gas: 6500000,
+        gas: 1000000,
         gasPrice: 10000000000
       })
       console.log('... succeeded')
@@ -264,7 +264,7 @@ class PizzaCoin {
     try {
       await this.main.methods.voteTeam(teamName, parseInt(votingWeight)).send({
         from: voterAddr,
-        gas: 6500000,
+        gas: 1000000,
         gasPrice: 10000000000
       })
       console.log('... succeeded voteTeam')
@@ -344,7 +344,7 @@ class PizzaCoin {
     try {
       await this.main.methods.registerPlayer(playerName, teamName).send({
         from: playerAddr,
-        gas: 6500000,
+        gas: 1000000,
         gasPrice: 10000000000
       })
 
@@ -359,7 +359,7 @@ class PizzaCoin {
     try {
       await this.main.methods.kickPlayer(playerAddr, teamName).send({
         from: kickerAddr,
-        gas: 6500000,
+        gas: 1000000,
         gasPrice: 10000000000
       })
     } catch (error) {
@@ -388,7 +388,7 @@ class PizzaCoin {
     try {
       await this.main.methods.lockRegistration().send({
         from: projectDeployerAddr,
-        gas: 6500000,
+        gas: 1000000,
         gasPrice: 10000000000
       })
     } catch (error) {
