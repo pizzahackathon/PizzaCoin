@@ -121,7 +121,7 @@ class PizzaCoin {
 
         data = {
           member: await this.getPlayersProfile(teamName),
-          score: await this.getTotalVotersToTeam(teamName)
+          score: await this.getVotingPointForTeam(teamName)
         }
         const teamProfile = {
           name: teamName,
@@ -179,6 +179,18 @@ class PizzaCoin {
     console.log('\nQuerying for a total number of voters to the specific team --> "' + teamName + '" ...')
     try {
       totalVoters = await this.team.methods.getTotalVotersToTeam(teamName).call({})
+    } catch (error) {
+      console.error(error)
+    }
+    return totalVoters
+  }
+
+  async getVotingPointForTeam (teamName) {
+    let totalVoters = 0
+
+    console.log('\nQuerying for a total number of voters to the specific team --> "' + teamName + '" ...')
+    try {
+      totalVoters = await this.team.methods.getVotingPointForTeam(teamName).call({})
     } catch (error) {
       console.error(error)
     }
@@ -355,8 +367,7 @@ class PizzaCoin {
   // ///////////////// //
 
   async getStaffName (address) {
-    let name = await this.staff.methods.getStaffName(this.account).call()
-
+    let name = await this.staff.methods.getStaffName(address).call()
     return name
   }
   async isStaff (address) {
