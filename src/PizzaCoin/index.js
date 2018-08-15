@@ -273,6 +273,19 @@ class PizzaCoin {
     }
   }
 
+  async kickTeam (teamName) {
+    console.log('\nKicking team --> "' + teamName + '" ...')
+    try {
+      await this.main.methods.kickTeam(teamName).send({
+        from: this.account,
+        gas: 1000000,
+        gasPrice: 10000000000
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // ///////////////// //
   // ---- PLAYER ----  //
   // ///////////////// //

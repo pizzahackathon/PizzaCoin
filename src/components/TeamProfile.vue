@@ -49,6 +49,14 @@
             >
             Join
           </button>
+          <button
+            class="button is-danger"
+             @click="removeTeam(team.name)"
+             v-if="team.members.length === 0 && isLoggedIn && stateContract === 'Registration'"
+             :disabled="team.members.length > 4"
+            >
+            Kick team
+          </button>
           <form @submit.prevent="onAddPlayer(team)">
               <b-input
                   v-if="!isJoined"
@@ -170,6 +178,16 @@ export default {
         console.error(error)
       }
     },
+    async removeTeam (teamName) {
+      // this.userAddress
+      console.log(`teamName: ${teamName}`)
+      try {
+        const res = await this.$pizzaCoin.kickTeam(teamName)
+        console.log(`After delete ->> ${res}`)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     playerAvatarImage (address) {
       let data = new Identicon(address, 120).toString()
       return `data:image/png;base64,${data}`
@@ -190,7 +208,7 @@ export default {
 }
 .player {
   display: inline-block;
-  margin: 10px 0 0 10px;
+  margin: 45px 0 0 10px;
   flex-grow: 1;
   height: 100px;
 }
