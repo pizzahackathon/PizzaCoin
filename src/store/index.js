@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import auth from '@/store/auth'
 import team from './team'
 import staff from './staff'
+import system from './system'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
   modules: {
     auth,
     team,
-    staff
+    staff,
+    system
   },
   state: {
     // members: [],

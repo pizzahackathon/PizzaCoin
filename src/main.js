@@ -16,7 +16,9 @@ setInterval(async function () {
   let isStaff = await pizzaCoin.isStaff(account)
   // let tokenBalance = await pizzaCoin.getTokenBalance('0x006dA2313d578dac3D1eCE86c17Fe914a14D18C5')
   let tokenBalance = await pizzaCoin.getTokenBalance(account)
-  console.log(`ddd >> ${isStaff}`)
+  let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
+  console.log('check state --> ' + state)
+  console.log(`isStaff >> ${isStaff}`)
   if (isStaff) {
     account = pizzaCoin.account
     store.dispatch('auth/isStaffLogin', account)
@@ -26,6 +28,7 @@ setInterval(async function () {
     isPlayer: await pizzaCoin.isPlayer(account),
     tokenBalance: tokenBalance
   }
+  store.dispatch('staff/getContractState', state)
   store.dispatch('auth/getTokenBalance', showToken)
 }, 3000)
 

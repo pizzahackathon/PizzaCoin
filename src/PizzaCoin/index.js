@@ -17,10 +17,15 @@ class PizzaCoin {
       this.web3 = new Web3(window.web3.currentProvider)
     }
 
-    this.pizzaCoinAddr = '0xa549dc3136f369281d42d25d33f4f1df9b2416e5'
-    this.pizzaCoinStaffAddr = '0x04c9cbbAfa8b632A2De409AbEbf260227Ba0D4Ee'
-    this.pizzaCoinTeamAddr = '0xC3557980171116C3c67127CD4b2521F4e731c8f6'
-    this.pizzaCoinPlayerAddr = '0x27bA426a96d78deB8491EA20A6249Ba30Cfa3910'
+    // this.pizzaCoinAddr = '0xa549dc3136f369281d42d25d33f4f1df9b2416e5'
+    // this.pizzaCoinStaffAddr = '0x04c9cbbAfa8b632A2De409AbEbf260227Ba0D4Ee'
+    // this.pizzaCoinTeamAddr = '0xC3557980171116C3c67127CD4b2521F4e731c8f6'
+    // this.pizzaCoinPlayerAddr = '0x27bA426a96d78deB8491EA20A6249Ba30Cfa3910'
+
+    this.pizzaCoinAddr = '0x01880958a75707b5789e19dc5cc84f6a6f51b555'
+    this.pizzaCoinStaffAddr = '0x77F12393574f9d3B0de163eEB39D72379DFeEb5D'
+    this.pizzaCoinTeamAddr = '0x4E96a76108f7bB25861Ed9466B79015b9c2De031'
+    this.pizzaCoinPlayerAddr = '0x3e641056Dc1c5f241FC4958995b0d51ac7a1A6E5'
 
     // this.pizzaCoinAddr = '0xe9c5c311c9fed290fcc246c93877292d525dc528'
     // this.pizzaCoinStaffAddr = '0x31B82DD3eff8DA9FFC219A19a3506a9bF8D594d9'
