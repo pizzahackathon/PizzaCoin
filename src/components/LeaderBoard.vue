@@ -40,6 +40,7 @@ export default {
       this.teamCount = await this.$pizzaCoin.getTeamCount()
       await this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       _.forEach(this.teams, (team) => {
+        console.log('team: ', team)
         console.log('teamName: ', team.name)
         console.log('total vote: ', team.score)
         this.teamNames.push(team.name)

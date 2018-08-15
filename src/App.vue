@@ -19,6 +19,9 @@
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
+            {{ playerInfo }}
+          </div>
+          <div class="navbar-item">
             <div class="field is-grouped">
               <p class="control" v-if="isLoggedIn && stateContract === 'Registration'">
                 <a class="bd-tw-button button"  @click="lockRegistration()">
@@ -92,7 +95,8 @@ export default {
     isComponentModalActive: false,
     creatorName: '',
     teamname: '',
-    account: null
+    account: null,
+    playerInfo: ''
   }),
   async mounted () {
     console.log('check state --> ')
@@ -100,16 +104,27 @@ export default {
       let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
       console.log('check state --> ' + state)
       this.$store.dispatch('staff/getContractState', state)
+
+      await this.getAccountInfo()
     } catch (error) {
       console.error(error)
     }
   },
   computed: {
     ...mapState('auth', ['isLoggedIn', 'tokenBalance']),
-    ...mapState('staff', ['stateContract'])},
+    ...mapState('staff', ['stateContract'])
+  },
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
     ...mapActions('team', ['creatTeam']),
+    async getAccountInfo () {
+      let isPlayer = await this.isPlayer()
+      if (isPlayer) {
+        this.playerInfo = 'Player: ' + await this.$pizzaCoin.getPlayerName(this.$pizzaCoin.account)
+      } else {
+        this.playerInfo = 'Staff: ' + await this.$pizzaCoin.getStaffName(this.$pizzaCoin.account)
+      }
+    },
     async onCreateTeam () {
       try {
         this.isComponentModalActive = false
@@ -129,6 +144,13 @@ export default {
       console.log('start vote' + await this.$pizzaCoin.account)
       try {
         await this.$pizzaCoin.startVoting(await this.$pizzaCoin.account)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async isPlayer () {
+      try {
+        return await this.$pizzaCoin.isPlayer(this.$pizzaCoin.account)
       } catch (error) {
         console.error(error)
       }
