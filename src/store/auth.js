@@ -17,7 +17,7 @@ const mutations = {
   },
   getTokenBalance (state, {isPlayer, tokenBalance}) {
     console.log(` isPlayer >> ${isPlayer}`)
-    if (isPlayer) {
+    if (isPlayer || state.isLoggedIn) {
       state.tokenBalance = tokenBalance
     } else {
       state.tokenBalance = 0
