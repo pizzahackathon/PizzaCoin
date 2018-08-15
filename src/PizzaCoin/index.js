@@ -17,20 +17,16 @@ class PizzaCoin {
       this.web3 = new Web3(window.web3.currentProvider)
     }
 
+    // 15 Teams example
     // this.pizzaCoinAddr = '0xa549dc3136f369281d42d25d33f4f1df9b2416e5'
     // this.pizzaCoinStaffAddr = '0x04c9cbbAfa8b632A2De409AbEbf260227Ba0D4Ee'
     // this.pizzaCoinTeamAddr = '0xC3557980171116C3c67127CD4b2521F4e731c8f6'
     // this.pizzaCoinPlayerAddr = '0x27bA426a96d78deB8491EA20A6249Ba30Cfa3910'
 
-    this.pizzaCoinAddr = '0x01880958a75707b5789e19dc5cc84f6a6f51b555'
-    this.pizzaCoinStaffAddr = '0x77F12393574f9d3B0de163eEB39D72379DFeEb5D'
-    this.pizzaCoinTeamAddr = '0x4E96a76108f7bB25861Ed9466B79015b9c2De031'
-    this.pizzaCoinPlayerAddr = '0x3e641056Dc1c5f241FC4958995b0d51ac7a1A6E5'
-
-    // this.pizzaCoinAddr = '0xe9c5c311c9fed290fcc246c93877292d525dc528'
-    // this.pizzaCoinStaffAddr = '0x31B82DD3eff8DA9FFC219A19a3506a9bF8D594d9'
-    // this.pizzaCoinTeamAddr = '0x50f2790E368745EcA659836A685875d19fBf2019'
-    // this.pizzaCoinPlayerAddr = '0x0d1c4B71fD15C56eB3E2aDEe030f9Dba55129376'
+    this.pizzaCoinAddr = '0x8e9b60c0457d2d20e2144d71d1fed17861414569'
+    this.pizzaCoinStaffAddr = '0x32464cD1534f07B6f0104E99FD1EE4EEfF19A5f2'
+    this.pizzaCoinTeamAddr = '0x5B10634C098185e490193651a6E770f8556ff696'
+    this.pizzaCoinPlayerAddr = '0x14546618fA946A493928835310003A49D72B3654'
 
     this.loadUserAddress().then(account => {
       this.account = account
@@ -83,6 +79,11 @@ class PizzaCoin {
     return teamCount
   }
 
+  async getTeamArrayLength () {
+    let teamArrayLength = await this.team.methods.getTeamArrayLength().call()
+    return teamArrayLength
+  }
+
   async getPlayerCountInTeam (teamName) {
     let playerCount = await this.team.methods.getTotalPlayersInTeam(teamName).call()
     return playerCount
@@ -93,8 +94,8 @@ class PizzaCoin {
   // /////////////// //
   async getTeamsProfile () {
     try {
-      let totalTeams = await this.getTeamCount()
-      console.log('totalTeams: ' + totalTeams + '\n')
+      let teamArrayLength = await this.getTeamArrayLength()
+      console.log('teamArrayLength: ' + teamArrayLength + '\n')
       let data
       // let nextStartSearchingIndex = 0
       // let endOfList, teamName, totalVoted
@@ -102,10 +103,29 @@ class PizzaCoin {
       let teamInfoTasks = []
 
       // FIX THIS: This doesn't work for kicked team
-      for (var i = 0; i < totalTeams; i++) {
+      for (var i = 0; i < teamArrayLength; i++) {
         teamInfoTasks.push(this.getFirstFoundTeamInfo(i))
       }
+
       let teamInfos = await Promise.all(teamInfoTasks)
+      // Not end list yet
+      if (teamInfos.length > 0) {
+        let endOfList = teamInfos[teamInfos.length - 1][0]
+        if (endOfList === false) {
+          // clean duplicated
+          let uniqueTeamInfos = []
+          let foundTeamNames = []
+          for (let teamInfo of teamInfos) {
+            let teamName = teamInfo[2]
+            if (foundTeamNames.indexOf(teamName) === -1) {
+              uniqueTeamInfos.push(teamInfo)
+              foundTeamNames.push(teamName)
+            }
+          }
+          teamInfos = uniqueTeamInfos
+        }
+      }
+
       // console.log(`teamInfos ${teamInfos}`)
       let teamProfiles = teamInfos.map(async (teamInfo) => {
         // console.log(`teamInfo ${teamInfo}`)
