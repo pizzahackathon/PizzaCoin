@@ -1,30 +1,30 @@
 <template>
     <div>
         <div
-            class="main level is-mobile"
-             v-for="member in team.members"
-             :key="member.address"
-                >
-            <div class="level-item has-text-centered">
-                    <div>
-                        <div>{{ member.name }}</div>
-                    </div>
-                </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <div>{{ member.address }}</div>
-                    </div>
-                </div>
-                <div class="level-item has-text-centered" v-if="isLoggedIn && stateContract === 'Registration'">
-                    <div>
-                        <button
-                            class="button is-danger"
-                            @click="removePlayer(team, member)"
-                            >
-                                Kick
-                            </button>
-                    </div>
-                </div>
+          class="main level is-mobile"
+            v-for="member in team.members"
+            :key="member.address"
+              >
+          <div class="level-item has-text-centered">
+              <div>
+                  <div>{{ member.name }}</div>
+              </div>
+          </div>
+          <div class="level-item has-text-centered">
+              <div>
+                  <div>{{ member.address }}</div>
+              </div>
+          </div>
+          <div class="level-item has-text-centered" v-if="isLoggedIn && stateContract === 'Registration'">
+              <div>
+                  <button
+                      class="button is-danger"
+                      @click="removePlayer(team, member)"
+                      >
+                          Kick
+                  </button>
+              </div>
+          </div>
         </div>
         <button
             class="button is-primary"
