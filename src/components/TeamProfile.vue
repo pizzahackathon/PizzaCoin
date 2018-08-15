@@ -17,11 +17,6 @@
               </div>
           </div>
           </a>
-          <div class="level-item has-text-centered">
-              <div>
-                  <!-- <div>{{ member.address }}</div> -->
-              </div>
-          </div>
           <div class="level-item has-text-centered" v-if="isLoggedIn && stateContract === 'Registration'">
               <div>
                   <button
@@ -40,7 +35,7 @@
             >
             VOTE
         </button>
-        <div v-if="stateContract === 'Registration'">
+        <div v-if="stateContract === 'Registration'" class="join">
           <button
             class="button is-success"
              @click="onJoin()"
@@ -217,5 +212,10 @@ export default {
 }
 .playerName {
   font-size: 22px;
+}
+.join {
+  flex-basis: 100%;
+  text-align: center;
+  margin: 25px;
 }
 </style>
