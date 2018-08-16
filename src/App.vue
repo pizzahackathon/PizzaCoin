@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="is-white">
     <div id="nav">
      <nav class="navbar is-transparent is-warning">
       <div class="navbar-brand">
@@ -176,6 +176,9 @@ export default {
 <style>
 #app {
   position: relative;
+}
+.app {
+  background: #C3CBE2;
 }
 .main {
   margin-top: 2ex;
