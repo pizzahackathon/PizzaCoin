@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+
 import LeaderBoard from './components/LeaderBoard.vue'
 // import Web3Example from './views/Web3Example'
 

@@ -16,7 +16,7 @@ setInterval(async function () {
   let isStaff = await pizzaCoin.isStaff(account)
   // let tokenBalance = await pizzaCoin.getTokenBalance('0x006dA2313d578dac3D1eCE86c17Fe914a14D18C5')
   let tokenBalance = await pizzaCoin.getTokenBalance(account)
-  let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
+  let state = await pizzaCoin.getContractState(await pizzaCoin.account)
   console.log('check state --> ' + state)
   console.log(`isStaff >> ${isStaff}`)
   if (isStaff) {

@@ -1,32 +1,37 @@
 <template>
-    <div class="players-box">
+    <div class="">
         <div
-          class="main level is-mobile player"
+          class="is-mobile"
             v-for="member in team.members"
             :key="member.address"
               >
-          <a :href="`${$store.state.system.etherscanPrefix}/address/${member.address}`" target="_blank">
-            <div class="level-item has-text-centered">
-              <div>
-                <img :src="playerAvatarImage(member.address)" alt="">
-              </div>
-              <div>
-                  <div class="playerName">
-                    {{ member.name }}
-                  </div>
-              </div>
-          </div>
-          </a>
-          <div class="level-item has-text-centered" v-if="isLoggedIn && stateContract === 'Registration'">
-              <div>
-                  <button
-                      class="button is-danger"
-                      @click="removePlayer(team, member)"
+            <div class="media content-margin">
+                  <div class="media-left">
+                      <a :href="`${$store.state.system.etherscanPrefix}/address/${member.address}`" target="_blank">
+                      <p class="image is-48x48">
+                        <img :src="playerAvatarImage(member.address)" alt="">
+                      </p>
+                      </a>
+                    </div>
+                    <div class="media-content">
+                        <div class="playerName">
+                          <h4>{{ member.name }}</h4>
+                        </div>
+                    </div>
+                    <div
+                     class="media-right"
+                     v-if="isLoggedIn && stateContract === 'Registration'"
                       >
-                          Kick
-                  </button>
-              </div>
-          </div>
+                      <div>
+                          <button
+                              class="button is-danger"
+                              @click="removePlayer(team, member)"
+                              >
+                                  Kick
+                          </button>
+                      </div>
+                    </div>
+            </div>
         </div>
         <button
             class="button is-primary"
@@ -37,7 +42,7 @@
         </button>
         <div v-if="stateContract === 'Registration'" class="join">
           <button
-            class="button is-success"
+            class="button is-success is-fullwidth"
              @click="onJoin()"
              v-if="isJoined"
              :disabled="team.members.length > 4"
@@ -45,7 +50,7 @@
             Join
           </button>
           <button
-            class="button is-danger"
+            class="button is-danger is-fullwidth join"
              @click="removeTeam(team.name)"
              v-if="team.members.length === 0 && isLoggedIn && stateContract === 'Registration'"
              :disabled="team.members.length > 4"
@@ -197,25 +202,20 @@ export default {
 }
 </style>
 <style scoped>
-.players-box {
-  display: flex;
-  flex-flow: row wrap;
+.content-margin {
+  margin-top: 5px;
 }
 .player {
   display: inline-block;
-  margin: 45px 0 0 10px;
+  margin: 5px 0 0 10px;
   flex-grow: 1;
   height: 100px;
 }
-.level-item {
-  display: block !important;
-}
 .playerName {
-  font-size: 22px;
+  font-size: 12px;
+  margin-top: 10px;
 }
 .join {
-  flex-basis: 100%;
-  text-align: center;
-  margin: 25px;
+  margin-top: 10px;
 }
 </style>

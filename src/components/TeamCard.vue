@@ -1,26 +1,20 @@
 <template>
-    <div class="column is-4">
-        <!-- <vcl-instagram v-if="!team"></vcl-instagram> -->
-        <div class="box">
-            <article class="media">
-                <div class="media-content">
-                    <div class="content">
-                        <div class="message-header has-text-centered">
-                            {{team.name}}
-                            <button class="button is-primary">{{ team.score }}</button>
-                        </div>
-                        <br>
-                        <hr>
-                        <div>
-                            <TeamProfile
-                                :team="team"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </article>
+  <div class="column is-4">
+    <a href="" class="badge1" :data-badge="team.score"></a>
+    <div class="box content">
+      <article class="post">
+        <h2 class="">
+            {{team.name}}
+        </h2>
+        <hr>
+        <div class="">
+            <TeamProfile
+                :team="team"
+            />
         </div>
+      </article>
     </div>
+  </div>
 </template>
 
 <script>
@@ -36,7 +30,24 @@ export default {
 </script>
 
 <style scped>
-.message-header {
-  font-size: 2em;
+.content-body {
+  margin-top: 0px;
+}
+.badge1 {
+   position:relative;
+}
+.badge1[data-badge]:after {
+   content:attr(data-badge);
+   position:absolute;
+   top:-15px;
+   right:-450px;
+   font-size:1.5em;
+   background:#f44141;
+   color:white;
+   width:25px;height:25px;
+   text-align:center;
+   line-height:18px;
+   border-radius:50%;
+   box-shadow:0 0 10px #333;
 }
 </style>
