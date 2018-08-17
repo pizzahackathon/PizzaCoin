@@ -20,10 +20,5 @@ export default new Router({
       name: 'leader-board',
       component: LeaderBoard
     }
-    // {
-    //   path: '/web3Example',
-    //   name: 'web3Example',
-    //   component: Web3Example
-    // }
   ]
 })

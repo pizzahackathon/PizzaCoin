@@ -45,8 +45,11 @@
         <router-link to="/web3Example">Web3 Example</router-link> | -->
     </div>
      <section>
-       <span class="icon" @click="isComponentModalActive = true">
-         <i class="fas fa-plus-circle fa fa-3x"></i>
+       <span
+        class="icon"
+        @click="isComponentModalActive = true"
+        v-if="stateContract === 'Registration'">
+         <i class="fas fa-plus-circle fa fa-2x"></i>
        </span>
 
         <b-modal :active.sync="isComponentModalActive" has-modal-card>
@@ -104,10 +107,14 @@ export default {
       let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
       console.log('check state --> ' + state)
       this.$store.dispatch('staff/getContractState', state)
-
-      await this.getAccountInfo()
     } catch (error) {
       console.error(error)
+    }
+
+    try {
+      await this.getAccountInfo()
+    } catch (error) {
+      this.playerInfo = 'You haven\'t registered'
     }
   },
   computed: {
@@ -177,16 +184,13 @@ export default {
 #app {
   position: relative;
 }
-.app {
-  background: #C3CBE2;
-}
 .main {
   margin-top: 2ex;
 }
 .icon {
    position: absolute;
    top: 80px;
-   right: 100px;
+   right: 30px;
 }
 .icon:hover {
   opacity: 0.8;

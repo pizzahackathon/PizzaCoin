@@ -9,13 +9,16 @@
                   <div class="media-left">
                       <a :href="`${$store.state.system.etherscanPrefix}/address/${member.address}`" target="_blank">
                       <p class="image is-48x48">
-                        <img :src="playerAvatarImage(member.address)" alt="">
+                        <img :src="playerAvatarImage(member.address)" alt="" class="img-player">
                       </p>
                       </a>
                     </div>
                     <div class="media-content">
-                        <div class="playerName">
-                          <h4>{{ member.name }}</h4>
+                        <div>
+                          <div class="playerName">
+                             <h4>{{ member.name }}</h4>
+                          </div>
+                          <h6>{{ member.address }}</h6>
                         </div>
                     </div>
                     <div
@@ -66,6 +69,13 @@
                   required>
               </b-input>
           </form>
+          <button
+            class="button is-primary is-fullwidth join"
+             @click="onAddPlayer(team)"
+              v-if="!isJoined"
+            >
+            Submit
+          </button>
         </div>
     </div>
 </template>
@@ -80,30 +90,6 @@ export default {
     pizzaCoin: null,
     pizzaCoinSymbol: '',
     userAddress: ''
-    // team: {
-    //   members: [
-    //     {
-    //       name: 'abc',
-    //       address: '0xfcee22fcc5607812db42371d9f75cf527e44718a'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0x786f95663b1feaa429fe608dd51946356f9e6d54'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0x950807aeaccb5e66dc09e9f99a7d559a880d8b14'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0x69f6829b0a62c34a844e9a0a123dd4b1822a7bc5'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0xdea6af9e0d4a7ac7e639b1c5751b58c165af590b'
-    //     }
-    //   ]
-    // }
   }),
   async mounted () {
     await this.loadPizzaCoinSymbol()
@@ -217,5 +203,13 @@ export default {
 }
 .join {
   margin-top: 10px;
+}
+.img-player {
+  border-radius: 50%;
+}
+</style>
+<style scoped>
+.button {
+  border-radius: 9999px !important;
 }
 </style>
