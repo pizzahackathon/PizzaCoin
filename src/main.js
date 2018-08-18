@@ -11,27 +11,31 @@ Vue.prototype.$pizzaCoin = pizzaCoin
 Vue.prototype.$store = store
 
 setInterval(async function () {
-  let account = pizzaCoin.account
+  let account = await pizzaCoin.account
   console.log('service >> ' + account)
   let isStaff = await pizzaCoin.isStaff(account)
+  let isPlayer = await pizzaCoin.isPlayer(account)
+  // let userName = await pizzaCoin.getPlayerName(account)
   // let tokenBalance = await pizzaCoin.getTokenBalance('0x006dA2313d578dac3D1eCE86c17Fe914a14D18C5')
   let tokenBalance = await pizzaCoin.getTokenBalance(account)
-  console.log(`ddd >> ${isStaff}`)
+  let state = await pizzaCoin.getContractState(account)
+  console.log('check state --> ' + state)
+  console.log(`isStaff >> ${isStaff}`)
   if (isStaff) {
-    account = pizzaCoin.account
     store.dispatch('auth/isStaffLogin', account)
+  } else if (isPlayer) {
+    store.dispatch('auth/isPlayerLogin', account)
   }
   console.log('check tokenBalance --> ' + typeof parseInt(tokenBalance))
   let showToken = {
-    isPlayer: await pizzaCoin.isPlayer(account),
+    isPlayer: isPlayer,
     tokenBalance: tokenBalance
   }
+  store.dispatch('staff/getContractState', state)
   store.dispatch('auth/getTokenBalance', showToken)
 }, 3000)
 
 // store.dispatch('team/getTeamsProfile')
-
-console.log('service >> ' + pizzaCoin.account)
 
 Vue.use(Buefy)
 

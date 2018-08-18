@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <div id="nav">
+  <div id="app" class="">
+    <div id="nav" class="nav-bar">
      <nav class="navbar is-transparent is-warning">
       <div class="navbar-brand">
         <a class="navbar-item" href="#">
@@ -11,10 +11,10 @@
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <a href="/leader-board" class="bd-tw-button button">Leader board</a>
+            <a href="/leader-board" class="navbar-item">Leader board</a>
           </div>
           <div class="navbar-item">
-            <a href="/leader-board" class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</a>
+            <a href="#" class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</a>
           </div>
         </div>
         <div class="navbar-end">
@@ -23,16 +23,16 @@
           </div>
           <div class="navbar-item">
             <div class="field is-grouped">
-              <p class="control" v-if="isLoggedIn && stateContract === 'Registration'">
+              <p class="control" v-if="isStaffLoggedIn && stateContract === 'Registration'">
                 <a class="bd-tw-button button"  @click="lockRegistration()">
                     Freeze & Transfer
                 </a>
               </p>
               <p class="control">
-                <a class="bd-tw-button button" @click="startVote()" v-if="isLoggedIn && stateContract === 'Registration Locked'">
+                <a class="bd-tw-button button" @click="startVote()" v-if="isStaffLoggedIn && stateContract === 'Registration Locked'">
                     Start Vote
                 </a>
-                <a class="bd-tw-button button" @click="stopVote()" v-if="isLoggedIn && stateContract === 'Voting'">
+                <a class="bd-tw-button button" @click="stopVote()" v-if="isStaffLoggedIn && stateContract === 'Voting'">
                     Stop Vote
                 </a>
               </p>
@@ -41,12 +41,13 @@
         </div>
       </div>
       </nav>
-        <!-- <router-link to="/">Home</router-link> |
-        <router-link to="/web3Example">Web3 Example</router-link> | -->
     </div>
      <section>
-       <span class="icon" @click="isComponentModalActive = true">
-         <i class="fas fa-plus-circle fa fa-3x"></i>
+       <span
+        class="icon"
+        @click="isComponentModalActive = true"
+        v-if="stateContract === 'Registration'">
+         <i class="fas fa-plus-circle fa fa-2x"></i>
        </span>
 
         <b-modal :active.sync="isComponentModalActive" has-modal-card>
@@ -104,14 +105,18 @@ export default {
       let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
       console.log('check state --> ' + state)
       this.$store.dispatch('staff/getContractState', state)
-
-      await this.getAccountInfo()
     } catch (error) {
       console.error(error)
     }
+
+    try {
+      await this.getAccountInfo()
+    } catch (error) {
+      this.playerInfo = 'You haven\'t registered'
+    }
   },
   computed: {
-    ...mapState('auth', ['isLoggedIn', 'tokenBalance']),
+    ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {
@@ -183,7 +188,7 @@ export default {
 .icon {
    position: absolute;
    top: 80px;
-   right: 100px;
+   right: 30px;
 }
 .icon:hover {
   opacity: 0.8;
@@ -191,5 +196,10 @@ export default {
 }
 .navbar-brand {
   padding-left: 2em;
+}
+</style>
+<style scoped>
+.nav-bar {
+  box-shadow:0 0 10px #333 !important;
 }
 </style>

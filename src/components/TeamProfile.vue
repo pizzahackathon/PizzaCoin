@@ -1,55 +1,68 @@
 <template>
-    <div class="players-box">
+    <div class="">
         <div
-          class="main level is-mobile player"
+          class="is-mobile"
             v-for="member in team.members"
             :key="member.address"
               >
-          <a :href="`${$store.state.system.etherscanPrefix}/address/${member.address}`" target="_blank">
-            <div class="level-item has-text-centered">
-              <div>
-                <img :src="playerAvatarImage(member.address)" alt="">
-              </div>
-              <div>
-                  <div class="playerName">
-                    {{ member.name }}
-                  </div>
-              </div>
-          </div>
-          </a>
-          <div class="level-item has-text-centered">
-              <div>
-                  <!-- <div>{{ member.address }}</div> -->
-              </div>
-          </div>
-          <div class="level-item has-text-centered" v-if="isLoggedIn && stateContract === 'Registration'">
-              <div>
-                  <button
-                      class="button is-danger"
-                      @click="removePlayer(team, member)"
+            <div class="media content-margin">
+                  <div class="media-left">
+                      <a :href="`${$store.state.system.etherscanPrefix}/address/${member.address}`" target="_blank">
+                      <p class="image is-48x48">
+                        <img :src="playerAvatarImage(member.address)" alt="" class="img-player">
+                      </p>
+                      </a>
+                    </div>
+                    <div class="media-content">
+                        <div>
+                          <div class="playerName">
+                             <h4>{{ member.name }}</h4>
+                          </div>
+                          <h6>{{ member.address }}</h6>
+                        </div>
+                    </div>
+                    <div
+                     class="media-right"
+                     v-if="isStaffLoggedIn && stateContract === 'Registration'"
                       >
-                          Kick
-                  </button>
-              </div>
-          </div>
+                      <div>
+                          <button
+                              class="button is-danger"
+                              @click="removePlayer(team, member)"
+                              >
+                                  Kick
+                          </button>
+                      </div>
+                    </div>
+            </div>
         </div>
         <button
-            class="button is-primary"
+            class="button is-primary is-fullwidth"
              @click="onVote(team)"
              v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0"
+             :disabled="team"
             >
             VOTE
         </button>
-        <div v-if="stateContract === 'Registration'">
+        <div v-if="!isStaffLoggedIn && stateContract === 'Registration'" class="join">
           <button
-            class="button is-success"
+            class="button is-success is-fullwidth"
              @click="onJoin()"
-             v-if="isJoined"
+             v-if="isJoined && !isPlayerLoggedIn"
              :disabled="team.members.length > 4"
             >
             Join
           </button>
-          <form @submit.prevent="onAddPlayer(team)">
+          <button
+            class="button is-danger is-fullwidth join"
+             @click="removeTeam(team.name)"
+             v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
+            >
+            Kick team
+          </button>
+          <form
+            @submit.prevent="onAddPlayer(team)"
+            >
               <b-input
                   v-if="!isJoined"
                   type="text"
@@ -58,6 +71,13 @@
                   required>
               </b-input>
           </form>
+          <button
+            class="button is-primary is-fullwidth join"
+             @click="onAddPlayer(team)"
+              v-if="!isJoined"
+            >
+            Submit
+          </button>
         </div>
     </div>
 </template>
@@ -72,37 +92,13 @@ export default {
     pizzaCoin: null,
     pizzaCoinSymbol: '',
     userAddress: ''
-    // team: {
-    //   members: [
-    //     {
-    //       name: 'abc',
-    //       address: '0xfcee22fcc5607812db42371d9f75cf527e44718a'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0x786f95663b1feaa429fe608dd51946356f9e6d54'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0x950807aeaccb5e66dc09e9f99a7d559a880d8b14'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0x69f6829b0a62c34a844e9a0a123dd4b1822a7bc5'
-    //     },
-    //     {
-    //       name: 'abc',
-    //       address: '0xdea6af9e0d4a7ac7e639b1c5751b58c165af590b'
-    //     }
-    //   ]
-    // }
   }),
   async mounted () {
     await this.loadPizzaCoinSymbol()
   },
   props: ['team'],
   computed: {
-    ...mapState('auth', ['user', 'isLoggedIn', 'tokenBalance']),
+    ...mapState('auth', ['user', 'isStaffLoggedIn', 'tokenBalance', 'isPlayerLoggedIn']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {
@@ -170,6 +166,16 @@ export default {
         console.error(error)
       }
     },
+    async removeTeam (teamName) {
+      // this.userAddress
+      console.log(`teamName: ${teamName}`)
+      try {
+        const res = await this.$pizzaCoin.kickTeam(teamName)
+        console.log(`After delete ->> ${res}`)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     playerAvatarImage (address) {
       let data = new Identicon(address, 120).toString()
       return `data:image/png;base64,${data}`
@@ -184,20 +190,28 @@ export default {
 }
 </style>
 <style scoped>
-.players-box {
-  display: flex;
-  flex-flow: row wrap;
+.content-margin {
+  margin-top: 5px;
 }
 .player {
   display: inline-block;
-  margin: 10px 0 0 10px;
+  margin: 5px 0 0 10px;
   flex-grow: 1;
   height: 100px;
 }
-.level-item {
-  display: block !important;
-}
 .playerName {
-  font-size: 22px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.join {
+  margin-top: 10px;
+}
+.img-player {
+  border-radius: 50%;
+}
+</style>
+<style scoped>
+.button {
+  border-radius: 9999px !important;
 }
 </style>

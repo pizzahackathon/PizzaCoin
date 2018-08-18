@@ -8,6 +8,7 @@
                         v-for="team in teams"
                         :key="team.name"
                         :team="team"
+                        :score="team.score"
                       />
                 </div>
             </div>

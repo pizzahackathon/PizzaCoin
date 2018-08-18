@@ -1,10 +1,13 @@
 
 const state = {
   user: {},
-  isLoggedIn: false,
+  isStaffLoggedIn: false,
+  isPlayerLoggedIn: false,
   isLoading: 0,
   userAddress: '',
-  tokenBalance: 0
+  userName: '',
+  tokenBalance: 0,
+  role: ''
 }
 
 const mutations = {
@@ -13,11 +16,19 @@ const mutations = {
   },
   isStaffLogin (state, payload) {
     console.log(` payload >> ${payload}`)
-    state.isLoggedIn = payload
+    state.isStaffLoggedIn = true
+    state.isPlayerLoggedIn = false
+    state.role = 'Staff'
+  },
+  isPlayerLogin (state, payload) {
+    console.log(` payload >> ${payload}`)
+    state.isStaffLoggedIn = false
+    state.isPlayerLoggedIn = true
+    state.role = 'Player'
   },
   getTokenBalance (state, {isPlayer, tokenBalance}) {
     console.log(` isPlayer >> ${isPlayer}`)
-    if (isPlayer || state.isLoggedIn) {
+    if (isPlayer || state.isStaffLoggedIn) {
       state.tokenBalance = tokenBalance
     } else {
       state.tokenBalance = 0
@@ -27,8 +38,12 @@ const mutations = {
 
 const actions = {
   async isStaffLogin ({commit}, payload) {
-    console.log(`actions >> ${payload}`)
+    console.log(`actions isStaffLogin >> ${payload}`)
     commit('isStaffLogin', payload)
+  },
+  async isPlayerLogin ({commit}, payload) {
+    console.log(`actions isPlayerLogin >> ${payload}`)
+    commit('isPlayerLogin', payload)
   },
   async setIsLoading ({ commit }, value) {
     commit('setLoading', value)
