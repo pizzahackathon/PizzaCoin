@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="is-white">
-    <div id="nav">
+  <div id="app" class="">
+    <div id="nav" class="nav-bar">
      <nav class="navbar is-transparent is-warning">
       <div class="navbar-brand">
         <a class="navbar-item" href="#">
@@ -11,10 +11,10 @@
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <a href="/leader-board" class="bd-tw-button button">Leader board</a>
+            <a href="/leader-board" class="navbar-item">Leader board</a>
           </div>
           <div class="navbar-item">
-            <a href="/leader-board" class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</a>
+            <a href="#" class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</a>
           </div>
         </div>
         <div class="navbar-end">
@@ -41,8 +41,6 @@
         </div>
       </div>
       </nav>
-        <!-- <router-link to="/">Home</router-link> |
-        <router-link to="/web3Example">Web3 Example</router-link> | -->
     </div>
      <section>
        <span
@@ -198,5 +196,10 @@ export default {
 }
 .navbar-brand {
   padding-left: 2em;
+}
+</style>
+<style scoped>
+.nav-bar {
+  box-shadow:0 0 10px #333 !important;
 }
 </style>
