@@ -23,7 +23,7 @@
                     </div>
                     <div
                      class="media-right"
-                     v-if="isLoggedIn && stateContract === 'Registration'"
+                     v-if="isStaffLoggedIn && stateContract === 'Registration'"
                       >
                       <div>
                           <button
@@ -43,11 +43,11 @@
             >
             VOTE
         </button>
-        <div v-if="stateContract === 'Registration'" class="join">
+        <div v-if="!isStaffLoggedIn && stateContract === 'Registration'" class="join">
           <button
             class="button is-success is-fullwidth"
              @click="onJoin()"
-             v-if="isJoined"
+             v-if="isJoined && !isPlayerLoggedIn"
              :disabled="team.members.length > 4"
             >
             Join
@@ -55,12 +55,14 @@
           <button
             class="button is-danger is-fullwidth join"
              @click="removeTeam(team.name)"
-             v-if="team.members.length === 0 && isLoggedIn && stateContract === 'Registration'"
+             v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
              :disabled="team.members.length > 4"
             >
             Kick team
           </button>
-          <form @submit.prevent="onAddPlayer(team)">
+          <form
+            @submit.prevent="onAddPlayer(team)"
+            >
               <b-input
                   v-if="!isJoined"
                   type="text"
@@ -96,7 +98,7 @@ export default {
   },
   props: ['team'],
   computed: {
-    ...mapState('auth', ['user', 'isLoggedIn', 'tokenBalance']),
+    ...mapState('auth', ['user', 'isStaffLoggedIn', 'tokenBalance', 'isPlayerLoggedIn']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {

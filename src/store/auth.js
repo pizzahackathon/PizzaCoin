@@ -1,7 +1,8 @@
 
 const state = {
   user: {},
-  isLoggedIn: false,
+  isStaffLoggedIn: false,
+  isPlayerLoggedIn: false,
   isLoading: 0,
   userAddress: '',
   userName: '',
@@ -15,17 +16,19 @@ const mutations = {
   },
   isStaffLogin (state, payload) {
     console.log(` payload >> ${payload}`)
-    state.isLoggedIn = true
+    state.isStaffLoggedIn = true
+    state.isPlayerLoggedIn = false
     state.role = 'Staff'
   },
   isPlayerLogin (state, payload) {
     console.log(` payload >> ${payload}`)
-    state.isLoggedIn = false
+    state.isStaffLoggedIn = false
+    state.isPlayerLoggedIn = true
     state.role = 'Player'
   },
   getTokenBalance (state, {isPlayer, tokenBalance}) {
     console.log(` isPlayer >> ${isPlayer}`)
-    if (isPlayer || state.isLoggedIn) {
+    if (isPlayer || state.isStaffLoggedIn) {
       state.tokenBalance = tokenBalance
     } else {
       state.tokenBalance = 0

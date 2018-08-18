@@ -23,16 +23,16 @@
           </div>
           <div class="navbar-item">
             <div class="field is-grouped">
-              <p class="control" v-if="isLoggedIn && stateContract === 'Registration'">
+              <p class="control" v-if="isStaffLoggedIn && stateContract === 'Registration'">
                 <a class="bd-tw-button button"  @click="lockRegistration()">
                     Freeze & Transfer
                 </a>
               </p>
               <p class="control">
-                <a class="bd-tw-button button" @click="startVote()" v-if="isLoggedIn && stateContract === 'Registration Locked'">
+                <a class="bd-tw-button button" @click="startVote()" v-if="isStaffLoggedIn && stateContract === 'Registration Locked'">
                     Start Vote
                 </a>
-                <a class="bd-tw-button button" @click="stopVote()" v-if="isLoggedIn && stateContract === 'Voting'">
+                <a class="bd-tw-button button" @click="stopVote()" v-if="isStaffLoggedIn && stateContract === 'Voting'">
                     Stop Vote
                 </a>
               </p>
@@ -118,7 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', ['isLoggedIn', 'tokenBalance']),
+    ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {

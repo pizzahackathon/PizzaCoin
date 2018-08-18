@@ -354,10 +354,10 @@ class PizzaCoin {
   }
 
   async isPlayer (address) {
-    console.log(`ddd >> ${address}`)
+    console.log(`isPlayer >> ${address}`)
 
     let isPlayer = await this.player.methods.isPlayer(address).call()
-    console.log(`dddIs >> ${isPlayer}`)
+    console.log(`isPlayer >> ${isPlayer}`)
 
     return isPlayer
   }
