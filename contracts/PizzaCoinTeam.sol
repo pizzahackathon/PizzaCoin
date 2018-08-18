@@ -39,6 +39,7 @@ interface ITeamContract {
             address _player
         );
     function getTotalTeams() external view returns (uint256 _total);
+    function getTeamArrayLength() external view returns (uint256 _length);
     function getFirstFoundTeamInfo(uint256 _startSearchingIndex) 
         external view
         returns (
@@ -494,6 +495,13 @@ contract PizzaCoinTeam is ITeamContract, Owned {
                 _total++;
             }
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // Get a length of 'team' array (including all ever removal teams)
+    // ------------------------------------------------------------------------
+    function getTeamArrayLength() external view returns (uint256 _length) {
+        return teams.length;
     }
 
     // ------------------------------------------------------------------------

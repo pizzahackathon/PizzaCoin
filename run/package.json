@@ -1,12 +1,12 @@
 {
   "name": "run",
   "version": "1.0.0",
-  "description": "",
+  "description": "To test PizzaCoin contract and its dependencies",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Phuwanai Thummavet (serial-coder)",
   "license": "ISC",
   "dependencies": {
     "parse-error": "^0.2.0",
