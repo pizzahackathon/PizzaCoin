@@ -1,6 +1,6 @@
 <template>
   <div class="column is-4">
-    <a href="#" class="badge1" :data-badge="team.score"></a>
+    <a href="#" class="badge1" :data-badge="score"></a>
     <div class="box content shadow">
       <article class="post">
         <h2 class="">
@@ -22,7 +22,7 @@ import TeamProfile from '@/components/TeamProfile.vue'
 
 export default {
   name: 'TeamProfileCard',
-  props: ['team'],
+  props: ['team', 'score'],
   components: {
     TeamProfile
   }

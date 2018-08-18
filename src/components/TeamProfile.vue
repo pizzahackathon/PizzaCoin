@@ -37,7 +37,7 @@
             </div>
         </div>
         <button
-            class="button is-primary"
+            class="button is-primary is-fullwidth"
              @click="onVote(team)"
              v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0"
             >
