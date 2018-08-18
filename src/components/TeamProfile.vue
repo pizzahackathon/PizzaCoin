@@ -40,6 +40,7 @@
             class="button is-primary is-fullwidth"
              @click="onVote(team)"
              v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0"
+             :disabled="team"
             >
             VOTE
         </button>
@@ -56,7 +57,6 @@
             class="button is-danger is-fullwidth join"
              @click="removeTeam(team.name)"
              v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
-             :disabled="team.members.length > 4"
             >
             Kick team
           </button>
