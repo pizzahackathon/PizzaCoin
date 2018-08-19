@@ -42,12 +42,18 @@ export default {
    top:-15px;
    right:-450px;
    font-size:1.5em;
-   background:#f44141;
+   background:#167df0;
    color:white;
    width:25px;height:25px;
    text-align:center;
    line-height:18px;
    border-radius:50%;
    box-shadow:0 0 10px #333;
+   font-size: 2em;
+   width: 40px;
+   height: 38px;
+   justify-content: center;
+   vertical-align: middle;
+   padding-top: 9px;
 }
 </style>
