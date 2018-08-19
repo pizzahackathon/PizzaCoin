@@ -181,18 +181,18 @@ contract PizzaCoin is ERC20, Owned {
     // Initial a state mapping
     // ------------------------------------------------------------------------
     function initStateMap() internal onlyInitialState onlyOwner {
-        stateMap[keccak256(State.Initial)] = "Initial";
-        stateMap[keccak256(State.Registration)] = "Registration";
-        stateMap[keccak256(State.RegistrationLocked)] = "Registration Locked";
-        stateMap[keccak256(State.Voting)] = "Voting";
-        stateMap[keccak256(State.VotingFinished)] = "Voting Finished";
+        stateMap[keccak256(abi.encodePacked(State.Initial))] = "Initial";
+        stateMap[keccak256(abi.encodePacked(State.Registration))] = "Registration";
+        stateMap[keccak256(abi.encodePacked(State.RegistrationLocked))] = "Registration Locked";
+        stateMap[keccak256(abi.encodePacked(State.Voting))] = "Voting";
+        stateMap[keccak256(abi.encodePacked(State.VotingFinished))] = "Voting Finished";
     }
 
     // ------------------------------------------------------------------------
     // Get a contract state in String format
     // ------------------------------------------------------------------------
     function getContractState() public view returns (string _state) {
-        return stateMap[keccak256(state)];
+        return stateMap[keccak256(abi.encodePacked(state))];
     }
 
     // ------------------------------------------------------------------------
