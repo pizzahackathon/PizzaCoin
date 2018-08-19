@@ -4,7 +4,7 @@
      <nav class="navbar is-transparent is-warning">
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item">
-          <img src="https://p-u.popcdn.net/attachments/images/000/010/730/large/Pizza_Hackathon_Logo.png?1532094493" alt="Pizza Hackathon" width="50" height="50">
+          <img class="logo" src="https://p-u.popcdn.net/attachments/images/000/010/730/large/Pizza_Hackathon_Logo.png?1532094493" alt="Pizza Hackathon" width="50" height="50">
         </router-link>
       </div>
 
@@ -203,5 +203,8 @@ export default {
 <style scoped>
 .nav-bar {
   box-shadow:0 0 10px #333 !important;
+}
+.logo {
+  max-height: 3.75em;
 }
 </style>
