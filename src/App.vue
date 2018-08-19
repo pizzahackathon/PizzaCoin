@@ -16,7 +16,7 @@
             </router-link>
           </div>
           <div class="navbar-item">
-            <span class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</span>
+            <a :href="`${$store.state.system.etherscanPrefix}/token/${$store.state.system.pizzaCoinAddr}?a=${$pizzaCoin.account}`" class="bd-tw-button button is-info" target="_blank"> You have {{ tokenBalance }} PZC</a>
           </div>
         </div>
         <div class="navbar-end">

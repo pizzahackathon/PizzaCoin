@@ -1,6 +1,6 @@
 <template>
   <div class="column is-4">
-    <a href="#" class="badge1" :data-badge="score"></a>
+    <a :href="`${$store.state.system.etherscanPrefix}/address/${$store.state.system.pizzaCoinAddr}#events`" class="badge1" :data-badge="score" target="_blank"></a>
     <div class="box content shadow">
       <article class="post">
         <h2 class="">
