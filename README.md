@@ -21,7 +21,7 @@ Each Players and Staffs have same amount of PZC on voting period.
 ## Smart Contract
 TBD
 
-## DApp is Decentralized Application
+## DApp ( Decentralized Application )
 TBD
 
 ## Contributors
