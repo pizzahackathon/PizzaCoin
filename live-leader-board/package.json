@@ -14,6 +14,7 @@
     "chart.js": "^2.7.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
+    "sweetalert2": "^7.26.11",
     "vue": "^2.5.16",
     "vue-chartjs": "^3.3.2",
     "vue-youtube-embed": "^2.2.1"
