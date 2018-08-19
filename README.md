@@ -8,7 +8,7 @@ Pizza Coin is <a href="https://en.wikipedia.org/wiki/ERC-20">ERC20</a> Compatibl
 
 Each Players and Staffs have same amount of PZC on voting period.
 
-#### Pizza Coin consist of two parts
+### Pizza Coin consist of two parts
 <p align="center">
   <a href="#" target="_blank">
     <img width="260px" src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/ethereum-smart-contract.jpeg">
