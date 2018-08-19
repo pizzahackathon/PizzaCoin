@@ -16,7 +16,7 @@ library BasicStringUtils {
     // Determine if two strings are equal or not
     // ------------------------------------------------------------------------
     function isEqual(string self, string other) internal pure returns (bool bEqual) {
-        return keccak256(self) == keccak256(other);
+        return keccak256(abi.encodePacked(self)) == keccak256(abi.encodePacked(other));
     }
 
     // ------------------------------------------------------------------------

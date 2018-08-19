@@ -33,7 +33,7 @@ library BasicStringUtils {
     // Determine if two strings are equal or not
     // ------------------------------------------------------------------------
     function isEqual(string self, string other) internal pure returns (bool bEqual) {
-        return keccak256(self) == keccak256(other);
+        return keccak256(abi.encodePacked(self)) == keccak256(abi.encodePacked(other));
     }
 
     // ------------------------------------------------------------------------
@@ -265,17 +265,17 @@ contract PizzaCoin is ERC20Interface, Owned {
     // Initial a state mapping
     // ------------------------------------------------------------------------
     function initStateMap() internal onlyRegistrationState onlyOwner {
-        stateMap[keccak256(State.Registration)] = "Registration";
-        stateMap[keccak256(State.RegistrationLocked)] = "Registration Locked";
-        stateMap[keccak256(State.Voting)] = "Voting";
-        stateMap[keccak256(State.VotingFinished)] = "Voting Finished";
+        stateMap[keccak256(abi.encodePacked(State.Registration))] = "Registration";
+        stateMap[keccak256(abi.encodePacked(State.RegistrationLocked))] = "Registration Locked";
+        stateMap[keccak256(abi.encodePacked(State.Voting))] = "Voting";
+        stateMap[keccak256(abi.encodePacked(State.VotingFinished))] = "Voting Finished";
     }
 
     // ------------------------------------------------------------------------
     // Convert a state to a readable string
     // ------------------------------------------------------------------------
     function convertStateToString() internal view returns (string _state) {
-        return stateMap[keccak256(state)];
+        return stateMap[keccak256(abi.encodePacked(state))];
     }
 
     // ------------------------------------------------------------------------
@@ -283,7 +283,6 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     function registerStaff(address _newStaff, string _newStaffName) 
         public onlyRegistrationState onlyStaff notRegistered(_newStaff) 
-        returns (bool success) 
     {
         require(
             address(_newStaff) != address(0),
@@ -315,13 +314,12 @@ contract PizzaCoin is ERC20Interface, Owned {
         _totalSupply = _totalSupply.add(voterInitialTokens);
 
         emit StaffRegistered(_newStaff, _newStaffName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
     // Remove a specific staff
     // ------------------------------------------------------------------------
-    function kickStaff(address _staff) public onlyRegistrationState onlyOwner returns (bool success) {
+    function kickStaff(address _staff) public onlyRegistrationState onlyOwner {
         require(
             address(_staff) != address(0),
             "'_staff' contains an invalid address."
@@ -358,7 +356,6 @@ contract PizzaCoin is ERC20Interface, Owned {
         _totalSupply = _totalSupply.sub(voterInitialTokens);
 
         emit StaffKicked(_staff, staffName, kicker, kickerName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -382,7 +379,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     // Team leader creates a team
     // ------------------------------------------------------------------------
-    function createTeam(string _teamName, string _creatorName) public onlyRegistrationState notRegistered(msg.sender) returns (bool success) {
+    function createTeam(string _teamName, string _creatorName) public onlyRegistrationState notRegistered(msg.sender) {
         require(
             _teamName.isEmpty() == false,
             "'_teamName' might not be empty."
@@ -415,7 +412,6 @@ contract PizzaCoin is ERC20Interface, Owned {
 
         // Register a creator to a team as team leader
         registerTeamPlayer(_creatorName, _teamName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -423,7 +419,6 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     function registerTeamPlayer(string _playerName, string _teamName) 
         public onlyRegistrationState notRegistered(msg.sender) 
-        returns (bool success) 
     {
         require(
             _playerName.isEmpty() == false,
@@ -461,7 +456,6 @@ contract PizzaCoin is ERC20Interface, Owned {
         _totalSupply = _totalSupply.add(voterInitialTokens);
 
         emit TeamPlayerRegistered(_teamName, player, _playerName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -508,7 +502,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     // Remove a specific player from a particular team
     // ------------------------------------------------------------------------
-    function kickTeamPlayer(address _player, string _teamName) public onlyRegistrationState onlyStaff returns (bool success) {
+    function kickTeamPlayer(address _player, string _teamName) public onlyRegistrationState onlyStaff {
         require(
             address(_player) != address(0),
             "'_player' contains an invalid address."
@@ -554,7 +548,6 @@ contract PizzaCoin is ERC20Interface, Owned {
         _totalSupply = _totalSupply.sub(voterInitialTokens);
 
         emit TeamPlayerKicked(_teamName, _player, playerName, kicker, kickerName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -599,7 +592,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     // Remove a specific team (the team must be empty of players)
     // ------------------------------------------------------------------------
-    function kickTeam(string _teamName) public onlyRegistrationState onlyStaff returns (bool success) {
+    function kickTeam(string _teamName) public onlyRegistrationState onlyStaff {
         require(
             _teamName.isEmpty() == false,
             "'_teamName' might not be empty."
@@ -634,7 +627,6 @@ contract PizzaCoin is ERC20Interface, Owned {
         address kicker = msg.sender;
         string memory kickerName = staffsInfo[kicker].name;
         emit TeamKicked(_teamName, kicker, kickerName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -658,37 +650,34 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     // Allow a staff freeze Registration state and transfer the state to RegistrationLocked
     // ------------------------------------------------------------------------
-    function lockRegistration() public onlyRegistrationState onlyStaff returns (bool success) {
+    function lockRegistration() public onlyRegistrationState onlyStaff {
         state = State.RegistrationLocked;
 
         address staff = msg.sender;
         string memory staffName = staffsInfo[staff].name;
         emit StateChanged(convertStateToString(), staff, staffName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
     // Allow a staff transfer a state from RegistrationLocked to Voting
     // ------------------------------------------------------------------------
-    function startVoting() public onlyRegistrationLockedState onlyStaff returns (bool success) {
+    function startVoting() public onlyRegistrationLockedState onlyStaff {
         state = State.Voting;
 
         address staff = msg.sender;
         string memory staffName = staffsInfo[staff].name;
         emit StateChanged(convertStateToString(), staff, staffName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
     // Allow a staff transfer a state from Voting to VotingFinished
     // ------------------------------------------------------------------------
-    function stopVoting() public onlyVotingState onlyStaff returns (bool success) {
+    function stopVoting() public onlyVotingState onlyStaff {
         state = State.VotingFinished;
 
         address staff = msg.sender;
         string memory staffName = staffsInfo[staff].name;
         emit StateChanged(convertStateToString(), staff, staffName);
-        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -1075,7 +1064,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     // Allow any staff or any player in other different teams to vote to a team
     // ------------------------------------------------------------------------
-    function voteTeam(string _teamName, uint256 _votingWeight) public onlyVotingState onlyRegistered returns (bool success) {
+    function voteTeam(string _teamName, uint256 _votingWeight) public onlyVotingState onlyRegistered {
         require(
             _teamName.isEmpty() == false,
             "'_teamName' might not be empty."
@@ -1116,7 +1105,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     // Vote for a team by a staff
     // ------------------------------------------------------------------------
-    function voteTeamByStaff(string _teamName, uint256 _votingWeight) internal onlyVotingState returns (bool success) {
+    function voteTeamByStaff(string _teamName, uint256 _votingWeight) internal onlyVotingState {
         address voter = msg.sender;
         assert(_teamName.isEmpty() == false);
         assert(_votingWeight > 0);
@@ -1148,13 +1137,12 @@ contract PizzaCoin is ERC20Interface, Owned {
 
         string memory voterName = staffsInfo[voter].name;
         emit TeamVotedByStaff(_teamName, voter, voterName, _votingWeight);
-        return true;
     }
 
     // ------------------------------------------------------------------------
     // Vote for a team by a different team player
     // ------------------------------------------------------------------------
-    function voteTeamByDifferentTeamPlayer(string _teamName, uint256 _votingWeight) internal onlyVotingState returns (bool success) {
+    function voteTeamByDifferentTeamPlayer(string _teamName, uint256 _votingWeight) internal onlyVotingState {
         address voter = msg.sender;
         assert(_teamName.isEmpty() == false);
         assert(_votingWeight > 0);
@@ -1192,7 +1180,6 @@ contract PizzaCoin is ERC20Interface, Owned {
         string memory voterName = playersInfo[voter].name;
         string memory teamVoterAssociatedWith = playersInfo[voter].teamName;
         emit TeamVotedByPlayer(_teamName, voter, voterName, teamVoterAssociatedWith, _votingWeight);
-        return true;
     }
 
     // ------------------------------------------------------------------------
