@@ -67,15 +67,18 @@ node main.js
 ## DApp ( Decentralized Application )
 
 #### Run Team Dashboard
+- cd DApp
 - npm install
 - npm run serve
 
-#### Run Leader Board
+#### Run Live Feed
+- cd live-feed
 - npm install
 - npm run serve
 
-#### Run Leader Board Api server
-- node run
+#### Run Live Feed Api server
+- cd live-feed
+- TBD
 
 #### Configure
 ## store/system.js
