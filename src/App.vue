@@ -3,18 +3,20 @@
     <div id="nav" class="nav-bar">
      <nav class="navbar is-transparent is-warning">
       <div class="navbar-brand">
-        <a class="navbar-item" href="#">
+        <router-link to="/" class="navbar-item">
           <img src="https://p-u.popcdn.net/attachments/images/000/010/730/large/Pizza_Hackathon_Logo.png?1532094493" alt="Pizza Hackathon" width="50" height="50">
-        </a>
+        </router-link>
       </div>
 
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <a href="/leader-board" class="navbar-item">Leader board</a>
+            <router-link to="/leader-board" class="navbar-item">
+              Leader board
+            </router-link>
           </div>
           <div class="navbar-item">
-            <a href="#" class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</a>
+            <span class="bd-tw-button button is-info"> You have {{ tokenBalance }} Token</span>
           </div>
         </div>
         <div class="navbar-end">
