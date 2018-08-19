@@ -33,7 +33,6 @@ class PizzaCoin {
     this.pizzaCoinStaffAddr = '0xb25eE5C4d11F9D934f2642d30c99319708e615D4'
     this.pizzaCoinTeamAddr = '0x164d120357CAc5Cea08c201D719c7D48b2054b8e'
     this.pizzaCoinPlayerAddr = '0xD1571785b4309F55294EF7593276B7B5505F103A'
-
     this.loadUserAddress().then(account => {
       this.account = account
     })
