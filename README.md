@@ -21,4 +21,4 @@
 - **pizzaCoinStaffAddr**: Deployed Pizza Coin Team Address
 - **pizzaCoinPlayerAddr**: Deployed Pizza Coin Player Address
 
-* For pizzaCoinAddr, pizzaCoinStaffAddr, pizzaCoinStaffAddr and pizzaCoinPlayerAddr please consult in Pizza-Coin directory.
+** For **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinStaffAddr** and **pizzaCoinPlayerAddr** please consult in Pizza-Coin directory.
