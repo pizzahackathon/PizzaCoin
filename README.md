@@ -19,6 +19,8 @@ Each Players and Staffs have same amount of PZC for voting.
 </p>
 
 ## Smart Contract
+<img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Smart-contract-screenshot-PizzaCoin.png">
+
 #### To set up Node.JS packages required by Truffle
 ```
 npm install
@@ -63,9 +65,8 @@ cd run
 node main.js
 ```
 
-
 ## DApp ( Decentralized Application )
-<img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/DApp-screenshot-teams.png">
+<img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/DApp-screenshot-teams.jpg">
 
 #### Run Team Dashboard
 - cd DApp
