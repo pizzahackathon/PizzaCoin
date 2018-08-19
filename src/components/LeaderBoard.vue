@@ -75,12 +75,10 @@ export default {
       }
     },
     createWeb3 () {
-      var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/_ws'))
-      // var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/v3/4e81201d04f84222a663fa0efe57270e'))
+      var web3 = new Web3(new Web3.providers.WebsocketProvider(this.$store.state.system.ethereumNode))
       this.pizzaCoin = new web3.eth.Contract(
         PizzaCoinAbi,
         this.$pizzaCoin.pizzaCoinAddr
-        // PizzaCoinJson.networks[4].address     // Rinkeby
       )
     },
     createChart (chartId, chartData) {

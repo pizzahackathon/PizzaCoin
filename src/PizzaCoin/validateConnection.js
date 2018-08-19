@@ -9,9 +9,9 @@ const validateConnection = {
 
     // Check Network
     let currentNetwork = await this.getNetworkName()
-    console.log(`currentNetwork ${currentNetwork}`)
-    if (currentNetwork !== 'rinkeby') {
-      const errorText = 'Wrong network! Please switch to **Rinkeby** on Metamask.'
+    console.log(`currentNetwork ${this.network}`)
+    if (currentNetwork !== this.network) {
+      const errorText = `Wrong network! Please switch to **${this.capitalize(this.network)}** on Metamask.`
       this.showToastError(toast, errorText, 60000)
       throw Error(errorText)
     }
@@ -50,6 +50,10 @@ const validateConnection = {
       // position: 'is-bottom',
       type: 'is-danger'
     })
+  },
+
+  capitalize (text) {
+    return text.charAt(0).toUpperCase() + text.slice(1)
   }
 }
 

@@ -6,8 +6,18 @@ import 'buefy/lib/buefy.css'
 import Buefy from 'buefy'
 import Pizzacoin from '@/PizzaCoin'
 
-const pizzaCoin = new Pizzacoin()
+//
+// ─── INITIAL PIZZA COIN ─────────────────────────────────────────────────────────
+//
+const pizzaCoin = new Pizzacoin(
+  store.state.system.network,
+  store.state.system.ethereumNode,
+  store.state.system.pizzaCoinAddr,
+  store.state.system.pizzaCoinStaffAddr,
+  store.state.system.pizzaCoinTeamAddr,
+  store.state.system.pizzaCoinPlayerAddr)
 Vue.prototype.$pizzaCoin = pizzaCoin
+
 Vue.prototype.$store = store
 
 setInterval(async function () {
