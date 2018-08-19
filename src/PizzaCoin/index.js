@@ -12,7 +12,8 @@ class PizzaCoin {
     // connect with web3-compatible like Metamask, Cipher, Trust wallet
     if (typeof window.web3 === 'undefined') {
       // console.error('No metamask or web3 wallet found!')
-      this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/_ws'))
+      // this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/_ws'))
+      this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/_ws'))
     } else {
       this.web3 = new Web3(window.web3.currentProvider)
     }
@@ -23,10 +24,15 @@ class PizzaCoin {
     // this.pizzaCoinPlayerAddr = '0x27bA426a96d78deB8491EA20A6249Ba30Cfa3910'
     // this.pizzaCoinTeamAddr = '0xC3557980171116C3c67127CD4b2521F4e731c8f6'
 
-    this.pizzaCoinAddr = '0x2f1d21D4667BA3744bf031d6cd6Cef2109cCc090'
-    this.pizzaCoinStaffAddr = '0x0E87749faD6fBAE09C3A01D4B0FF3b5128fD5675'
-    this.pizzaCoinPlayerAddr = '0x12998F6E32D3f76D856c92eD88428E5A7630aC29'
-    this.pizzaCoinTeamAddr = '0xc336A6537b820bF530BfcdECF5Efb6c33bE49c77'
+    // this.pizzaCoinAddr = '0x2f1d21D4667BA3744bf031d6cd6Cef2109cCc090'
+    // this.pizzaCoinStaffAddr = '0x0E87749faD6fBAE09C3A01D4B0FF3b5128fD5675'
+    // this.pizzaCoinPlayerAddr = '0x12998F6E32D3f76D856c92eD88428E5A7630aC29'
+    // this.pizzaCoinTeamAddr = '0xc336A6537b820bF530BfcdECF5Efb6c33bE49c77'
+
+    this.pizzaCoinAddr = '0x5aa5bf8f1a386f6f3cc564548890ee9a7382718d'
+    this.pizzaCoinStaffAddr = '0xb25eE5C4d11F9D934f2642d30c99319708e615D4'
+    this.pizzaCoinTeamAddr = '0x164d120357CAc5Cea08c201D719c7D48b2054b8e'
+    this.pizzaCoinPlayerAddr = '0xD1571785b4309F55294EF7593276B7B5505F103A'
 
     this.loadUserAddress().then(account => {
       this.account = account
@@ -153,14 +159,20 @@ class PizzaCoin {
         }
         console.log('teamName: ' + teamName)
         console.log('totalVoted: ' + totalVoted + '\n')
+        const {teams, canVote} = await this.getPlayersProfile(teamName)
+        console.log('canVote' + canVote)
 
         data = {
-          member: await this.getPlayersProfile(teamName),
+          member: teams,
+          canVote: canVote,
           score: await this.getVotingPointForTeam(teamName)
         }
+        // console.log('checkCanVote: ' + data.member[0].address + '\n')
+
         const teamProfile = {
           name: teamName,
           members: data.member,
+          canVote: data.canVote,
           score: data.score
         }
         console.log('profile >> ' + JSON.stringify(teamProfile))
@@ -326,6 +338,7 @@ class PizzaCoin {
 
     let nextStartSearchingIndex = 0
     let endOfList, playerAddress
+    let canVote = true
     while (true) {
       [
         endOfList,
@@ -340,6 +353,10 @@ class PizzaCoin {
       console.log('playerAddress >> : ' + playerAddress)
       let playerName = await this.getPlayerName(playerAddress)
       console.log(`playerName >> : ${playerName}`)
+      if (playerAddress === this.account) {
+        canVote = false
+        console.log(playerAddress + 'booommm' + this.account)
+      }
       teams.push({
         'name': playerName,
         'address': playerAddress
@@ -350,7 +367,7 @@ class PizzaCoin {
     // let isStaff = await this.isStaff(this.account)
     // console.log(`isStaff >> ${isStaff}`)
     // console.log('teams >> ' + teams)
-    return teams
+    return {teams, canVote}
   }
 
   async isPlayer (address) {

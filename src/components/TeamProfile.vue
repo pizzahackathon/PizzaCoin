@@ -39,8 +39,7 @@
         <button
             class="button is-primary is-fullwidth"
              @click="onVote(team)"
-             v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0"
-             :disabled="team"
+             v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0 && team.canVote"
             >
             VOTE
         </button>

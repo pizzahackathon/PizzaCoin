@@ -10,8 +10,8 @@ const validateConnection = {
     // Check Network
     let currentNetwork = await this.getNetworkName()
     console.log(`currentNetwork ${currentNetwork}`)
-    if (currentNetwork !== 'ropsten') {
-      const errorText = 'Wrong network! Please switch to **Ropsten** on Metamask.'
+    if (currentNetwork !== 'rinkeby') {
+      const errorText = 'Wrong network! Please switch to **Rinkeby** on Metamask.'
       this.showToastError(toast, errorText, 60000)
       throw Error(errorText)
     }
