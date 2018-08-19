@@ -33,33 +33,57 @@
 <script>
 import axios from 'axios'
 import _ from 'lodash'
+import config from '@/config.js'
 
 export default {
   name: 'TwitterComponent',
   data () {
     return {
       twitterDatas: [],
-      videosId: null
+      videosId: null,
+      instance: null,
+      queryString: ''
     }
   },
   async mounted () {
-    const instance = axios.create({
+    this.instance = axios.create({
       baseURL:
-        'https://us-central1-live-leader-board.cloudfunctions.net/restApi',
+        config.twitter.endPoint,
       headers: {
         'Content-Type': 'application/json'
       }
     })
-
-    for (let i = 0; i <= 10; i++) {
-      this.loadTweets(instance)
-      await this.sleep(10)
+    this.prepareQueryString()
+    if (config.isProd) {
+      this.runTweetProd()
+    } else {
+      this.runTweetDev()
     }
   },
   methods: {
+    prepareQueryString () {
+      _.forEach(config.twitter.queryParam, (query, idx, array) => {
+        this.queryString += '%23' + query
+        if (idx !== array.length - 1) {
+          this.queryString += '%20OR%20'
+        }
+      })
+    },
+    async runTweetDev () {
+      for (let i = 0; i <= 1; i++) {
+        this.loadTweets(this.instance)
+        await this.sleep(10)
+      }
+    },
+    async runTweetProd () {
+      for (;;) {
+        this.loadTweets(this.instance)
+        await this.sleep(10)
+      }
+    },
     async loadTweets (instance) {
-      const response = await instance.get('/loadTweets/%23pizzahackathon')
-      console.log(response.data.statuses)
+      const response = await instance.get(this.queryString)
+      // console.log(response.data.statuses)
       this.twitterDatas = response.data.statuses
       _.forEach(this.twitterDatas, (tweet) => {
         if (tweet.entities.urls) {
