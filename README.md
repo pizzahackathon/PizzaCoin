@@ -23,3 +23,14 @@ TBD
 
 ## DApp is Decentralized Application
 TBD
+
+## Contributors
+
+# Coders
+- <a href="https://github.com/serial-coder">Byte</a> (Smart contract)
+- <a href="https://github.com/teerapat1739">Game</a> (DApp Team)
+- <a href="https://github.com/zent-bank">Bank</a> (DApp Leader board)
+
+# Advisors
+- <a href="https://github.com/totiz?tab=repositories">Tot Nattapon </a>
+- <a href="https://nuuneoi.com/">Nuuneoi</a>
