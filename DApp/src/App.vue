@@ -48,7 +48,7 @@
        <span
         class="icon"
         @click="isComponentModalActive = true"
-        v-if="stateContract === 'Registration'">
+        v-if="stateContract === 'Registration' && !isStaffLoggedIn">
          <i class="fas fa-plus-circle fa fa-2x"></i>
        </span>
 
