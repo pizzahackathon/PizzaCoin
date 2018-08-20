@@ -3,21 +3,34 @@
 
 var HDWalletProvider = require('truffle-hdwallet-provider');
 var mnemonic = require('./mnemonic.secret');
+var infuraApi = require('./infura-api.secret');
 
 module.exports = {
   networks: {
+    mainnet: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/' + infuraApi);
+      },
+      network_id: '1'
+    },
     ropsten: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/3ikLuZwohJ81nAe4aPyI');
+        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/' + infuraApi);
       },
       network_id: '3'
     },
     rinkeby: {
       provider: function() {
         //return new HDWalletProvider(mnemonic, 'http://localhost:8545');
-        return new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/3ikLuZwohJ81nAe4aPyI');
+        return new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/' + infuraApi);
       },
       network_id: '4'
+    },
+    kovan: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, 'https://kovan.infura.io/' + infuraApi);
+      },
+      network_id: '42'
     },
     rinkeby_localsync: {
       host: 'localhost',
