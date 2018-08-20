@@ -52,13 +52,6 @@
             >
             Join
           </button>
-          <button
-            class="button is-danger is-fullwidth join"
-             @click="removeTeam(team.name)"
-             v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
-            >
-            Kick team
-          </button>
           <form
             @submit.prevent="onAddPlayer(team)"
             >
@@ -78,6 +71,13 @@
             Submit
           </button>
         </div>
+        <button
+          class="button is-danger is-fullwidth join"
+            @click="removeTeam(team.name)"
+            v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
+          >
+          Kick team
+        </button>
     </div>
 </template>
 <script>
