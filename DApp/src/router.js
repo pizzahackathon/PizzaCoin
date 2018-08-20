@@ -22,11 +22,15 @@ export default new Router({
     },
     {
       path: '/livefeed',
-      beforeEnter () { location.href = 'https://pizzahackathon.github.io/livefeed/' }
+      beforeEnter () {
+        window.open('https://pizzahackathon.github.io/livefeed/', '_blank')
+      }
     },
     {
       path: '/github',
-      beforeEnter () { location.href = 'https://github.com/pizzahackathon/' }
+      beforeEnter () {
+        window.open('https://github.com/pizzahackathon/', '_blank')
+      }
     }
   ]
 })
