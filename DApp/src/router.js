@@ -19,7 +19,14 @@ export default new Router({
       path: '/leader-board',
       name: 'leader-board',
       component: LeaderBoard
+    },
+    {
+      path: '/livefeed',
+      beforeEnter () { location.href = 'https://pizzahackathon.github.io/livefeed/' }
+    },
+    {
+      path: '/github',
+      beforeEnter () { location.href = 'https://github.com/pizzahackathon/' }
     }
-    // https://github.com/pizzahackathon/PizzaCoin
   ]
 })

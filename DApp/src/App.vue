@@ -17,6 +17,9 @@
             <router-link to="/leader-board" class="navbar-item">
               Leader board
             </router-link> |
+            <router-link to="/livefeed" class="navbar-item">
+              Live feed
+            </router-link> |
             <router-link to="/github" class="navbar-item">
               Github
             </router-link>
