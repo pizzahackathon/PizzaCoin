@@ -6,7 +6,7 @@ Pizza Coin is a demonstration of Voting system on Blockchain, utilizing <a href=
 
 Pizza Coin is <a href="https://en.wikipedia.org/wiki/ERC-20">ERC20</a> compatible with voting mechanism, allowing player to participate in creating / joining team and voting. Authorized staff can perform "kick player", "kick team", "freeze and transfer tokens" and "start / stop voting".
 
-Each player and each staff has the same amount of PZC for voting. Specifically, a player can give a vote to any teams he/she is not associated with whereas a staff is freely to give a vote to any teams. Each voter is able to vote to any favourite teams according to his/her own voting token balance.
+Each player and each staff has the same amount of PZC for voting. Specifically, a player can give a vote to any teams that he/she is not associated with whereas a staff is freely to give a vote to any teams. Each voter is able to vote to any favourite teams according to his/her own voting token balance.
 
 ### Pizza Coin consists of two parts
 <p align="center">
