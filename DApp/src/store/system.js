@@ -2,10 +2,10 @@ const state = {
   network: 'kovan',
   etherscanPrefix: 'https://kovan.etherscan.io',
   ethereumNode: 'wss://kovan.infura.io/_ws', // Only websocker endpoint
-  pizzaCoinAddr: '0xad046a2f39ada5391c8ab44b06cfdf68b317f70d',
-  pizzaCoinStaffAddr: '0x094bB77d34A250F8711c17814Cc96C567B5EF95b',
-  pizzaCoinPlayerAddr: '0xC6E2b58E3208B10D9Fae03eEA2802F11BA674bBc',
-  pizzaCoinTeamAddr: '0x82b778B1f8Bc6e41ffB5F8Dfa305C7cfd3Ffd176'
+  pizzaCoinAddr: '0xfddd77bec2e53d723e749bf908e4066f7be0873a',
+  pizzaCoinStaffAddr: '0xe3001d83e9EB2C086ac48750C6E13d83035347d0',
+  pizzaCoinPlayerAddr: '0x6336294bF6b6216EabEe952f336Fd44AAD3c0885',
+  pizzaCoinTeamAddr: '0xf7802f5CC14CBF2D9D919b68180a56595F77b4F6'
 }
 
 // Ropsten
