@@ -22,10 +22,10 @@ Each Players and Staffs have same amount of PZC for voting.
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Smart-contract-screenshot-PizzaCoin.png">
 description: TBD
 
-## To install Truffle Framework
+#### To install Truffle Framework
 <a href="https://truffleframework.com/docs/truffle/getting-started/installation">follow this link</a>
 
-#### To set up Node.JS packages required by Truffle
+#### To install Node.JS packages required by Truffle
 ```
 npm install
 ```
@@ -57,7 +57,7 @@ truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via lo
 truffle migrate --network ganache  // Deploy to Ganache local test environment
 ```
 
-#### To set up Node.JS packages required by lazy-web3-wrapper functions
+#### To install Node.JS packages required by lazy-web3-wrapper functions
 ```
 cd run
 npm install
