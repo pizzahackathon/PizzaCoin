@@ -55,7 +55,7 @@
           <button
             class="button is-danger is-fullwidth join"
              @click="removeTeam(team.name)"
-             v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
+             v-if="team.members.length === 0 && isPlayerLoggedIn && stateContract === 'Registration'"
             >
             Kick team
           </button>

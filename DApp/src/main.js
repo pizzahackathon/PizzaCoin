@@ -43,6 +43,7 @@ setInterval(async function () {
   }
   store.dispatch('staff/getContractState', state)
   store.dispatch('auth/getTokenBalance', showToken)
+  store.dispatch('team/getTeamsProfile', await pizzaCoin.getTeamsProfile())
 }, 3000)
 
 // store.dispatch('team/getTeamsProfile')
