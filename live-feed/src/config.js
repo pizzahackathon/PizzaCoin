@@ -12,7 +12,7 @@ const chart = {
   btcMin: 6350.0000,
   btcMax: 6500.0000,
   ethMin: 290.0000,
-  ethMax: 300.0000
+  ethMax: 310.0000
 }
 
 export default {
