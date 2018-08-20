@@ -22,31 +22,47 @@ Each player and each staff has the same amount of PZC for voting. Specifically, 
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Smart-contract-screenshot-PizzaCoin.png">
 description: Pizza Coin Contract
 
-#### To install Truffle Framework
-<a href="https://truffleframework.com/docs/truffle/getting-started/installation">follow this link</a>
+## To install Truffle Framework
+&emsp;<a href="https://truffleframework.com/docs/truffle/getting-started/installation">Follow this link</a>
 
-#### To install Node.JS packages required by Truffle
+## To install Node.JS packages required by Truffle
 ```
 npm install
 ```
 
-#### To set up 'mnemonic.secret' file
+## To get Infura API for free
+&emsp;<a href="https://infura.io">Register to get a free api.</a> Note that, the api will be sent to your registered e-mail.
+
+## To set up 'infura-api.secret' file
+```
+echo "'your-infura-api'" > infura-api.secret  // Your Infura api must be marked with single quotes
+```
+
+## To set up 'mnemonic.secret' file
 ```
 echo "'your-secret-mnemonic'" > mnemonic.secret  // Your secret mnemonic must be marked with single quotes
 ```
 
-#### To compile PizzaCoin contract and its dependencies
+## To compile PizzaCoin contract and its dependencies
 ```
 truffle compile
 ```
 
-#### To deploy PizzaCoin contract and its dependencies
+## To deploy PizzaCoin contract and its dependencies
+```
+truffle migrate --network mainnet  // Deploy to Ethereum public main network via Infura
+```
+
 ```
 truffle migrate --network ropsten  // Deploy to Ropsten testnet via Infura
 ```
 
 ```
 truffle migrate --network rinkeby  // Deploy to Rinkeby testnet via Infura
+```
+
+```
+truffle migrate --network kovan  // Deploy to Kovan testnet via Infura
 ```
 
 ```
@@ -57,13 +73,13 @@ truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via lo
 truffle migrate --network ganache  // Deploy to Ganache local test environment
 ```
 
-#### To install Node.JS packages required by lazy-web3-wrapper functions
+## To install Node.JS packages required by lazy-web3-wrapper functions
 ```
 cd run
 npm install
 ```
 
-#### To execute Node.JS based lazy-web3-wrapper functions (for demo)
+## To execute Node.JS based lazy-web3-wrapper functions (for demo)
 ```
 cd run
 node main.js
