@@ -39,8 +39,6 @@ export default {
 .badge1[data-badge]:after {
    content:attr(data-badge);
    position:absolute;
-   top:-15px;
-   right:-450px;
    font-size:1.5em;
    background:#167df0;
    color:white;
@@ -55,5 +53,60 @@ export default {
    justify-content: center;
    vertical-align: middle;
    padding-top: 9px;
+}
+@media only screen and (min-width:120px){
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-320px;
+    }
+}
+@media only screen and (min-width:320px){
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-320px;
+    }
+}
+@media only screen and (min-width:480px){
+    font-size: 10em;
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-770px;
+    }
+}
+@media only screen and (min-width:769px){
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-250px;
+    }
+}
+@media only screen and (min-width:960px){
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-320px;
+    }
+}
+@media only screen and (min-width:1024px){
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-320px;
+    }
+}
+@media only screen and (min-width:1279px){
+    .badge1[data-badge]:after {
+      top:-15px;
+      right:-390px;
+    }
+}
+@media only screen and (min-width:1472px){
+.badge1[data-badge]:after {
+   top:-15px;
+   right:-450px;
+  }
+}
+@media only screen and (min-width:2000px){
+.badge1[data-badge]:after {
+   top:-15px;
+   right:-450px;
+}
 }
 </style>

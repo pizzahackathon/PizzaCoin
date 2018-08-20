@@ -18,7 +18,7 @@
                           <div class="playerName">
                              <h4>{{ member.name }}</h4>
                           </div>
-                          <h6>{{ member.address }}</h6>
+                          <h6 class="userAdress">{{ member.address }}</h6>
                         </div>
                     </div>
                     <div
@@ -212,5 +212,59 @@ export default {
 <style scoped>
 .button {
   border-radius: 9999px !important;
+}
+</style>
+
+<style scped>
+@media only screen and (min-width:120px){
+    .userAdress {
+      font-size:20px;
+      word-break: break-all;
+    }
+}
+@media only screen and (min-width:320px){
+    .userAdress {
+      font-size:20px;
+      word-break: break-all;
+    }
+}
+@media only screen and (min-width:480px){
+    .userAdress {
+      font-size:20px;
+      word-break: break-all;
+    }
+}
+@media only screen and (min-width:769px){
+    .userAdress {
+      font-size:20px;
+      word-break: break-all;
+    }
+}
+@media only screen and (min-width:960px){
+    .userAdress {
+      font-size:20px;
+      word-break: break-all;
+    }
+}
+@media only screen and (min-width:1024px){
+    .userAdress {
+      font-size:20px;
+      word-break: break-all;
+    }
+}
+@media only screen and (min-width:1279px){
+    .userAdress {
+     font-size:20px;
+    }
+}
+@media only screen and (min-width:1472px){
+.userAdress {
+   font-size:20px;
+  }
+}
+@media only screen and (min-width:2000px){
+.userAdress {
+   font-size:20px;
+  }
 }
 </style>
