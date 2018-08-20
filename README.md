@@ -2,13 +2,13 @@
 
 <h2 align="center">Pizza Coin</h2>
 
-Pizza Coin is a demonstration of Voting system on Blockchain, Utilize <a href="https://www.ethereum.org/">Ehtereum</a> Blockchain with <a href="https://solidity.readthedocs.io/">Smart contracts</a>. Developed for the 1st Thailand's blockchain hackathon named <a href="https://www.facebook.com/events/205814763443058/">Pizza Hackathon 2018</a>.
+Pizza Coin is a demonstration of Voting system on Blockchain, utilizing <a href="https://www.ethereum.org/">Ehtereum</a> Blockchain with <a href="https://solidity.readthedocs.io/">Smart contracts</a>. Developed for the 1st Thailand's blockchain hackathon named <a href="https://www.facebook.com/events/205814763443058/">Pizza Hackathon 2018</a>.
 
-Pizza Coin is <a href="https://en.wikipedia.org/wiki/ERC-20">ERC20</a> Compatible with voting mechanism, allow player to participate in creating / joining team and voting. Authorized staff can perform "kick player", "kick team", "freeze and transfer tokens" and "start / stop voting".
+Pizza Coin is <a href="https://en.wikipedia.org/wiki/ERC-20">ERC20</a> compatible with voting mechanism, allowing player to participate in creating / joining team and voting. Authorized staff can perform "kick player", "kick team", "freeze and transfer tokens" and "start / stop voting".
 
-Each Players and Staffs have same amount of PZC for voting.
+Each player and each staff has the same amount of PZC for voting. Specifically, a player can give a vote to any teams he/she is not associated with whereas a staff is freely to give a vote to any teams. Each voter is able to vote to any favourite teams according to his/her own voting token balance.
 
-### Pizza Coin consist of two parts
+### Pizza Coin consists of two parts
 <p align="center">
   <a href="#" target="_blank">
     <img width="260px" src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/ethereum-smart-contract.jpeg">
@@ -20,7 +20,7 @@ Each Players and Staffs have same amount of PZC for voting.
 
 ## Smart Contract
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Smart-contract-screenshot-PizzaCoin.png">
-description: TBD
+description: Pizza Coin Contract
 
 #### To install Truffle Framework
 <a href="https://truffleframework.com/docs/truffle/getting-started/installation">follow this link</a>
