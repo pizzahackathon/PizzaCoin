@@ -5,3 +5,4 @@ cmd.rtf
 branches-info.rtf
 node_modules/
 mnemonic.secret
+infura-api.secret
