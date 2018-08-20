@@ -20,5 +20,6 @@ export default new Router({
       name: 'leader-board',
       component: LeaderBoard
     }
+    // https://github.com/pizzahackathon/PizzaCoin
   ]
 })

@@ -11,17 +11,23 @@
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
+            <router-link to="/" class="navbar-item active">
+              Home
+            </router-link> |
             <router-link to="/leader-board" class="navbar-item">
               Leader board
+            </router-link> |
+            <router-link to="/github" class="navbar-item">
+              Github
             </router-link>
-          </div>
-          <div class="navbar-item">
-            <a :href="`${$store.state.system.etherscanPrefix}/token/${$store.state.system.pizzaCoinAddr}?a=${$pizzaCoin.account}`" class="bd-tw-button button is-info" target="_blank"> You have {{ tokenBalance }} PZC</a>
           </div>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
             {{ playerInfo }}
+          </div>
+          <div class="navbar-item">
+            <a :href="`${$store.state.system.etherscanPrefix}/token/${$store.state.system.pizzaCoinAddr}?a=${$pizzaCoin.account}`" class="bd-tw-button button is-info" target="_blank"> You have {{ tokenBalance }} PZC</a>
           </div>
           <div class="navbar-item">
             <div class="field is-grouped">
@@ -206,5 +212,10 @@ export default {
 }
 .logo {
   max-height: 3.75em;
+}
+.active {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: blue;
 }
 </style>

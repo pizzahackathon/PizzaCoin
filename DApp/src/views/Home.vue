@@ -1,5 +1,16 @@
 <template>
     <div class="home">
+      <span style="
+          text-align: center;
+          justify-content: center;
+          width: 100%;
+          display: block;
+          font-size: 4em;
+          margin-bottom: 33px;
+          margin-top: -27px;
+        ">
+        Teams
+      </span>
       <div class="container">
         <div class="is-mobile">
             <div>
