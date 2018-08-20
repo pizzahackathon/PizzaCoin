@@ -48,7 +48,7 @@
        <span
         class="icon"
         @click="isComponentModalActive = true"
-        v-if="stateContract === 'Registration' && !isStaffLoggedIn">
+        v-if="stateContract === 'Registration' && !(isStaffLoggedIn || isPlayerLoggedIn)">
          <i class="fas fa-plus-circle fa fa-2x"></i>
        </span>
 
@@ -118,7 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance']),
+    ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance', 'isPlayerLoggedIn']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {
