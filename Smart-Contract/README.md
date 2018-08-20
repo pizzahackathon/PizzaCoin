@@ -1,4 +1,4 @@
-<p align="center"><a href="#" target="_blank" rel="noopener noreferrer"><img width="100" src="/doc/images/Pizza_Hackathon_Logo.png"></a></p>
+<p align="center"><a href="#" target="_blank" rel="noopener noreferrer"><img width="100" src="doc/images/Pizza_Hackathon_Logo.png"></a></p>
 
 <h2 align="center">Pizza Coin</h2>
 
