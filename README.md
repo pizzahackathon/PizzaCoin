@@ -22,6 +22,9 @@ Each Players and Staffs have same amount of PZC for voting.
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Smart-contract-screenshot-PizzaCoin.png">
 description: TBD
 
+## To install Truffle Framework
+<a href="https://truffleframework.com/docs/truffle/getting-started/installation">follow this link</a>
+
 #### To set up Node.JS packages required by Truffle
 ```
 npm install
@@ -100,7 +103,7 @@ description: TBD
 # Contributors
 
 ## Coders
-- <a href="https://github.com/serial-coder">Byte</a> (Smart contract)
+- <a href="https://github.com/serial-coder">Bright</a> (Smart Contract)
 - <a href="https://github.com/teerapat1739">Game</a> (DApp Team)
 - <a href="https://github.com/zent-bank">Bank</a> (DApp Leader board)
 
