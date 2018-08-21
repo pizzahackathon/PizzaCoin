@@ -38,7 +38,7 @@ export default {
     async loadData () {
       this.teamCount = await this.$pizzaCoin.getTeamCount()
       await this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
-      _.forEach(this.teams, (team) => {
+      _.forEach(this.teams, (team, idx) => {
         console.log('team: ', team)
         console.log('teamName: ', team.name)
         console.log('total vote: ', team.score)
@@ -46,7 +46,7 @@ export default {
         this.teamScore.push(team.score)
       })
     },
-    initChartInstance () {
+    initChartInstance (bgColor, borderColor) {
       this.leaderBoardData = {
         type: 'bar',
         data: {
@@ -55,6 +55,40 @@ export default {
             { // one line graph
               label: 'Score voting',
               data: this.teamScore,
+              backgroundColor: [
+                'rgba(255, 0, 0, 0.1)',
+                'rgba(85, 0, 255, 0.1)',
+                'rgba(64, 255, 0, 0.1)',
+                'rgba(236, 66, 249, 0.1)',
+                'rgba(84, 23, 167, 0.1)',
+                'rgba(206, 31, 147, 0.1)',
+                'rgba(203, 133, 246, 0.1)',
+                'rgba(166, 159, 22, 0.1)',
+                'rgba(31, 215, 109, 0.1)',
+                'rgba(107, 203, 204, 0.1)',
+                'rgba(29, 61,1 45, 0.1)',
+                'rgba(174, 99, 20 , 0.1)',
+                'rgba(26, 123, 92 , 0.1)',
+                'rgba(64, 97, 253, 0.1)',
+                'rgba(35, 176, 25, 0.1)'
+              ],
+              borderColor: [
+                'rgba(255, 0, 0)',
+                'rgba(85, 0, 255)',
+                'rgba(64, 255, 0)',
+                'rgba(236, 66, 249)',
+                'rgba(84, 23, 167)',
+                'rgba(206, 31, 147)',
+                'rgba(203, 133, 246)',
+                'rgba(166, 159, 22)',
+                'rgba(31, 215, 109)',
+                'rgba(107, 203, 204)',
+                'rgba(29, 61,1 45)',
+                'rgba(174, 99, 20 )',
+                'rgba(26, 123, 92 )',
+                'rgba(64, 97, 253)',
+                'rgba(35, 176, 25)'
+              ],
               borderWidth: 3
             }
           ]
