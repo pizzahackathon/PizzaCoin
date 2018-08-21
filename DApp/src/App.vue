@@ -11,16 +11,16 @@
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <router-link to="/" class="navbar-item active">
+            <router-link to="/" class="navbar-item link-item">
               Home
-            </router-link> |
-            <router-link to="/leader-board" class="navbar-item">
+            </router-link>
+            <router-link to="/leader-board" class="navbar-item link-item">
               Leader board
-            </router-link> |
-            <router-link to="/livefeed" class="navbar-item">
+            </router-link>
+            <router-link to="/livefeed" class="navbar-item link-item">
               Live feed
-            </router-link> |
-            <router-link to="/github" class="navbar-item">
+            </router-link>
+            <router-link to="/github" class="navbar-item link-item">
               Github
             </router-link>
           </div>
@@ -216,9 +216,13 @@ export default {
 .logo {
   max-height: 3.75em;
 }
-.active {
-  font-size: 1.2em;
+.router-link-exact-active {
   font-weight: bold;
   color: blue;
+}
+.link-item {
+  font-size: 1.1em;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 </style>
