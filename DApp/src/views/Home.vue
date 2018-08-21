@@ -16,7 +16,7 @@
             <div>
                 <div class="columns is-multiline">
                     <TeamCard
-                        v-for="team in teams"
+                        v-for="team in dataTeam"
                         :key="team.name"
                         :team="team"
                         :score="team.score"
@@ -37,12 +37,14 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      teamCount: ''
+      teamCount: '',
+      dataTeam: null
     }
   },
   name: 'home',
   computed: {
-    ...mapState('team', ['teams'])
+    ...mapState('team', ['teams']),
+    ...mapState('staff', ['stateContract'])
   },
   methods: {
   },
@@ -59,7 +61,13 @@ export default {
       await this.$pizzaCoin.validateWallet(this.$toast)
 
       this.teamCount = await this.$pizzaCoin.getTeamCount()
-      this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
+      let teams = await this.$pizzaCoin.getTeamsProfile()
+      this.dataTeam = teams
+      while (this.stateContract === 'Registration') {
+        let teams = await this.$pizzaCoin.getTeamsProfile()
+        this.dataTeam = teams
+        console.log('home')
+      }
     } catch (error) {
       console.error(error)
     }
