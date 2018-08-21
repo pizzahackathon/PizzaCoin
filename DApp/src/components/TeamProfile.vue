@@ -161,7 +161,6 @@ export default {
         const res = await this.$pizzaCoin.kickPlayer(removePlayerData)
         console.log(`After delete ->> ${res}`)
         this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
-        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       } catch (error) {
         console.error(error)
       }
@@ -172,7 +171,6 @@ export default {
       try {
         const res = await this.$pizzaCoin.kickTeam(teamName)
         console.log(`After delete ->> ${res}`)
-        this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
         this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       } catch (error) {
         console.error(error)

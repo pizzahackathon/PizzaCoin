@@ -31,10 +31,20 @@ setInterval(async function () {
   let state = await pizzaCoin.getContractState(account)
   console.log('check state --> ' + state)
   console.log(`isStaff >> ${isStaff}`)
-  if (isStaff) {
-    store.dispatch('auth/isStaffLogin', account)
-  } else if (isPlayer) {
-    store.dispatch('auth/isPlayerLogin', account)
+  console.log(`isPlayer >> ${isPlayer}`)
+
+  if (isStaff || isPlayer) {
+    isStaff ? store.dispatch('auth/isStaffLogin', account) : store.dispatch('auth/isPlayerLogin', account)
+    try {
+      let name = isStaff ? await pizzaCoin.getStaffName(account) : await pizzaCoin.getPlayerName(account)
+      const data = {
+        role: isStaff ? 'Staff' : 'Player',
+        name: name
+      }
+      store.dispatch('auth/playerInfo', data)
+    } catch (error) {
+      console.error(error)
+    }
   }
   console.log('check tokenBalance --> ' + typeof parseInt(tokenBalance))
   let showToken = {
@@ -43,10 +53,7 @@ setInterval(async function () {
   }
   store.dispatch('staff/getContractState', state)
   store.dispatch('auth/getTokenBalance', showToken)
-  // store.dispatch('team/getTeamsProfile', await pizzaCoin.getTeamsProfile())
-}, 3000)
-
-// store.dispatch('team/getTeamsProfile')
+}, 1000)
 
 Vue.use(Buefy)
 

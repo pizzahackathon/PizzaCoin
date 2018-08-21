@@ -6,7 +6,7 @@ const state = {
 }
 
 const actions = {
-  async getTeamsProfile (context, teams) {
+  getTeamsProfile (context, teams) {
     console.log('action --> getTeamsProfile')
     context.commit('getTeamsProfile', teams)
   },

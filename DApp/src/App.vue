@@ -107,8 +107,8 @@ export default {
     isComponentModalActive: false,
     creatorName: '',
     teamname: '',
-    account: null,
-    playerInfo: ''
+    account: null
+    // playerInfo: ''
   }),
   async mounted () {
     console.log('check state --> ')
@@ -119,28 +119,14 @@ export default {
     } catch (error) {
       console.error(error)
     }
-
-    try {
-      await this.getAccountInfo()
-    } catch (error) {
-      this.playerInfo = 'You haven\'t registered'
-    }
   },
   computed: {
-    ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance', 'isPlayerLoggedIn']),
+    ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance', 'isPlayerLoggedIn', 'playerInfo']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
     ...mapActions('team', ['creatTeam']),
-    async getAccountInfo () {
-      let isPlayer = await this.isPlayer()
-      if (isPlayer) {
-        this.playerInfo = 'Player: ' + await this.$pizzaCoin.getPlayerName(this.$pizzaCoin.account)
-      } else {
-        this.playerInfo = 'Staff: ' + await this.$pizzaCoin.getStaffName(this.$pizzaCoin.account)
-      }
-    },
     async onCreateTeam () {
       try {
         this.isComponentModalActive = false

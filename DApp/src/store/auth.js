@@ -7,7 +7,7 @@ const state = {
   userAddress: '',
   userName: '',
   tokenBalance: 0,
-  role: ''
+  playerInfo: 'You haven\'t registered'
 }
 
 const mutations = {
@@ -18,13 +18,11 @@ const mutations = {
     console.log(` payload >> ${payload}`)
     state.isStaffLoggedIn = true
     state.isPlayerLoggedIn = false
-    state.role = 'Staff'
   },
   isPlayerLogin (state, payload) {
     console.log(` payload >> ${payload}`)
     state.isStaffLoggedIn = false
     state.isPlayerLoggedIn = true
-    state.role = 'Player'
   },
   getTokenBalance (state, {isPlayer, tokenBalance}) {
     console.log(` isPlayer >> ${isPlayer}`)
@@ -33,6 +31,10 @@ const mutations = {
     } else {
       state.tokenBalance = 0
     }
+  },
+  playerInfo (state, {role, name}) {
+    console.log(role + 'playerInfo' + name)
+    state.playerInfo = role + ' : ' + name
   }
 }
 
@@ -51,6 +53,9 @@ const actions = {
   getTokenBalance ({commit}, payload) {
     console.log(` getTokenBalance >> ${payload}`)
     commit('getTokenBalance', payload)
+  },
+  playerInfo ({commit}, payload) {
+    commit('playerInfo', payload)
   }
 }
 
