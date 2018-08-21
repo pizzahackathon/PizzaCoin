@@ -19,6 +19,7 @@ const pizzaCoin = new Pizzacoin(
 Vue.prototype.$pizzaCoin = pizzaCoin
 
 Vue.prototype.$store = store
+let intervalTime = 1500
 
 setInterval(async function () {
   let account = await pizzaCoin.account
@@ -52,8 +53,16 @@ setInterval(async function () {
     tokenBalance: tokenBalance
   }
   store.dispatch('staff/getContractState', state)
+  if (state === 'Voting') {
+    intervalTime = 100
+    // console.log('inteval' + intervalTime)
+  }
+  if (state === 'Voting Finished') {
+    intervalTime = 100000
+  }
   store.dispatch('auth/getTokenBalance', showToken)
-}, 1000)
+  console.log('inteval' + intervalTime)
+}, intervalTime)
 
 Vue.use(Buefy)
 

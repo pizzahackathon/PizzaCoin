@@ -155,20 +155,20 @@ class PizzaCoin {
         }
         console.log('teamName: ' + teamName)
         console.log('totalVoted: ' + totalVoted + '\n')
-        const {teams, canVote} = await this.getPlayersProfile(teamName)
-        console.log('canVote' + canVote)
+        // const {teams, canVote} = await this.getPlayersProfile(teamName)
+        // console.log('canVote' + canVote)
 
         data = {
-          member: teams,
-          canVote: canVote,
+          // member: teams,
+          // canVote: canVote,
           score: await this.getVotingPointForTeam(teamName)
         }
         // console.log('checkCanVote: ' + data.member[0].address + '\n')
 
         const teamProfile = {
           name: teamName,
-          members: data.member,
-          canVote: data.canVote,
+          // members: data.member,
+          // canVote: data.canVote,
           score: data.score
         }
         console.log('profile >> ' + JSON.stringify(teamProfile))

@@ -2,7 +2,7 @@
     <div class="">
         <div
           class="is-mobile"
-            v-for="member in team.members"
+            v-for="member in dataTeam"
             :key="member.address"
               >
             <div class="media content-margin">
@@ -39,7 +39,7 @@
         <button
             class="button is-primary is-fullwidth"
              @click="onVote(team)"
-             v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0 && team.canVote"
+             v-if="stateContract === 'Voting' && parseInt(tokenBalance) > 0 && canVote"
             >
             VOTE
         </button>
@@ -48,7 +48,7 @@
             class="button is-success is-fullwidth"
              @click="onJoin()"
              v-if="isJoined && !isPlayerLoggedIn"
-             :disabled="team.members.length > 4"
+             :disabled="dataTeam.length > 4"
             >
             Join
           </button>
@@ -74,7 +74,7 @@
         <button
           class="button is-danger is-fullwidth join"
             @click="removeTeam(team.name)"
-            v-if="team.members.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
+            v-if="dataTeam.length === 0 && isStaffLoggedIn && stateContract === 'Registration'"
           >
           Kick team
         </button>
@@ -90,10 +90,31 @@ export default {
     playerName: '',
     pizzaCoin: null,
     pizzaCoinSymbol: '',
-    userAddress: ''
+    userAddress: '',
+    dataTeam: null,
+    canVote: null
   }),
+  async created () {
+
+  },
   async mounted () {
     await this.loadPizzaCoinSymbol()
+    // // this.dataTeam = await this.team
+    // console.log('props'+ this.team.name)
+    // let {teams, canVote} = await this.$pizzaCoin.getPlayersProfile(this.team.name)
+    // this.dataTeam = teams
+    // console.log('canVote' + canVote)
+    if (this.stateContract !== 'Registration') {
+      let {teams, canVote} = await this.$pizzaCoin.getPlayersProfile(this.team.name)
+      this.dataTeam = teams
+      this.canVote = canVote
+      console.log('test' + this.dataTeam.length)
+    }
+    console.log('stateContract' + this.stateContract)
+    while (this.stateContract === 'Registration') {
+      let {teams} = await this.$pizzaCoin.getPlayersProfile(this.team.name)
+      this.dataTeam = teams
+    }
   },
   props: ['team'],
   computed: {
@@ -179,6 +200,9 @@ export default {
     playerAvatarImage (address) {
       let data = new Identicon(address, 120).toString()
       return `data:image/png;base64,${data}`
+    },
+    loadTeam () {
+      console.log('loadTeam')
     }
   }
 }

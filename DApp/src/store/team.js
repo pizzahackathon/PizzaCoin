@@ -32,7 +32,7 @@ const actions = {
 const mutations = {
   getTeamsProfile (state, teams) {
     /* eslint-disable */
-    console.log('mutations --> getTeamsProfile')
+    console.log('mutations --> getTeamsProfile' + teams)
         state.teams = teams;
         /* eslint-enable */
   },

@@ -9,7 +9,7 @@
         <hr>
         <div class="">
             <TeamProfile
-                :team="team"
+                :team="dataTeam"
             />
         </div>
       </article>
@@ -23,8 +23,15 @@ import TeamProfile from '@/components/TeamProfile.vue'
 export default {
   name: 'TeamProfileCard',
   props: ['team', 'score'],
+  data: () => ({
+    dataTeam: null
+  }),
   components: {
     TeamProfile
+  },
+  async mounted () {
+    this.dataTeam = this.team
+    console.log(this.dataTeam.name + 'props' + this.team.name)
   }
 }
 </script>
