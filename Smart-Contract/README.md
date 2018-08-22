@@ -2,8 +2,6 @@
 
 <h2 align="center">Pizza Coin</h2>
 
-# Pizza Coin developed for the 1st Thailand's blockchain hackathon (Pizza Hackathon 2018)
-
 ## Brief Synopsis of Pizza Hackathon
 
 <a href="https://www.facebook.com/events/205814763443058/">Pizza Hackathon</a> is the 1st blockchain hackathon event in Thailand which would be held on 25-26 August 2018. The objective of this event is to educate blockchain technologies as well as building thai blockchain developers. The event consists of educating and project hacking sessions where all participating developers are freely to develop any project based on blockchain technologies. There would eventually be a project competition among teams of developers at the end of the event. 
