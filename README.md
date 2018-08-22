@@ -142,11 +142,11 @@ TBD
 ### File: store/system.js
 - **network**: Ethereum network 'mainnet', 'ropsten', 'rinkeby', 'kovan' or etc.
 - **etherscanPrefix**: Etherscan url, you need to configure according to network.
-- **ethereumNode**: Public or Private Ethereum node, in case of user don't have Web3 provider like 'Metmask'. **Web socker** is need for Leader Board that checking real time incoming votes. exp: 'wss://rinkeby.infura.io/_ws'
-- **pizzaCoinAddr**: Deployed Pizza Coin Contract Address
-- **pizzaCoinStaffAddr**: Deployed Pizza Coin Staff Address
-- **pizzaCoinTeamAddr**: Deployed Pizza Coin Team Address
-- **pizzaCoinPlayerAddr**: Deployed Pizza Coin Player Address
+- **ethereumNode**: Public or Private Ethereum node, in case a user do not have Web3 provider like 'Metmask'. Note that, **Web socket** is required for Leader Board so that it is able to detect voting in real time. exp: 'wss://rinkeby.infura.io/_ws'
+- **pizzaCoinAddr**: The deployed Pizza Coin contract address
+- **pizzaCoinStaffAddr**: The deployed Pizza Coin Staff contract address
+- **pizzaCoinTeamAddr**: The deployed Pizza Coin Team contract address
+- **pizzaCoinPlayerAddr**: The deployed Pizza Coin Player contract address
 
 To get the deployed **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinTeamAddr** and **pizzaCoinPlayerAddr** addresses, please consult in the Smart-Contract/ directory.
 
