@@ -119,18 +119,24 @@ node main.js
 <h3 align="center">Figure 5. Example of DApp WebUI</h3><br />
 
 ## Run Team Dashboard
-- cd DApp
-- npm install
-- npm run serve
+```
+cd DApp
+npm install
+npm run serve
+```
 
 ## Run Live Feed
-- cd live-feed
-- npm install
-- npm run serve
+```
+cd live-feed
+npm install
+npm run serve
+```
 
 ## Run Live Feed Api server
-- cd live-feed
-- TBD
+```
+cd live-feed
+TBD
+```
 
 ## Configurations
 ### File: store/system.js
