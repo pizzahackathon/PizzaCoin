@@ -20,7 +20,7 @@ To find the winner team, we developed a voting system called the Pizza Coin (PZC
 
 ## Pizza Coin (Smart Contract)
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Smart-contract-screenshot-PizzaCoin.png">
-<h3 align="center">Figure 1. Example of Pizza Coin contract</h3><br />
+<h3 align="center">Figure 1. Example of Pizza Coin contract's source code</h3><br />
 
 ## Workflow Design of Pizza Coin Contract
 
