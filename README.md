@@ -131,8 +131,8 @@ node main.js
 - cd live-feed
 - TBD
 
-#### Further Configurations
-## store/system.js
+#### Configurations
+##### file: store/system.js
 - **network**: Ethereum network 'mainnet', 'ropsten', 'rinkeby', 'kovan' or etc.
 - **etherscanPrefix**: Etherscan url, you need to configure according to network.
 - **ethereumNode**: Public or Private Ethereum node, in case of user don't have Web3 provider like 'Metmask'. **Web socker** is need for Leader Board that checking real time incoming votes. exp: 'wss://rinkeby.infura.io/_ws'
@@ -141,7 +141,7 @@ node main.js
 - **pizzaCoinTeamAddr**: Deployed Pizza Coin Team Address
 - **pizzaCoinPlayerAddr**: Deployed Pizza Coin Player Address
 
-** For **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinTeamAddr** and **pizzaCoinPlayerAddr** please consult in Pizza-Coin directory.
+To get the deployed **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinTeamAddr** and **pizzaCoinPlayerAddr** addresses, please consult in the Smart-Contract/ directory.
 
 
 # Contributors
