@@ -57,8 +57,8 @@
        <span
         class="icon"
         @click="isComponentModalActive = true"
-        v-if="stateContract === 'Registration' && !(isStaffLoggedIn || isPlayerLoggedIn)">
-         <i class="fas fa-plus-circle fa fa-2x"></i>
+         v-if="stateContract === 'Registration' && !(isStaffLoggedIn || isPlayerLoggedIn) && this.$route.name !== 'leader-board'">
+         <i class="fas fa-plus-circle fa fa-3x"></i>
        </span>
 
         <b-modal :active.sync="isComponentModalActive" has-modal-card>
@@ -111,7 +111,7 @@ export default {
     // playerInfo: ''
   }),
   async mounted () {
-    console.log('check state --> ')
+    console.log('check route --> ' + this.$route.name)
     try {
       let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
       console.log('check state --> ' + state)
@@ -183,9 +183,11 @@ export default {
   margin-top: 2ex;
 }
 .icon {
-   position: absolute;
-   top: 80px;
-   right: 30px;
+  color: orangered;
+  position: fixed;
+  top: 900px;
+  right: 30px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 .icon:hover {
   opacity: 0.8;
