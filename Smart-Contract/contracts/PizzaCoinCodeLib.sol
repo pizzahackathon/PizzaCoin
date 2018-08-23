@@ -180,7 +180,7 @@ library PizzaCoinCodeLib {
         playerContractInstance.kickPlayer(_player, _teamName);
 
         // Remove a player from the player list of the specified team
-        teamContractInstance.kickPlayerOutOffTeam(_player, _teamName);
+        teamContractInstance.kickPlayerOutOfTeam(_player, _teamName);
     }
 
     // ------------------------------------------------------------------------
