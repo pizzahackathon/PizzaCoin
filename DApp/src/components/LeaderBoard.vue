@@ -125,15 +125,17 @@ export default {
                 ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily)
                 // Just naively convert to string for now
                 var dataString = dataset.data[index].toString()
-                // Make sure alignment settings are correct
-                ctx.textAlign = 'center'
-                ctx.textBaseline = 'middle'
-                var padding = 5
-                var position = element.tooltipPosition()
-                ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding)
+                if (parseInt(dataString) !== 0) {
+                  // Make sure alignment settings are correct
+                  ctx.textAlign = 'center'
+                  ctx.textBaseline = 'middle'
+                  var padding = 5
+                  var position = element.tooltipPosition()
+                  ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding)
 
-                ctx.font = Chart.helpers.fontString(20, fontStyle, fontFamily)
-                ctx.fillText(chart.data.labels[index].substring(0, 4), position.x, position.y - (fontSize / 2) - padding + 50)
+                  ctx.font = Chart.helpers.fontString(20, fontStyle, fontFamily)
+                  ctx.fillText(chart.data.labels[index].substring(0, 4), position.x, position.y - (fontSize / 2) - padding + 50)
+                }
               })
             }
           })
