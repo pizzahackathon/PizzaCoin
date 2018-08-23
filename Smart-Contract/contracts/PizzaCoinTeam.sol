@@ -21,7 +21,7 @@ interface ITeamContract {
     function createTeam(string _teamName) external;
     function registerPlayerToTeam(address _player, string _teamName) external;
     function kickTeam(string _teamName) external;
-    function kickPlayerOutOffTeam(address _player, string _teamName) external;
+    function kickPlayerOutOfTeam(address _player, string _teamName) external;
     function doesTeamExist(string _teamName) external view returns (bool bTeamExist);
     function getArrayLengthOfPlayersInTeam(string _teamName) external view returns (uint256 _length);
     function getTotalPlayersInTeam(string _teamName) external view returns (uint256 _total);
@@ -310,7 +310,7 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     // ------------------------------------------------------------------------
     // Remove a specific player from a particular team
     // ------------------------------------------------------------------------
-    function kickPlayerOutOffTeam(address _player, string _teamName) 
+    function kickPlayerOutOfTeam(address _player, string _teamName) 
         external onlyRegistrationState onlyPizzaCoin 
     {
         require(
