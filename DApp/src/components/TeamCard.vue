@@ -1,6 +1,6 @@
 <template>
   <div class="column is-4">
-    <a :href="`${$store.state.system.etherscanPrefix}/address/${$store.state.system.pizzaCoinAddr}#events`" class="badge1" :data-badge="score" target="_blank"></a>
+    <a v-if="stateContract === 'Voting'" :href="`${$store.state.system.etherscanPrefix}/address/${$store.state.system.pizzaCoinAddr}#events`" class="badge1" :data-badge="score" target="_blank"></a>
     <div class="box content shadow">
       <article class="post">
         <h2 class="">
@@ -19,9 +19,11 @@
 
 <script>
 import TeamProfile from '@/components/TeamProfile.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TeamProfileCard',
+  ...mapState('staff', ['stateContract']),
   props: ['team', 'score'],
   data: () => ({
     dataTeam: null
