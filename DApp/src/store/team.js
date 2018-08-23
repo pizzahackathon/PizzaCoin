@@ -2,7 +2,7 @@
 
 const state = {
   teams: [],
-  test: 'test'
+  teamCount: 0
 }
 
 const actions = {
@@ -22,6 +22,9 @@ const actions = {
   },
   voteTeam (context, teamname) {
     console.log('voteTeam --> ' + teamname)
+  },
+  getTeamCount (context, teamCount) {
+    context.commit('setTeamCount', teamCount)
   }
 }
 
@@ -78,6 +81,9 @@ const mutations = {
         }))
       }
     })
+  },
+  setTeamCount (state, teamCount) {
+    state.teamCount = teamCount
   }
 }
 

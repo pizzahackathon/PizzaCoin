@@ -37,13 +37,12 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      teamCount: '',
       dataTeam: null
     }
   },
   name: 'home',
   computed: {
-    ...mapState('team', ['teams']),
+    ...mapState('team', ['teams', 'teamCount']),
     ...mapState('staff', ['stateContract'])
   },
   methods: {
@@ -60,7 +59,6 @@ export default {
       await this.$pizzaCoin.validateWeb3Connection(this.$toast)
       await this.$pizzaCoin.validateWallet(this.$toast)
 
-      this.teamCount = await this.$pizzaCoin.getTeamCount()
       let teams = await this.$pizzaCoin.getTeamsProfile()
       this.dataTeam = teams
       while (this.stateContract === 'Registration') {

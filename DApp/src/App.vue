@@ -8,7 +8,7 @@
         </router-link>
       </div>
 
-      <div id="navbarExampleTransparentExample" class="navbar-menu">
+      <div class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
             <router-link to="/" class="navbar-item link-item">
@@ -122,7 +122,8 @@ export default {
   },
   computed: {
     ...mapState('auth', ['isStaffLoggedIn', 'tokenBalance', 'isPlayerLoggedIn', 'playerInfo']),
-    ...mapState('staff', ['stateContract'])
+    ...mapState('staff', ['stateContract']),
+    ...mapState('team', ['teamCount'])
   },
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
@@ -200,6 +201,7 @@ export default {
 <style scoped>
 .nav-bar {
   box-shadow:0 0 10px #333 !important;
+  padding: 0px;
 }
 .logo {
   max-height: 3.75em;
@@ -207,6 +209,7 @@ export default {
 .router-link-exact-active {
   font-weight: bold;
   color: blue;
+  text-decoration-style: solid;
 }
 .link-item {
   font-size: 1.1em;

@@ -19,7 +19,7 @@ const pizzaCoin = new Pizzacoin(
 Vue.prototype.$pizzaCoin = pizzaCoin
 
 Vue.prototype.$store = store
-let intervalTime = 1500
+let intervalTime = 1000
 
 setInterval(async function () {
   let account = await pizzaCoin.account
@@ -61,6 +61,7 @@ setInterval(async function () {
     intervalTime = 100000
   }
   store.dispatch('auth/getTokenBalance', showToken)
+  store.dispatch('team/getTeamCount', await pizzaCoin.getTeamCount())
   console.log('inteval' + intervalTime)
 }, intervalTime)
 
