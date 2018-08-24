@@ -141,21 +141,21 @@ node main.js
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/DApp-screenshot-teams.jpg">
 <h3 align="center">Figure 5. Example of DApp WebUI</h3><br />
 
-## Run Team Dashboard
+### Run Team Dashboard
 ```
 cd DApp
 npm install
 npm run serve
 ```
 
-## Run Live Feed
+### Run Live Feed
 ```
 cd live-feed
 npm install
 npm run serve
 ```
 
-## Run Live Feed Api server
+### Run Live Feed Api server
 ```
 cd live-feed
 TBD
