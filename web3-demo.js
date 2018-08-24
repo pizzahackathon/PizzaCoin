@@ -9,19 +9,19 @@
 'use strict';
 
 // Import libraries
-var Web3                = require('web3'),
-    PizzaCoinJson       = require('../build/contracts/PizzaCoin.json'),
-    PizzaCoinStaffJson  = require('../build/contracts/PizzaCoinStaff.json'),
-    PizzaCoinPlayerJson = require('../build/contracts/PizzaCoinPlayer.json'),
-    PizzaCoinTeamJson   = require('../build/contracts/PizzaCoinTeam.json'),
-    pe                  = require('parse-error');
+const Web3                = require('web3'),
+      pe                  = require('parse-error'),
+      PizzaCoinJson       = require('./build/contracts/PizzaCoin.json'),
+      PizzaCoinStaffJson  = require('./build/contracts/PizzaCoinStaff.json'),
+      PizzaCoinPlayerJson = require('./build/contracts/PizzaCoinPlayer.json'),
+      PizzaCoinTeamJson   = require('./build/contracts/PizzaCoinTeam.json');
 
-var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:7545'));    // Ganache
-//var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'));  // Rinkeby
-//var web3 = new Web3('http://localhost:7545');  // Ganache
-//var web3 = new Web3('http://localhost:8545');  // Rinkeby
+const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:7545'));    // Ganache
+//const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'));  // Rinkeby
+//const web3 = new Web3('http://localhost:7545');  // Ganache
+//const web3 = new Web3('http://localhost:8545');  // Rinkeby
 
-var PizzaCoin = new web3.eth.Contract(
+const PizzaCoin = new web3.eth.Contract(
     PizzaCoinJson.abi,
     PizzaCoinJson.networks[5777].address    // Ganache
     //PizzaCoinJson.networks[4].address     // Rinkeby
@@ -30,16 +30,16 @@ var PizzaCoin = new web3.eth.Contract(
 main();
 
 async function main() {
-    let ethAccounts = await web3.eth.getAccounts();
+    const ethAccounts = await web3.eth.getAccounts();
 
     console.log('Project deployer address: ' + ethAccounts[0]);
 
     try {
         // Subscribe to 'TeamVoted' event (this requires a web3-websocket provider)
-        let subscription = subscribeEvent();
+        const subscription = subscribeEvent();
 
         // Initialized contracts
-        let [
+        const [
             staffContractAddr, 
             playerContractAddr, 
             teamContractAddr
@@ -52,17 +52,17 @@ async function main() {
         console.log('PizzaCoinPlayer address: ' + playerContractAddr);
         console.log('PizzaCoinTeam address: ' + teamContractAddr);
 
-        let PizzaCoinStaff = new web3.eth.Contract(
+        const PizzaCoinStaff = new web3.eth.Contract(
             PizzaCoinStaffJson.abi,
             staffContractAddr
         );
 
-        let PizzaCoinPlayer = new web3.eth.Contract(
+        const PizzaCoinPlayer = new web3.eth.Contract(
             PizzaCoinPlayerJson.abi,
             playerContractAddr
         );
 
-        let PizzaCoinTeam = new web3.eth.Contract(
+        const PizzaCoinTeam = new web3.eth.Contract(
             PizzaCoinTeamJson.abi,
             teamContractAddr
         );
@@ -176,6 +176,8 @@ async function main() {
 
         // Unsubscribe to 'TeamVoted' event (this is not working??)
         unsubscribeEvent(subscription);
+
+        process.exit(0);
     }
     catch (err) {
         return console.error(err);

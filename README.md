@@ -38,7 +38,7 @@ For example, when a user makes a call to the registerPlayer() function of the PZ
 ## To install Truffle Framework
 &emsp;<a href="https://truffleframework.com/docs/truffle/getting-started/installation">Follow this link</a>
 
-## To install Node.JS packages required by Truffle
+## To install Node.JS dependency packages
 ```
 npm install
 ```
@@ -86,14 +86,12 @@ truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via lo
 truffle migrate --network ganache  // Deploy to Ganache local test environment
 ```
 
-## To install Node.JS packages required by lazy-web3-wrapper functions
+## To initial PizzaCoin contract (use this when integrating the contract with DApp)
 ```
-cd run
-npm install
+node init-contract.js <<ethereum_network>>  // For example, run 'node init-contract.js rinkeby'
 ```
 
-## To execute Node.JS based lazy-web3-wrapper functions (for demo)
+## To execute Node.JS based lazy-web3-wrapper functions (for demonstrating how to interact the contract with web3 node.js backend)
 ```
-cd run
-node main.js
+node web3-demo.js  // This script supports a connection to Ganache or local Geth node only
 ```
