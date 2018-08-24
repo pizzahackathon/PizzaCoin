@@ -6,10 +6,14 @@ const state = {
   // pizzaCoinStaffAddr: '0xe3001d83e9EB2C086ac48750C6E13d83035347d0',
   // pizzaCoinPlayerAddr: '0x6336294bF6b6216EabEe952f336Fd44AAD3c0885',
   // pizzaCoinTeamAddr: '0xf7802f5CC14CBF2D9D919b68180a56595F77b4F6'
-  pizzaCoinAddr: '0x951f89a580dea509a5e4e1a7fa8b5773b96cd47c',
-  pizzaCoinStaffAddr: '0xd3Ff33F99BFaEc30De7340b4c1d9a8E2aC217140',
-  pizzaCoinPlayerAddr: '0xF84372B67Aa3c361d72D0aBc477A6b1191c734C1',
-  pizzaCoinTeamAddr: '0x884eF59566D920FE71a63F44060324bBCed11DC7'
+  // pizzaCoinAddr: '0x951f89a580dea509a5e4e1a7fa8b5773b96cd47c',
+  // pizzaCoinStaffAddr: '0xd3Ff33F99BFaEc30De7340b4c1d9a8E2aC217140',
+  // pizzaCoinPlayerAddr: '0xF84372B67Aa3c361d72D0aBc477A6b1191c734C1',
+  // pizzaCoinTeamAddr: '0x884eF59566D920FE71a63F44060324bBCed11DC7'
+  pizzaCoinAddr: '0x2ae53961e6cad27ed6ef71c4b1e6021786d7846b',
+  pizzaCoinStaffAddr: '0x2F1f50dc6F3D9B77FFd5b6C7769c2C28423099f2',
+  pizzaCoinPlayerAddr: '0x377474c7afD40Dd75f4a6952CCB3bA69EF165159',
+  pizzaCoinTeamAddr: '0xb35F30854F7A4a4c5Dd61a7C410bAd2541ffaAE8'
 }
 
 // Ropsten

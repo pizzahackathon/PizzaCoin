@@ -49,38 +49,55 @@ On the prototype of our PZC contract, we faced 'Out-of-Gas' error when deploying
 
 For example, when a user makes a call to the registerPlayer() function of the PZC contract (let's call PZC.registerPlayer() for short), the PZC.registerPlayer() will forward the request to CodeLib.registerPlayer() in order to process the requesting transaction on behalf of the PZC contract instead. Note that, the CodeLib.registerPlayer() in question is the mapped function of the PZC.registerPlayer() which is stored on the external CodeLib library. Then, the CodeLib.registerPlayer() will hand over the process to the real worker function called Player.registerPlayer(). With this code migration method, we can significantly reduce a gas consumption when deploying the PZC mother contract.
 
-## Get started
+## Deploy with remix.ethereum.org
+
+### Install MetaMask
+- Install [MetaMask](https://metamask.io/) on chrome.
+- Get free ETH on test network, google search **ropsten faucet**, **rinkeby faucet** or **kovan faucet**
+
+### Deploy Smart Contracts
+1. Go to [remix.ethereum.org](https://remix.ethereum.org/)
+2. Choose 📁, select all files in Smart-Contract/contracts/
+3. Open **PizzaCoin.sol** on left panel
+4. Select Run on right panel
+5. Select **PizzaCoin** on list
+6. Deploy with **_ownerName** = "Your name", **_voterInitialTokens** = 3 (vote available for each player and staff), Your Metamask will prompt confirmation around 5 times.
+7. Select deployed contract below, call following createStaffContract, createPlayerContract, createTeamContract and startRegistration
+8. Finally, configure your DApp to use **PizzaCoin**, **PizzaCoinStaff**, **PizzaCoinPlayer**, **PizzaCoinTeam** addresses.
+
+
+## Deploy with truffle
 ```
 cd Smart-Contract/
 ```
 
-## To install Truffle Framework
+### To install Truffle Framework
 &emsp;<a href="https://truffleframework.com/docs/truffle/getting-started/installation">Follow this link</a>
 
-## To install Node.JS packages required by Truffle
+### To install Node.JS packages required by Truffle
 ```
 npm install
 ```
 
-## To get Infura API for free
+### To get Infura API for free
 &emsp;<a href="https://infura.io">Register to get a free api.</a> Note that, the api will be sent to your registered e-mail.
 
-## To set up 'infura-api.secret' file
+### To set up 'infura-api.secret' file
 ```
 echo "'your-infura-api'" > infura-api.secret  // Your Infura api must be marked with single quotes
 ```
 
-## To set up 'mnemonic.secret' file
+### To set up 'mnemonic.secret' file
 ```
 echo "'your-secret-mnemonic'" > mnemonic.secret  // Your secret mnemonic must be marked with single quotes
 ```
 
-## To compile PizzaCoin contract and its dependencies
+### To compile PizzaCoin contract and its dependencies
 ```
 truffle compile
 ```
 
-## To deploy PizzaCoin contract and its dependencies
+### To deploy PizzaCoin contract and its dependencies
 ```
 truffle migrate --network mainnet  // Deploy to Ethereum public main network via Infura
 ```
@@ -105,17 +122,18 @@ truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via lo
 truffle migrate --network ganache  // Deploy to Ganache local test environment
 ```
 
-## To install Node.JS packages required by lazy-web3-wrapper functions
+### To install Node.JS packages required by lazy-web3-wrapper functions
 ```
 cd run
 npm install
 ```
 
-## To execute Node.JS based lazy-web3-wrapper functions (for demo)
+### To execute Node.JS based lazy-web3-wrapper functions (for demo)
 ```
 cd run
 node main.js
 ```
+
 <br />
 <br />
 
@@ -123,21 +141,21 @@ node main.js
 <img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/DApp-screenshot-teams.jpg">
 <h3 align="center">Figure 5. Example of DApp WebUI</h3><br />
 
-## Run Team Dashboard
+### Run Team Dashboard
 ```
 cd DApp
 npm install
 npm run serve
 ```
 
-## Run Live Feed
+### Run Live Feed
 ```
 cd live-feed
 npm install
 npm run serve
 ```
 
-## Run Live Feed Api server
+### Run Live Feed Api server
 ```
 cd live-feed
 TBD
