@@ -53,7 +53,7 @@ For example, when a user makes a call to the registerPlayer() function of the PZ
 
 ### Install MetaMask
 - Install [MetaMask](https://metamask.io/) on Chrome browser.
-- Get free ETH on test network, by googling using keywords like **ropsten faucet**, **rinkeby faucet** or **kovan faucet**
+- Get free ETH on test network, by googling using keywords like **ropsten faucet**, **rinkeby faucet** or **kovan faucet**.
 
 ### Deploy PizzaCoin contract and its dependencies
 1. Go to [remix.ethereum.org](https://remix.ethereum.org/)
@@ -65,6 +65,7 @@ For example, when a user makes a call to the registerPlayer() function of the PZ
 7. Select **Deployed Contract** pane below and then invoke the following contract functions: **createStaffContract()**, **createPlayerContract()**, **createTeamContract()** and **startRegistration()**.
 8. Finally, configure your DApp by heading to the config file **system.js** which is in the directory **../DApp/src/store/**. Then, define the following variables with corresponding settings: **network**, **etherscanPrefix**, **ethereumNode**, **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinPlayerAddr** and **pizzaCoinTeamAddr**.
 
+<br />
 
 ## Deploy with Truffle Framework
 ```
