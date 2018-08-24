@@ -47,6 +47,7 @@ export default {
 }
 .badge1 {
    position:relative;
+   /* display: none; */
 }
 .badge1[data-badge]:after {
    content:attr(data-badge);

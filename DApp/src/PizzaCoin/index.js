@@ -306,8 +306,10 @@ class PizzaCoin {
         gasPrice: 10000000000
       })
       console.log('... succeeded voteTeam')
+      return true
     } catch (error) {
       console.error(error)
+      return false
     }
   }
 

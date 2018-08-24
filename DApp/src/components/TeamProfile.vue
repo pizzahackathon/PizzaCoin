@@ -125,6 +125,10 @@ export default {
     ...mapActions('team', ['addMember']),
     ...mapMutations('team', ['addScore']),
     async onVote ({name}) {
+      const loadingComponent = this.$loading.open({
+        container: null
+      })
+
       console.log('onVote --> ' + name)
       if (this.tokenBalance < 1) {
         alert('Your toker is not enough.')
@@ -135,12 +139,20 @@ export default {
             teamName: name,
             votingWeight: 1
           }
-          await this.$pizzaCoin.voteTeam(voteTeamData)
+          let isSuccess = await this.$pizzaCoin.voteTeam(voteTeamData)
+          if (isSuccess) {
+            this.$toast.open({
+              duration: 5000,
+              message: `Successfully vote 1 PZC for ${name}`,
+              type: 'is-success'
+            })
+          }
           this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
         } catch (error) {
           console.error(error)
         }
       }
+      loadingComponent.close()
     },
     onJoin () {
       this.playerName = ''
