@@ -60,7 +60,7 @@ export default {
           labels: this.teamNames,
           datasets: [
             { // one line graph
-              label: 'Score voting',
+              label: '',
               data: this.teamScore,
               backgroundColor: [
                 'rgba(255, 0, 0, 0.5)',

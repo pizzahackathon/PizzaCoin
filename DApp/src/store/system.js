@@ -2,10 +2,10 @@ const state = {
   network: 'kovan',
   etherscanPrefix: 'https://kovan.etherscan.io',
   ethereumNode: 'wss://kovan.infura.io/ws', // Only websocker endpoint
-  pizzaCoinAddr: '0x2ae53961e6cad27ed6ef71c4b1e6021786d7846b',
-  pizzaCoinStaffAddr: '0x2F1f50dc6F3D9B77FFd5b6C7769c2C28423099f2',
-  pizzaCoinPlayerAddr: '0x377474c7afD40Dd75f4a6952CCB3bA69EF165159',
-  pizzaCoinTeamAddr: '0xb35F30854F7A4a4c5Dd61a7C410bAd2541ffaAE8'
+  pizzaCoinAddr: '0xe960868fa9e521f853ade9d5b40088b6387592f0',
+  pizzaCoinStaffAddr: '0x0C7FfBfAB626dDB6278CC1a20BA471981d1C8048',
+  pizzaCoinPlayerAddr: '0xfD4B7211Abb8b41bf45805A8F177FF4f22F52E36',
+  pizzaCoinTeamAddr: '0x156e3718c6F8EF104141f147FDd79775B7085783'
 }
 
 export default {
