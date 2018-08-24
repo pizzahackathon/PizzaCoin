@@ -55,7 +55,7 @@
     </div>
      <section>
        <span
-        class="icon"
+       :class="{ icon: true, hidden: hidePlusIcon }"
         @click="isComponentModalActive = true"
          >
          <i class="fas fa-plus-circle fa fa-3x"></i>
@@ -107,11 +107,19 @@ export default {
     isComponentModalActive: false,
     creatorName: '',
     teamname: '',
-    account: null
+    account: null,
+    hidePlusIcon: false
     // playerInfo: ''
   }),
+  watch: {
+    $route (to, from) {
+      console.log(`route to ${JSON.stringify(to.name)}`)
+      this.updatePlusIcon()
+    }
+  },
   async mounted () {
     console.log('check route --> ' + this.$route.name)
+    this.updatePlusIcon()
     try {
       let state = await this.$pizzaCoin.getContractState(await this.$pizzaCoin.account)
       console.log('check state --> ' + state)
@@ -128,6 +136,9 @@ export default {
   methods: {
     ...mapActions('auth', ['isStaffLogin']),
     ...mapActions('team', ['creatTeam']),
+    updatePlusIcon () {
+      this.hidePlusIcon = this.$route.name === 'leader-board'
+    },
     async onCreateTeam () {
       try {
         this.isComponentModalActive = false
@@ -250,5 +261,8 @@ export default {
    bottom: 50px;
    top: auto;
   }
+}
+.hidden {
+  display: none;
 }
 </style>
