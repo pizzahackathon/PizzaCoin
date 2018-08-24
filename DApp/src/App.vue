@@ -223,32 +223,32 @@ export default {
 }
 @media only screen and (min-width:769px){
 .icon {
-   top:600px;
-   right:50px;
+   bottom: 120px;
+   top: auto;
   }
 }
 @media only screen and (min-width:960px){
 .icon {
-   top:700px;
-   right:50px;
+   bottom: 100px;
+   top: auto;
   }
 }
 @media only screen and (min-width:1024px){
 .icon {
-   top:800px;
-   right:50px;
+   bottom: 90px;
+   top: auto;
   }
 }
 @media only screen and (min-width:1472px){
 .icon {
-   top:1250px;
-   right:50px;
+  bottom: 80px;
+   top: auto;
   }
 }
 @media only screen and (min-width:2000px){
   .icon {
-   top:1350px;
-   right:50px;
+   bottom: 50px;
+   top: auto;
   }
 }
 </style>
