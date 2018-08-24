@@ -23,7 +23,9 @@ export default {
       leaderBoardData: null,
       pizzaCoin: null,
       teamNames: [],
-      teamScore: []
+      teamScore: [],
+      showTeamNameOnState: 'Voting Finished',
+      currentState: ''
     }
   },
   async mounted () {
@@ -36,12 +38,18 @@ export default {
   },
   methods: {
     async loadData () {
+      this.currentState = await this.$pizzaCoin.getContractState(this.$pizzaCoin.account)
       await this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       _.forEach(this.teams, (team, idx) => {
         console.log('team: ', team)
         console.log('teamName: ', team.name)
         console.log('total vote: ', team.score)
-        this.teamNames.push(team.name)
+
+        if (this.currentState === this.showTeamNameOnState) {
+          this.teamNames.push(team.name)
+        } else {
+          this.teamNames.push('')
+        }
         this.teamScore.push(team.score)
       })
     },
@@ -107,6 +115,7 @@ export default {
       }
     },
     initialLabels () {
+      const self = this
       // Define a plugin to provide data labels
       Chart.plugins.register({
         afterDatasetsDraw: function (chart) {
@@ -131,8 +140,10 @@ export default {
                   var position = element.tooltipPosition()
                   ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding)
 
-                  ctx.font = Chart.helpers.fontString(20, fontStyle, fontFamily)
-                  ctx.fillText(chart.data.labels[index].substring(0, 4), position.x, position.y - (fontSize / 2) - padding + 50)
+                  if (self.currentState === self.showTeamNameOnState) {
+                    ctx.font = Chart.helpers.fontString(20, fontStyle, fontFamily)
+                    ctx.fillText(chart.data.labels[index].substring(0, 4), position.x, position.y - (fontSize / 2) - padding + 50)
+                  }
                 }
               })
             }
