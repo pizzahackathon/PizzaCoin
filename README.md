@@ -55,12 +55,12 @@ For example, when a user makes a call to the registerPlayer() function of the PZ
 - Install [MetaMask](https://metamask.io/) on Chrome browser.
 - Get free ETH on test network, by googling using keywords like **ropsten faucet**, **rinkeby faucet** or **kovan faucet**
 
-### Deploy Smart Contracts
+### Deploy PizzaCoin contract and its dependencies
 1. Go to [remix.ethereum.org](https://remix.ethereum.org/)
 2. Choose 📁, select all files in **Smart-Contract/contracts/**
 3. Open **PizzaCoin.sol** on the left panel
 4. Select **Run** tab on the right panel
-5. Select **PizzaCoin** on the list
+5. Select **PizzaCoin** on the list below
 6. Specify **_ownerName** = "Your name" and **_voterInitialTokens** = 3 (i.e., the initial voting tokens every participant will get during a registration process). At this step, your Metamask will prompt you to confirm signing transaction 6 times.
 7. Select **Deployed Contract** pane below and then invoke the following contract functions: **createStaffContract()**, **createPlayerContract()**, **createTeamContract()** and **startRegistration()**.
 8. Finally, configure your DApp by heading to the config file **system.js** which is in the directory **../DApp/src/store/**. Then, define the following variables with corresponding settings: **network**, **etherscanPrefix**, **ethereumNode**, **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinPlayerAddr** and **pizzaCoinTeamAddr**.
