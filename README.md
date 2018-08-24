@@ -66,7 +66,7 @@ For example, when a user makes a call to the registerPlayer() function of the PZ
 8. Finally, configure your DApp to use **PizzaCoin**, **PizzaCoinStaff**, **PizzaCoinPlayer**, **PizzaCoinTeam** addresses.
 
 
-## Deploy with truffle
+## Deploy with Truffle Framework
 ```
 cd Smart-Contract/
 ```
@@ -74,7 +74,7 @@ cd Smart-Contract/
 ### To install Truffle Framework
 &emsp;<a href="https://truffleframework.com/docs/truffle/getting-started/installation">Follow this link</a>
 
-### To install Node.JS packages required by Truffle
+### To install Node.JS dependency packages
 ```
 npm install
 ```
@@ -122,16 +122,14 @@ truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via lo
 truffle migrate --network ganache  // Deploy to Ganache local test environment
 ```
 
-### To install Node.JS packages required by lazy-web3-wrapper functions
+## To initial PizzaCoin contract (use this when integrating the contract with DApp)
 ```
-cd run
-npm install
+node init-contract.js <<ethereum_network>>  // For example, run 'node init-contract.js rinkeby'
 ```
 
-### To execute Node.JS based lazy-web3-wrapper functions (for demo)
+## To execute Node.JS based lazy-web3-wrapper functions (for demonstrating how to interact the contract with web3 node.js backend)
 ```
-cd run
-node main.js
+node web3-demo.js  // This script supports a connection to Ganache or local Geth node only
 ```
 
 <br />
@@ -160,18 +158,6 @@ npm run serve
 cd live-feed
 TBD
 ```
-
-## Configurations
-### File: store/system.js
-- **network**: Ethereum network 'mainnet', 'ropsten', 'rinkeby', 'kovan' or etc.
-- **etherscanPrefix**: Etherscan url, you need to configure according to network.
-- **ethereumNode**: Public or Private Ethereum node, in case a user do not have Web3 provider like 'Metmask'. Note that, **Web socket** is required for Leader Board so that it is able to detect voting in real time. exp: 'wss://rinkeby.infura.io/_ws'
-- **pizzaCoinAddr**: The deployed Pizza Coin contract address
-- **pizzaCoinStaffAddr**: The deployed Pizza Coin Staff contract address
-- **pizzaCoinTeamAddr**: The deployed Pizza Coin Team contract address
-- **pizzaCoinPlayerAddr**: The deployed Pizza Coin Player contract address
-
-To get the deployed **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinTeamAddr** and **pizzaCoinPlayerAddr** addresses, please consult in the Smart-Contract/ directory.
 
 <br />
 <br />
