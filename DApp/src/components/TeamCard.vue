@@ -82,13 +82,13 @@ export default {
     font-size: 10em;
     .badge1[data-badge]:after {
       top:-15px;
-      right:-770px;
+      right:-300px;
     }
 }
 @media only screen and (min-width:769px){
     .badge1[data-badge]:after {
       top:-15px;
-      right:-250px;
+      right:-260px;
     }
 }
 @media only screen and (min-width:960px){
@@ -100,7 +100,7 @@ export default {
 @media only screen and (min-width:1024px){
     .badge1[data-badge]:after {
       top:-15px;
-      right:-320px;
+      right:-340px;
     }
 }
 @media only screen and (min-width:1279px){
