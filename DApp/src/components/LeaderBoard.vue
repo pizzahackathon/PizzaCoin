@@ -16,13 +16,12 @@ import _ from 'lodash'
 export default {
   name: 'LeaderBoardComponent',
   computed: {
-    ...mapState('team', ['teams'])
+    ...mapState('team', ['teams', 'teamCount'])
   },
   data () {
     return {
       leaderBoardData: null,
       pizzaCoin: null,
-      teamCount: 0,
       teamNames: [],
       teamScore: []
     }
@@ -36,7 +35,6 @@ export default {
   },
   methods: {
     async loadData () {
-      this.teamCount = await this.$pizzaCoin.getTeamCount()
       await this.$store.dispatch('team/getTeamsProfile', await this.$pizzaCoin.getTeamsProfile())
       _.forEach(this.teams, (team, idx) => {
         console.log('team: ', team)
