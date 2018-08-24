@@ -123,7 +123,7 @@ node main.js
 3. Open **PizzaCoin.sol** on left panel
 4. Select Run on right panel
 5. Select **PizzaCoin** on list
-6. Deploy with **_ownerName** = "Your name", **_voterInitialTokens** = 3 (vote available for each user), Your Metamask will prompt confirmation around 5 times.
+6. Deploy with **_ownerName** = "Your name", **_voterInitialTokens** = 3 (vote available for each player and staff), Your Metamask will prompt confirmation around 5 times.
 7. Select deployed contract below, call following createStaffContract, createPlayerContract, createTeamContract and startRegistration
 8. Finally, configure your DApp to use PizzaCoin, PizzaCoinStaff, PizzaCoinPlayer, PizzaCoinTeam addresses.
 
