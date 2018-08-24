@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/serial-coder/Pizza-Coin#readme",
   "dependencies": {
+    "ethereumjs-abi": "^0.6.5",
     "truffle-hdwallet-provider": "0.0.6"
   }
 }
