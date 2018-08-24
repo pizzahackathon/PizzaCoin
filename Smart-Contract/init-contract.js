@@ -100,16 +100,16 @@ async function main() {
         console.log('PizzaCoinTeam address: ' + pizzaCoinTeamAddr);
 
         // Writing a config file
-        /*console.log('\nWriting a config file...');
+        console.log('\nWriting a config file...');
         await writeContractConfigFile(
-            'contract-settings.js',
+            '../DApp/src/store/system.js',
             network, 
             pizzaCoinAddr, 
             pizzaCoinStaffAddr, 
             pizzaCoinPlayerAddr, 
             pizzaCoinTeamAddr
         );
-        console.log('... succeeded');*/
+        console.log('... succeeded');
 
         process.exit(0);
     }
