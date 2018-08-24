@@ -49,22 +49,25 @@ On the prototype of our PZC contract, we faced 'Out-of-Gas' error when deploying
 
 For example, when a user makes a call to the registerPlayer() function of the PZC contract (let's call PZC.registerPlayer() for short), the PZC.registerPlayer() will forward the request to CodeLib.registerPlayer() in order to process the requesting transaction on behalf of the PZC contract instead. Note that, the CodeLib.registerPlayer() in question is the mapped function of the PZC.registerPlayer() which is stored on the external CodeLib library. Then, the CodeLib.registerPlayer() will hand over the process to the real worker function called Player.registerPlayer(). With this code migration method, we can significantly reduce a gas consumption when deploying the PZC mother contract.
 
+<br />
+
 ## Deploy with remix.ethereum.org
 
 ### Install MetaMask
-- Install [MetaMask](https://metamask.io/) on chrome.
-- Get free ETH on test network, google search **ropsten faucet**, **rinkeby faucet** or **kovan faucet**
+- Install [MetaMask](https://metamask.io/) on Chrome browser.
+- Get free ETH on test network, by googling using keywords like **ropsten faucet**, **rinkeby faucet** or **kovan faucet**.
 
-### Deploy Smart Contracts
+### Deploy PizzaCoin contract and its dependencies
 1. Go to [remix.ethereum.org](https://remix.ethereum.org/)
-2. Choose 📁, select all files in Smart-Contract/contracts/
-3. Open **PizzaCoin.sol** on left panel
-4. Select Run on right panel
-5. Select **PizzaCoin** on list
-6. Deploy with **_ownerName** = "Your name", **_voterInitialTokens** = 3 (vote available for each player and staff), Your Metamask will prompt confirmation around 5 times.
-7. Select deployed contract below, call following createStaffContract, createPlayerContract, createTeamContract and startRegistration
-8. Finally, configure your DApp to use **PizzaCoin**, **PizzaCoinStaff**, **PizzaCoinPlayer**, **PizzaCoinTeam** addresses.
+2. Choose 📁, select all files in **Smart-Contract/contracts/**
+3. Open **PizzaCoin.sol** on the left panel
+4. Select **Run** tab on the right panel
+5. Select **PizzaCoin** on the list below
+6. Specify **_ownerName** = "Your name" and **_voterInitialTokens** = 3 (i.e., the initial voting tokens every participant will get during a registration process). At this step, your Metamask will prompt you to confirm signing transaction 6 times.
+7. Select **Deployed Contract** pane below and then invoke the following contract functions: **createStaffContract()**, **createPlayerContract()**, **createTeamContract()** and **startRegistration()**.
+8. Finally, configure your DApp by heading to the config file **system.js** which is in the directory **../DApp/src/store/**. Then, define the following variables with corresponding settings: **network**, **etherscanPrefix**, **ethereumNode**, **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinPlayerAddr** and **pizzaCoinTeamAddr**.
 
+<br />
 
 ## Deploy with Truffle Framework
 ```
