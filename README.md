@@ -52,18 +52,18 @@ For example, when a user makes a call to the registerPlayer() function of the PZ
 ## Deploy with remix.ethereum.org
 
 ### Install MetaMask
-- Install [MetaMask](https://metamask.io/) on chrome.
+- Install [MetaMask](https://metamask.io/) on Chrome browser.
 - Get free ETH on test network, google search **ropsten faucet**, **rinkeby faucet** or **kovan faucet**
 
 ### Deploy Smart Contracts
 1. Go to [remix.ethereum.org](https://remix.ethereum.org/)
 2. Choose 📁, select all files in Smart-Contract/contracts/
-3. Open **PizzaCoin.sol** on left panel
-4. Select Run on right panel
+3. Open **PizzaCoin.sol** on the left panel
+4. Select 'Run' tab on the right panel
 5. Select **PizzaCoin** on list
-6. Deploy with **_ownerName** = "Your name", **_voterInitialTokens** = 3 (vote available for each player and staff), Your Metamask will prompt confirmation around 5 times.
-7. Select deployed contract below, call following createStaffContract, createPlayerContract, createTeamContract and startRegistration
-8. Finally, configure your DApp to use **PizzaCoin**, **PizzaCoinStaff**, **PizzaCoinPlayer**, **PizzaCoinTeam** addresses.
+6. Specify **_ownerName** = "Your name" and **_voterInitialTokens** = 3 (the initial voting tokens every participant will gets during a registration process). At this step, your Metamask will prompt you to confirm signing transaction 6 times.
+7. Select 'Deployed Contract' pane below and then invoke the following contract functions: createStaffContract(), createPlayerContract(), createTeamContract() and startRegistration().
+8. Finally, configure your DApp by heading to the config file named 'system.js' which is in the directory '../DApp/src/store/'. Then, define the following variables **network**, **etherscanPrefix**, **ethereumNode**, **pizzaCoinAddr**, **pizzaCoinStaffAddr**, **pizzaCoinPlayerAddr** and **pizzaCoinTeamAddr** with corresponding settings.
 
 
 ## Deploy with Truffle Framework
