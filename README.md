@@ -139,7 +139,7 @@ node web3-demo.js  // This script supports a connection to Ganache or local Geth
 <br />
 
 ## DApp (Decentralized Application)
-<img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Interaction-between-DApp-and-PizzaCoin-contract.png">
+<p align="center"><img src="https://raw.githubusercontent.com/totiz/LiveDashboard/dev/images/Interaction-between-DApp-and-PizzaCoin-contract.png" width="750"></p>
 <h3 align="center">Figure 5. Interaction between DApp and PizzaCoin contract</h3><br />
 
 To facilitate our users, we developed Decentralized Application (DApp) as a web frontend connecting with PizzaCoin contract. DApp is a static web frontend application which runs at the client side without the need of any backend server. Our DApp connects with PizzaCoin contract through <a href="https://web3js.readthedocs.io/en/1.0/">Web3.js</a> library. The underlying protocal used by Web3.js is Json RPC over HTTP and/or Websocket as shown in Figure 5. 
