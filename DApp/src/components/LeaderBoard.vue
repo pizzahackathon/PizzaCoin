@@ -52,8 +52,6 @@ export default {
         }
         this.teamScore.push(team.score)
       })
-      this.teamNames = this.teamNames.reverse()
-      this.teamScore = this.teamScore.reverse()
     },
     initChartInstance (bgColor, borderColor) {
       this.leaderBoardData = {
