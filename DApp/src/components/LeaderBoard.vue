@@ -4,6 +4,34 @@
       Leader board
       <canvas id="leader-board-chart"></canvas>
       Team count {{ teamCount }}
+      <section>
+        <b-modal :active.sync="isCardModalActive" :width="640" scroll="keep">
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src="https://gateway.ipfs.io/ipfs/QmapyMbEgZJKY4ZtJhspWrrvGtfW2grCystrr7D3w7zun8" alt="Image">
+                    </figure>
+                </div>
+                <div class="card-content" style="
+                    position: absolute;
+                    top: 0px;
+                    left: 0px;
+                    background: transparent;
+                    width: 100%;
+                    height: 100%;
+                    padding-top: 196px;
+                ">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4" style="font-size: 54px;
+    text-align: center;color: #fb00ff;font-family: serif;">{{ modalTeamName }}</p>
+                            <p class="subtitle is-6"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-modal>
+      </section>
   </div>
 </template>
 <script>
@@ -25,7 +53,13 @@ export default {
       teamNames: [],
       teamScore: [],
       showTeamNameOnState: 'Voting Finished',
-      currentState: ''
+      currentState: '',
+      elements: null,
+      isImageModalActive: false,
+      isCardModalActive: false,
+      modalTeamName: 'test1',
+      modalTeamScore: 1,
+      hiddenNames: []
     }
   },
   async mounted () {
@@ -45,11 +79,12 @@ export default {
         console.log('teamName: ', team.name)
         console.log('total vote: ', team.score)
 
-        if (this.currentState === this.showTeamNameOnState) {
-          this.teamNames.push(team.name)
-        } else {
-          this.teamNames.push('')
-        }
+        // if (this.currentState === this.showTeamNameOnState) {
+        //   this.teamNames.push(team.name)
+        // } else {
+        this.teamNames.push('')
+        // }
+        this.hiddenNames.push(team.name)
         this.teamScore.push(team.score)
       })
     },
@@ -110,6 +145,23 @@ export default {
                 padding: 25
               }
             }]
+          },
+          onClick: (evt) => {
+            let activePoints = this.leaderBoardChart.getElementsAtEvent(evt)
+            let firstPoint = activePoints[0]
+            let label = this.leaderBoardChart.data.labels[firstPoint._index]
+            let value = this.leaderBoardChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index]
+            console.log('onClick ' + label + ': ' + value)
+            this.modalTeamName = this.hiddenNames[firstPoint._index]
+            this.modalTeamScore = value
+
+            this.isCardModalActive = true
+
+            // let activeElement = this.leaderBoardChart.getElementAtEvent(evt)
+            // activeElement.backgroundColor = '#000'
+            // chart_config.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index];
+            // console.log(`activeElement ${activeElement[0]._datasetIndex}`)
+            // this.data = elements
           }
         }
       }
@@ -142,7 +194,7 @@ export default {
 
                   if (self.currentState === self.showTeamNameOnState) {
                     ctx.font = Chart.helpers.fontString(20, fontStyle, fontFamily)
-                    ctx.fillText(chart.data.labels[index].substring(0, 4), position.x, position.y - (fontSize / 2) - padding + 50)
+                    // ctx.fillText(chart.data.labels[index].substring(0, 4), position.x, position.y - (fontSize / 2) - padding + 50)
                   }
                 }
               })
