@@ -79,12 +79,12 @@ export default {
         console.log('teamName: ', team.name)
         console.log('total vote: ', team.score)
 
-        // if (this.currentState === this.showTeamNameOnState) {
-        //   this.teamNames.push(team.name)
-        // } else {
-        this.teamNames.push('')
-        // }
-        this.hiddenNames.push('')
+        if (this.currentState === this.showTeamNameOnState) {
+          this.teamNames.push(team.name)
+        } else {
+          this.teamNames.push('')
+        }
+        this.hiddenNames.push(team.name)
         this.teamScore.push(team.score)
       })
     },
