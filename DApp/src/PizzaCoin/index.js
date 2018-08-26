@@ -303,7 +303,7 @@ class PizzaCoin {
       await this.main.methods.voteTeam(teamName, parseInt(votingWeight)).send({
         from: voterAddr,
         gas: 1000000,
-        gasPrice: 10000000000
+        gasPrice: 1000000000
       })
       console.log('... succeeded voteTeam')
       return true
