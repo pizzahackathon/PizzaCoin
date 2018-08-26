@@ -84,7 +84,7 @@ export default {
         // } else {
         this.teamNames.push('')
         // }
-        this.hiddenNames.push(team.name)
+        this.hiddenNames.push('')
         this.teamScore.push(team.score)
       })
     },
