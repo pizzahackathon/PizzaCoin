@@ -103,7 +103,7 @@ node web3-demo.js  // This script supports a connection to Ganache or local Geth
 <br />
 
 ## List of PizzaCoin contract address and its dependency addresses
-The following addresses point to PizzaCoin contract as well as its dependencies that were used in the hackathon event.
+The following addresses point to PizzaCoin contract as well as its dependencies that were used at the hackathon event.
 
 - <b>Ethereum network:</b> <a href="https://kovan.etherscan.io/">Kovan</a>
 - <b>PizzaCoin contract:</b> <a href="https://kovan.etherscan.io/address/0x76030b8f0e6e938afabe7662ec248f2b7815e6bb">0x76030b8f0e6e938afabe7662ec248f2b7815e6bb</a>
