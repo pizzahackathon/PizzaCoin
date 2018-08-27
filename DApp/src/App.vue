@@ -56,6 +56,7 @@
      <section>
        <span
        :class="{ icon: true, hidden: hidePlusIcon }"
+        v-if="stateContract === 'Registration'"
         @click="isComponentModalActive = true"
          >
          <i class="fas fa-plus-circle fa fa-3x"></i>
