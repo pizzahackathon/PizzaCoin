@@ -132,7 +132,7 @@ node init-contract.js <<ethereum_network>>  // For example, run 'node init-contr
 
 ## To execute Node.JS based lazy-web3-wrapper functions (for demonstrating how to interact the contract with web3 node.js backend)
 ```
-node web3-demo.js  // This script supports a connection to Ganache or local Geth node only
+node web3-demo.js  // This script supports a connection to Ganache or local Geth/Parity node only
 ```
 
 <br />
@@ -168,6 +168,23 @@ npm run serve
 cd live-feed
 TBD
 ```
+
+<br />
+<br />
+
+## List of PizzaCoin contract address and its dependency addresses
+The following addresses point to PizzaCoin contract as well as its dependencies that were used in the hackathon event.
+
+- <b>Ethereum network:</b> <a href="https://kovan.etherscan.io/">Kovan</a>
+- <b>PizzaCoin contract:</b> <a href="https://kovan.etherscan.io/address/0x76030b8f0e6e938afabe7662ec248f2b7815e6bb">0x76030b8f0e6e938afabe7662ec248f2b7815e6bb</a>
+- <b>PizzaCoinStaffDeployer library:</b> <a href="https://kovan.etherscan.io/address/0x7F8366b1C1aCE62A74531F9D1477428E15Aa1109">0x7F8366b1C1aCE62A74531F9D1477428E15Aa1109</a>
+- <b>PizzaCoinPlayerDeployer library:</b> <a href="https://kovan.etherscan.io/address/0x2659a5CEcC38250bf8a0F4f48DBF9C36C4eAB923">0x2659a5CEcC38250bf8a0F4f48DBF9C36C4eAB923</a>
+- <b>PizzaCoinTeamDeployer library:</b> <a href="https://kovan.etherscan.io/address/0xD32dC427118DA8CBfc300C6E483C03d7877f3d39">0xD32dC427118DA8CBfc300C6E483C03d7877f3d39</a>
+- <b>PizzaCoinCodeLib library:</b> <a href="https://kovan.etherscan.io/address/0xD9ea584DAB76F0BcF6Db85D61AA7Ee5606f15876">0xD9ea584DAB76F0BcF6Db85D61AA7Ee5606f15876</a>
+- <b>PizzaCoinCodeLib2 library:</b> <a href="https://kovan.etherscan.io/address/0xFaB51C36088D9651872f2cd610dAE7F82E4F04E0">0xFaB51C36088D9651872f2cd610dAE7F82E4F04E0</a>
+- <b>PizzaCoinStaff contract:</b> <a href="https://kovan.etherscan.io/address/0xEa1E67465b688Ea1b30856F55AcD77af43376d01">0xEa1E67465b688Ea1b30856F55AcD77af43376d01</a>
+- <b>PizzaCoinPlayer contract:</b> <a href="https://kovan.etherscan.io/address/0x785A811Ad43c733B0FdDd8113E8478bc2AEd02e0">0x785A811Ad43c733B0FdDd8113E8478bc2AEd02e0</a>
+- <b>PizzaCoinTeam contract:</b> <a href="https://kovan.etherscan.io/address/0x216C611001b2e8B6ff2cf51C5e9EB39ABE558E35">0x216C611001b2e8B6ff2cf51C5e9EB39ABE558E35</a>
 
 <br />
 <br />
