@@ -35,33 +35,37 @@ On the prototype of our PZC contract, we faced 'Out-of-Gas' error when deploying
 
 For example, when a user makes a call to the registerPlayer() function of the PZC contract (let's call PZC.registerPlayer() for short), the PZC.registerPlayer() will forward the request to CodeLib.registerPlayer() in order to process the requesting transaction on behalf of the PZC contract instead. Note that, the CodeLib.registerPlayer() in question is the mapped function of the PZC.registerPlayer() which is stored on the external CodeLib library. Then, the CodeLib.registerPlayer() will hand over the process to the real worker function called Player.registerPlayer(). With this code migration method, we can significantly reduce a gas consumption when deploying the PZC mother contract.
 
-## To install Truffle Framework
+<br />
+
+## Deploy PizzaCoin contract
+
+### To install Truffle Framework
 &emsp;<a href="https://truffleframework.com/docs/truffle/getting-started/installation">Follow this link</a>
 
-## To install Node.JS dependency packages
+### To install Node.JS dependency packages
 ```
 npm install
 ```
 
-## To get Infura API for free
+### To get Infura API for free
 &emsp;<a href="https://infura.io">Register to get a free api.</a> Note that, the api will be sent to your registered e-mail.
 
-## To set up 'infura-api.secret' file
+### To set up 'infura-api.secret' file
 ```
 echo "'your-infura-api'" > infura-api.secret  // Your Infura api must be marked with single quotes
 ```
 
-## To set up 'mnemonic.secret' file
+### To set up 'mnemonic.secret' file
 ```
 echo "'your-secret-mnemonic'" > mnemonic.secret  // Your secret mnemonic must be marked with single quotes
 ```
 
-## To compile PizzaCoin contract and its dependencies
+### To compile PizzaCoin contract and its dependencies
 ```
 truffle compile
 ```
 
-## To deploy PizzaCoin contract and its dependencies
+### To deploy PizzaCoin contract and its dependencies
 ```
 truffle migrate --network mainnet  // Deploy to Ethereum public main network via Infura
 ```
@@ -86,12 +90,28 @@ truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via lo
 truffle migrate --network ganache  // Deploy to Ganache local test environment
 ```
 
-## To initial PizzaCoin contract (use this when integrating the contract with DApp)
+### To initial PizzaCoin contract (use this when integrating the contract with DApp)
 ```
 node init-contract.js <<ethereum_network>>  // For example, run 'node init-contract.js rinkeby'
 ```
 
-## To execute Node.JS based lazy-web3-wrapper functions (for demonstrating how to interact the contract with web3 node.js backend)
+### To execute Node.JS based lazy-web3-wrapper functions (for demonstrating how to interact the contract with web3 node.js backend)
 ```
-node web3-demo.js  // This script supports a connection to Ganache or local Geth node only
+node web3-demo.js  // This script supports a connection to Ganache or local Geth/Parity node only
 ```
+
+<br />
+
+## List of PizzaCoin contract address and its dependency addresses
+The following addresses point to PizzaCoin contract as well as its dependencies that were used in the hackathon event.
+
+- <b>Ethereum network:</b> <a href="https://kovan.etherscan.io/">Kovan</a>
+- <b>PizzaCoin contract:</b> <a href="https://kovan.etherscan.io/address/0x76030b8f0e6e938afabe7662ec248f2b7815e6bb">0x76030b8f0e6e938afabe7662ec248f2b7815e6bb</a>
+- <b>PizzaCoinStaffDeployer library:</b> <a href="https://kovan.etherscan.io/address/0x7F8366b1C1aCE62A74531F9D1477428E15Aa1109">0x7F8366b1C1aCE62A74531F9D1477428E15Aa1109</a>
+- <b>PizzaCoinPlayerDeployer library:</b> <a href="https://kovan.etherscan.io/address/0x2659a5CEcC38250bf8a0F4f48DBF9C36C4eAB923">0x2659a5CEcC38250bf8a0F4f48DBF9C36C4eAB923</a>
+- <b>PizzaCoinTeamDeployer library:</b> <a href="https://kovan.etherscan.io/address/0xD32dC427118DA8CBfc300C6E483C03d7877f3d39">0xD32dC427118DA8CBfc300C6E483C03d7877f3d39</a>
+- <b>PizzaCoinCodeLib library:</b> <a href="https://kovan.etherscan.io/address/0xD9ea584DAB76F0BcF6Db85D61AA7Ee5606f15876">0xD9ea584DAB76F0BcF6Db85D61AA7Ee5606f15876</a>
+- <b>PizzaCoinCodeLib2 library:</b> <a href="https://kovan.etherscan.io/address/0xFaB51C36088D9651872f2cd610dAE7F82E4F04E0">0xFaB51C36088D9651872f2cd610dAE7F82E4F04E0</a>
+- <b>PizzaCoinStaff contract:</b> <a href="https://kovan.etherscan.io/address/0xEa1E67465b688Ea1b30856F55AcD77af43376d01">0xEa1E67465b688Ea1b30856F55AcD77af43376d01</a>
+- <b>PizzaCoinPlayer contract:</b> <a href="https://kovan.etherscan.io/address/0x785A811Ad43c733B0FdDd8113E8478bc2AEd02e0">0x785A811Ad43c733B0FdDd8113E8478bc2AEd02e0</a>
+- <b>PizzaCoinTeam contract:</b> <a href="https://kovan.etherscan.io/address/0x216C611001b2e8B6ff2cf51C5e9EB39ABE558E35">0x216C611001b2e8B6ff2cf51C5e9EB39ABE558E35</a>
