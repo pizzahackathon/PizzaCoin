@@ -193,8 +193,8 @@ The following addresses point to PizzaCoin contract as well as its dependencies 
 
 ## Coders
 - <a href="https://github.com/serial-coder">Bright</a> (Pizza Coin - Smart Contract)
-- <a href="https://github.com/teerapat1739">Game</a> (DApp Team)
-- <a href="https://github.com/zent-bank">Bank</a> (DApp Leader board)
+- <a href="https://github.com/teerapat1739">Game</a> (DApp WebUI)
+- <a href="https://github.com/zent-bank">Bank</a> (DApp Leader Board and Live Feed)
 
 ## Advisors
 - <a href="https://github.com/totiz?tab=repositories">Tot Nattapon </a>
