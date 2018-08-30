@@ -70,21 +70,31 @@ truffle compile
 truffle migrate --network mainnet  // Deploy to Ethereum public main network via Infura
 ```
 
+<p align="center">or</p>
+
 ```
 truffle migrate --network ropsten  // Deploy to Ropsten testnet via Infura
 ```
+
+<p align="center">or</p>
 
 ```
 truffle migrate --network rinkeby  // Deploy to Rinkeby testnet via Infura
 ```
 
+<p align="center">or</p>
+
 ```
 truffle migrate --network kovan  // Deploy to Kovan testnet via Infura
 ```
 
+<p align="center">or</p>
+
 ```
 truffle migrate --network rinkeby_localsync  // Deploy to Rinkeby testnet via local Geth node
 ```
+
+<p align="center">or</p>
 
 ```
 truffle migrate --network ganache  // Deploy to Ganache local test environment
