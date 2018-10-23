@@ -58,7 +58,7 @@ library PizzaCoinCodeLib {
 
         playerContractInstance.registerPlayer(player, _playerName, _teamName);
 
-        // Add a player to a team that he/she is associating with
+        // Add a player to the specified team
         teamContractInstance.registerPlayerToTeam(player, _teamName);
     }
 
@@ -118,51 +118,33 @@ library PizzaCoinCodeLib {
     }
 
     // ------------------------------------------------------------------------
-    // Remove the first found player of a particular team 
-    // (start searching at _startSearchingIndex)
+    // Remove the first player on the list from a particular team 
     // ------------------------------------------------------------------------
-    function kickFirstFoundPlayerInTeam(
+    function kickFirstPlayerInTeam(
         string _teamName, 
-        uint256 _startSearchingIndex,
         address _playerContract,
         address _teamContract
     ) 
-        public returns (uint256 _nextStartSearchingIndex) 
+    public
     {
         assert(_playerContract != address(0));
         assert(_teamContract != address(0));
 
-        // Get contract instances from the deployed addresses
-        IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
+        // Get a contract instance from the deployed addresses
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
-        // Get the array length of players in the specific team, 
-        // including all ever removal players
-        uint256 noOfAllEverTeamPlayers = teamContractInstance.getArrayLengthOfPlayersInTeam(_teamName);
+        bool endOfList;
+        address player;
 
-        require(
-            _startSearchingIndex < noOfAllEverTeamPlayers,
-            "'_startSearchingIndex' is out of bound."
-        );
+        // Get the first player in the specified team
+        (endOfList, player) = teamContractInstance.getPlayerInTeamAtIndex(_teamName, 0);
 
-        _nextStartSearchingIndex = noOfAllEverTeamPlayers;
-
-        for (uint256 i = _startSearchingIndex; i < noOfAllEverTeamPlayers; i++) {
-            bool endOfList;  // used as a temporary variable
-            address player;
-
-            (endOfList, player) = teamContractInstance.getPlayerInTeamAtIndex(_teamName, i);
-            
-            // player == address(0) if a player was kicked previously
-            if (player != address(0) && playerContractInstance.isPlayerInTeam(player, _teamName)) {
-                // Remove a specific player
-                kickPlayer(player, _teamName, _playerContract, _teamContract);
-
-                // Start next searching at the next array element
-                _nextStartSearchingIndex = i + 1;
-                return;     
-            }
+        if (endOfList) {
+            revert("There is no player in the specified team.");
         }
+        
+        // Remove a specific player
+        kickPlayer(player, _teamName, _playerContract, _teamContract);
     }
     
     // ------------------------------------------------------------------------
@@ -196,7 +178,7 @@ library PizzaCoinCodeLib {
     }
 
     // ------------------------------------------------------------------------
-    // Allow any staff or any player in other different teams to vote to a team
+    // Allow any staff or any player vote to a favourite team
     // ------------------------------------------------------------------------
     function voteTeam(
         string _teamName, 
@@ -235,7 +217,7 @@ library PizzaCoinCodeLib {
             return voteTeamByStaff(_teamName, _votingWeight, _staffContract, _teamContract);
         }
         else {
-            // Voter is a team player
+            // Voter is a player
             return voteTeamByDifferentTeamPlayer(_teamName, _votingWeight, _playerContract, _teamContract);
         }
     }
@@ -271,15 +253,15 @@ library PizzaCoinCodeLib {
         );
 
         // Staff commits to vote to the team
-        staffContractInstance.commitToVote(_teamName, voter, _votingWeight);
-        teamContractInstance.voteToTeam(_teamName, voter, _votingWeight);
+        staffContractInstance.commitToVote(voter, _teamName, _votingWeight);
+        teamContractInstance.voteToTeam(voter, _teamName, _votingWeight);
 
-        // Get a current voting point for the team
-        _totalVoted = teamContractInstance.getVotingPointForTeam(_teamName);
+        // Get the current voting points of the team
+        _totalVoted = teamContractInstance.getVotingPointsOfTeam(_teamName);
     }
 
     // ------------------------------------------------------------------------
-    // Vote for a team by a different team player
+    // Vote for a team by a different team's player
     // ------------------------------------------------------------------------
     function voteTeamByDifferentTeamPlayer(
         string _teamName, 
@@ -313,10 +295,10 @@ library PizzaCoinCodeLib {
         );
 
         // Player commits to vote to the team
-        playerContractInstance.commitToVote(_teamName, voter, _votingWeight);
-        teamContractInstance.voteToTeam(_teamName, voter, _votingWeight);
+        playerContractInstance.commitToVote(voter, _teamName, _votingWeight);
+        teamContractInstance.voteToTeam(voter, _teamName, _votingWeight);
 
-        // Get a current voting point for the team
-        _totalVoted = teamContractInstance.getVotingPointForTeam(_teamName);
+        // Get the current voting points of the team
+        _totalVoted = teamContractInstance.getVotingPointsOfTeam(_teamName);
     }
 }

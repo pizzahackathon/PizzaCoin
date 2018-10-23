@@ -34,7 +34,6 @@ contract PizzaCoin is ERC20, Owned {
     event PlayerRegistered();
     event TeamCreated();
     event PlayerKicked();
-    event FirstFoundPlayerInTeamKicked(uint256 _nextStartSearchingIndex);
     event TeamKicked();
     event TeamVoted(string _teamName, uint256 _totalVoted);
 
@@ -88,25 +87,25 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Guarantee that _user has not been registered before
+    // Guarantee that _user is not registered
     // ------------------------------------------------------------------------
     modifier notRegistered(address _user) {
         require(
             PizzaCoinCodeLib2.isStaff(_user, staffContract) == false && 
             PizzaCoinCodeLib2.isPlayer(_user, playerContract) == false,
-            "This address was registered already."
+            "This address is registered already."
         );
         _;
     }
 
     // ------------------------------------------------------------------------
-    // Guarantee that msg.sender has already been registered
+    // Guarantee that msg.sender is already registered
     // ------------------------------------------------------------------------
     modifier onlyRegistered {
         require(
             PizzaCoinCodeLib2.isStaff(msg.sender, staffContract) ||
             PizzaCoinCodeLib2.isPlayer(msg.sender, playerContract),
-            "This address was not being registered."
+            "This address is not being registered."
         );
         _;
     }
@@ -178,7 +177,7 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Initial a state mapping
+    // Initial the state mapping
     // ------------------------------------------------------------------------
     function initStateMap() internal onlyInitialState onlyOwner {
         stateMap[keccak256(abi.encodePacked(State.Initial))] = "Initial";
@@ -280,7 +279,7 @@ contract PizzaCoin is ERC20, Owned {
 
         // Register an owner as a staff. Note that, we cannot make a call to 
         // PizzaCoin.registerStaff() directly at this moment because 
-        // the contract state is Initial.
+        // the contract is in Initial state.
         PizzaCoinCodeLib.registerStaff(owner, ownerName, staffContract);
 
         emit ChildContractCreated(staffContract);
@@ -374,25 +373,18 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Remove the first found player of a particular team 
-    // (start searching at _startSearchingIndex)
+    // Remove the first player on the list from a particular team 
     // ------------------------------------------------------------------------
-    function kickFirstFoundPlayerInTeam(string _teamName, uint256 _startSearchingIndex) 
-        public onlyRegistrationState onlyStaff returns (uint256 _nextStartSearchingIndex) {
-
-        _nextStartSearchingIndex = PizzaCoinCodeLib.kickFirstFoundPlayerInTeam(
-            _teamName, _startSearchingIndex, playerContract, teamContract);
-
+    function kickFirstPlayerInTeam(string _teamName) public onlyRegistrationState onlyStaff {
+        PizzaCoinCodeLib.kickFirstPlayerInTeam(_teamName, playerContract, teamContract);
         emit PlayerKicked();
-        emit FirstFoundPlayerInTeamKicked(_nextStartSearchingIndex);
     }
 
     // ------------------------------------------------------------------------
-    // Allow any staff or any player in other different teams to vote to a team
+    // Allow any staff or any player vote to a favourite team
     // ------------------------------------------------------------------------
     function voteTeam(string _teamName, uint256 _votingWeight) public onlyVotingState onlyRegistered {
-        uint256 totalVoted;
-        totalVoted = PizzaCoinCodeLib.voteTeam(
+        uint256 totalVoted = PizzaCoinCodeLib.voteTeam(
             _teamName, 
             _votingWeight, 
             staffContract, 
@@ -406,7 +398,7 @@ contract PizzaCoin is ERC20, Owned {
     /*
     *
     * This contract is partially compatible with ERC token standard #20 interface.
-    * That is, only the balanceOf() and totalSupply() would be implemented.
+    * That is, only balanceOf() and totalSupply() would really be implemented.
     *
     */
 

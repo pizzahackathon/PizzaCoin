@@ -103,7 +103,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     struct StaffInfo {
         bool wasRegistered;    // Check if a specific staff is being registered
         string name;
-        uint256 tokensBalance; // Amount of tokens left for voting
+        uint256 tokenBalance;  // Amount of tokens left for voting
         string[] teamsVoted;   // Record all the teams voted by this staff
         
         // mapping(team => votes)
@@ -113,7 +113,7 @@ contract PizzaCoin is ERC20Interface, Owned {
     struct TeamPlayerInfo {
         bool wasRegistered;    // Check if a specific player is being registered
         string name;
-        uint256 tokensBalance; // Amount of tokens left for voting
+        uint256 tokenBalance;  // Amount of tokens left for voting
         string teamName;       // A team this player associates with
         string[] teamsVoted;   // Record all the teams voted by this player
         
@@ -304,7 +304,7 @@ contract PizzaCoin is ERC20Interface, Owned {
         staffsInfo[_newStaff] = StaffInfo({
             wasRegistered: true,
             name: _newStaffName,
-            tokensBalance: voterInitialTokens,
+            tokenBalance: voterInitialTokens,
             teamsVoted: new string[](0)
             /*
                 Omit 'votesWeight'
@@ -442,7 +442,7 @@ contract PizzaCoin is ERC20Interface, Owned {
         playersInfo[player] = TeamPlayerInfo({
             wasRegistered: true,
             name: _playerName,
-            tokensBalance: voterInitialTokens,
+            tokenBalance: voterInitialTokens,
             teamName: _teamName,
             teamsVoted: new string[](0)
             /*
@@ -704,14 +704,14 @@ contract PizzaCoin is ERC20Interface, Owned {
             uint256 _nextStartSearchingIndex,
             address _staff,
             string _name,
-            uint256 _tokensBalance
+            uint256 _tokenBalance
         ) 
     {
         _endOfList = true;
         _nextStartSearchingIndex = staffs.length;
         _staff = address(0);
         _name = "";
-        _tokensBalance = 0;
+        _tokenBalance = 0;
 
         if (_startSearchingIndex >= staffs.length) {
             return;
@@ -726,7 +726,7 @@ contract PizzaCoin is ERC20Interface, Owned {
                 _nextStartSearchingIndex = i + 1;
                 _staff = staff;
                 _name = staffsInfo[staff].name;
-                _tokensBalance = staffsInfo[staff].tokensBalance;
+                _tokenBalance = staffsInfo[staff].tokenBalance;
                 return;
             }
         }
@@ -806,7 +806,7 @@ contract PizzaCoin is ERC20Interface, Owned {
             uint256 _nextStartSearchingIndex,
             address _player,
             string _name,
-            uint256 _tokensBalance,
+            uint256 _tokenBalance,
             string _teamName
         ) 
     {
@@ -814,7 +814,7 @@ contract PizzaCoin is ERC20Interface, Owned {
         _nextStartSearchingIndex = players.length;
         _player = address(0);
         _name = "";
-        _tokensBalance = 0;
+        _tokenBalance = 0;
         _teamName = "";
 
         if (_startSearchingIndex >= players.length) {
@@ -830,7 +830,7 @@ contract PizzaCoin is ERC20Interface, Owned {
                 _nextStartSearchingIndex = i + 1;
                 _player = player;
                 _name = playersInfo[player].name;
-                _tokensBalance = playersInfo[player].tokensBalance;
+                _tokenBalance = playersInfo[player].tokenBalance;
                 _teamName = playersInfo[player].teamName;
                 return;
             }
@@ -1113,11 +1113,11 @@ contract PizzaCoin is ERC20Interface, Owned {
         assert(isStaff(voter));
 
         require(
-            _votingWeight <= staffsInfo[voter].tokensBalance,
+            _votingWeight <= staffsInfo[voter].tokenBalance,
             "Insufficient voting balance."
         );
 
-        staffsInfo[voter].tokensBalance = staffsInfo[voter].tokensBalance.sub(_votingWeight);
+        staffsInfo[voter].tokenBalance = staffsInfo[voter].tokenBalance.sub(_votingWeight);
 
         // If staffsInfo[voter].votesWeight[_teamName] > 0 is true, this implies that 
         // the voter was used to give a vote to the specified team previously
@@ -1155,11 +1155,11 @@ contract PizzaCoin is ERC20Interface, Owned {
         );
 
         require(
-            _votingWeight <= playersInfo[voter].tokensBalance,
+            _votingWeight <= playersInfo[voter].tokenBalance,
             "Insufficient voting balance."
         );
 
-        playersInfo[voter].tokensBalance = playersInfo[voter].tokensBalance.sub(_votingWeight);
+        playersInfo[voter].tokenBalance = playersInfo[voter].tokenBalance.sub(_votingWeight);
 
         // If playersInfo[voter].votesWeight[_teamName] > 0 is true, this implies that 
         // the voter was used to give a vote to the specified team previously
@@ -1183,14 +1183,14 @@ contract PizzaCoin is ERC20Interface, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Find a maximum voting points from each team after voting is finished
+    // Find maximum voting points from each team after voting is finished
     // ------------------------------------------------------------------------
     function getMaxTeamVotingPoints() public view onlyVotingFinishedState returns (uint256 _maxTeamVotingPoints) {
         _maxTeamVotingPoints = 0;
         for (uint256 i = 0; i < teams.length; i++) {
             // Team was not removed before
             if (teams[i].isEmpty() == false && teamsInfo[teams[i]].wasCreated == true) {
-                // Find a new maximum points
+                // Find new maximum points
                 if (teamsInfo[teams[i]].totalVoted > _maxTeamVotingPoints) {
                     _maxTeamVotingPoints = teamsInfo[teams[i]].totalVoted;
                 }
@@ -1199,17 +1199,17 @@ contract PizzaCoin is ERC20Interface, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get a total number of team winners after voting is finished
+    // Get a total number of winning teams after voting is finished
     // It is possible to have several teams that got the equal maximum voting points 
     // ------------------------------------------------------------------------
-    function getTotalTeamWinners() public view onlyVotingFinishedState returns (uint256 _total) {
+    function getTotalWinningTeams() public view onlyVotingFinishedState returns (uint256 _total) {
         uint256 maxTeamVotingPoints = getMaxTeamVotingPoints();
 
         _total = 0;
         for (uint256 i = 0; i < teams.length; i++) {
             // Team was not removed before
             if (teams[i].isEmpty() == false && teamsInfo[teams[i]].wasCreated == true) {
-                // Count the team winners up
+                // Count up the winning teams
                 if (teamsInfo[teams[i]].totalVoted == maxTeamVotingPoints) {
                     _total++;
                 }
@@ -1218,11 +1218,11 @@ contract PizzaCoin is ERC20Interface, Owned {
     }
     
     // ------------------------------------------------------------------------
-    // Get the first found team winner
+    // Get the first found winning team
     // (start searching at _startSearchingIndex)
     // It is possible to have several teams that got the equal maximum voting points 
     // ------------------------------------------------------------------------
-    function getFirstFoundTeamWinner(uint256 _startSearchingIndex) 
+    function getFirstFoundWinningTeam(uint256 _startSearchingIndex) 
         public view onlyVotingFinishedState 
         returns (
             bool _endOfList,
@@ -1246,7 +1246,7 @@ contract PizzaCoin is ERC20Interface, Owned {
 
             // Team was not removed before
             if (teamName.isEmpty() == false && teamsInfo[teamName].wasCreated == true) {
-                // Find a team winner
+                // Find a winning team
                 if (teamsInfo[teamName].totalVoted == maxTeamVotingPoints) {
                     _endOfList = false;
                     _nextStartSearchingIndex = i + 1;
@@ -1278,10 +1278,10 @@ contract PizzaCoin is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     function balanceOf(address tokenOwner) public view returns (uint256 balance) {
         if (isStaff(tokenOwner)) {
-            return staffsInfo[tokenOwner].tokensBalance;
+            return staffsInfo[tokenOwner].tokenBalance;
         }
         else if (isTeamPlayer(tokenOwner)) {
-            return playersInfo[tokenOwner].tokensBalance;
+            return playersInfo[tokenOwner].tokenBalance;
         }
         else {
             revert("The specified address was not being registered.");

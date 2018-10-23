@@ -97,9 +97,8 @@ async function main() {
         // Kick a player
         await kickPlayer(ethAccounts[0], ethAccounts[6], 'pizzaHack');
 
-        // Kick the first found player in team
-        let nextStartSearchingIndex = await kickFirstFoundPlayerInTeam(ethAccounts[0], 'pizzaHack', 0);
-        console.log('nextStartSearchingIndex: ' + nextStartSearchingIndex);
+        // Kick the first player in team
+        await kickFirstPlayerInTeam(ethAccounts[0], 'pizzaHack');
 
         // Kick a team
         //await kickTeam(ethAccounts[0], 'pizzaHack');
@@ -136,7 +135,7 @@ async function main() {
         let i = 0;
         while (true) 
         {
-            let [endOfList, voter, voteWeight] = await getVoteResultAtIndexToTeam(PizzaCoinTeam, 'pizzaCoin', i);
+            let [endOfList, voter, voteWeight] = await getVotingResultToTeamAtIndex(PizzaCoinTeam, 'pizzaCoin', i);
             if (endOfList) {
                 break;
             }
@@ -148,12 +147,12 @@ async function main() {
         // Change all contracts' state from Voting to VotingFinished
         await stopVoting(ethAccounts[0]);
 
-        // Get a maximum voting point
-        let maxTeamVotingPoint = await getMaxTeamVotingPoint(PizzaCoinTeam);
-        console.log('maxTeamVotingPoint: ' + maxTeamVotingPoint);
+        // Get a maximum voting points
+        let maxTeamVotingPoints = await getMaxTeamVotingPoints(PizzaCoinTeam);
+        console.log('maxTeamVotingPoints: ' + maxTeamVotingPoints);
 
-        // Get a total number of winner teams
-        let totalWinners = await getTotalWinnerTeams(PizzaCoinTeam);
+        // Get a total number of winning teams
+        let totalWinners = await getTotalWinningTeams(PizzaCoinTeam);
         console.log('totalWinners: ' + totalWinners + '\n');
 
         let startSearchingIndex = 0;
@@ -165,7 +164,7 @@ async function main() {
                 startSearchingIndex, 
                 teamName, 
                 totalVoted
-            ] = await getFirstFoundWinnerTeam(PizzaCoinTeam, startSearchingIndex);
+            ] = await getFirstFoundWinningTeam(PizzaCoinTeam, startSearchingIndex);
 
             if (endOfList) {
                 break;
@@ -216,13 +215,13 @@ function unsubscribeEvent(subscription) {
     });
 }
 
-async function getFirstFoundWinnerTeam(PizzaCoinTeam, startSearchingIndex) {
+async function getFirstFoundWinningTeam(PizzaCoinTeam, startSearchingIndex) {
     let err;
     let tupleReturned;
 
     //console.log('\nQuerying for the first found winner team (by the index of voters) ...');
     [err, tupleReturned] = await callContractFunction(
-        PizzaCoinTeam.methods.getFirstFoundWinnerTeam(startSearchingIndex).call({})
+        PizzaCoinTeam.methods.getFirstFoundWinningTeam(startSearchingIndex).call({})
     );
 
     if (err) {
@@ -238,12 +237,12 @@ async function getFirstFoundWinnerTeam(PizzaCoinTeam, startSearchingIndex) {
     ];
 }
 
-async function getTotalWinnerTeams(PizzaCoinTeam) {
+async function getTotalWinningTeams(PizzaCoinTeam) {
     let err, totalWinners;
 
-    console.log('\nQuerying for a total number of winner teams ...');
+    console.log('\nQuerying for a total number of winning teams ...');
     [err, totalWinners] = await callContractFunction(
-        PizzaCoinTeam.methods.getTotalWinnerTeams().call({})
+        PizzaCoinTeam.methods.getTotalWinningTeams().call({})
     );
 
     if (err) {
@@ -253,12 +252,12 @@ async function getTotalWinnerTeams(PizzaCoinTeam) {
     return totalWinners;
 }
 
-async function getMaxTeamVotingPoint(PizzaCoinTeam) {
+async function getMaxTeamVotingPoints(PizzaCoinTeam) {
     let err, maxTeamVotingPoints;
 
-    console.log('\nQuerying for a maximum voting point ...');
+    console.log('\nQuerying for maximum voting points ...');
     [err, maxTeamVotingPoints] = await callContractFunction(
-        PizzaCoinTeam.methods.getMaxTeamVotingPoint().call({})
+        PizzaCoinTeam.methods.getMaxTeamVotingPoints().call({})
     );
 
     if (err) {
@@ -268,13 +267,13 @@ async function getMaxTeamVotingPoint(PizzaCoinTeam) {
     return maxTeamVotingPoints;
 }
 
-async function getVoteResultAtIndexToTeam(PizzaCoinTeam, teamName, voterIndex) {
+async function getVotingResultToTeamAtIndex(PizzaCoinTeam, teamName, voterIndex) {
     let err;
     let tupleReturned;
 
     //console.log('\nQuerying for a voting result (by the index of voters) to a specified team --> "' + teamName + '" ...');
     [err, tupleReturned] = await callContractFunction(
-        PizzaCoinTeam.methods.getVoteResultAtIndexToTeam(teamName, voterIndex).call({})
+        PizzaCoinTeam.methods.getVotingResultToTeamAtIndex(teamName, voterIndex).call({})
     );
 
     if (err) {
@@ -459,13 +458,13 @@ async function kickPlayer(kickerAddr, playerAddr, teamName) {
     console.log('... succeeded');
 }
 
-async function kickFirstFoundPlayerInTeam(kickerAddr, teamName, startSearchingIndex) {
+async function kickFirstPlayerInTeam(kickerAddr, teamName) {
     let err, receipt;
-    console.log('\nKicking the first found player in team --> "' + teamName + '" ...');
+    console.log('\nKicking the first player in team --> "' + teamName + '" ...');
 
-    // Kick the first found player in team
+    // Kick the first player in team
     [err, receipt] = await callContractFunction(
-        PizzaCoin.methods.kickFirstFoundPlayerInTeam(teamName, startSearchingIndex).send({
+        PizzaCoin.methods.kickFirstPlayerInTeam(teamName).send({
             from: kickerAddr,
             gas: 6500000,
             gasPrice: 10000000000
@@ -476,7 +475,6 @@ async function kickFirstFoundPlayerInTeam(kickerAddr, teamName, startSearchingIn
         throw new Error(err.message);
     }
     console.log('... succeeded');
-    return receipt.events.FirstFoundPlayerInTeamKicked.returnValues._nextStartSearchingIndex;
 }
 
 async function createTeam(creatorAddr, creatorName, teamName) {

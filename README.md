@@ -4,40 +4,62 @@
 
 ## Brief Synopsis of Pizza Hackathon
 
-<a href="https://www.facebook.com/events/205814763443058/">Pizza Hackathon</a> is the 1st blockchain hackathon event in Thailand which would be held on 25-26 August 2018. The objective of this event is to educate blockchain technologies as well as building thai blockchain developers. The event consists of educating and project hacking sessions where all participating developers are freely to develop any project based on blockchain technologies. There would eventually be a project competition among teams of developers at the end of the event. 
+<a href="https://www.facebook.com/events/205814763443058/">Pizza Hackathon</a> was the 1st blockchain hackathon event in Thailand which was held on 25-26 August 2018. The objective of this event was to educate blockchain technologies as well as building up thai blockchain developers. The event consisted of education and project hacking sessions in which all participating developers had freedom to develop any project based on any blockchain technologies. There was eventually the project competition among teams of developers at the end of the event.
 
-To find the winner team, we developed a voting system called the Pizza Coin (PZC). The PZC is a voting system based on <a href="https://www.ethereum.org/">Ethereum</a> blockchain's <a href="https://solidity.readthedocs.io/">smart contract</a> compatible with <a href="https://en.wikipedia.org/wiki/ERC-20">ERC-20 token standard</a>. Each event participant (i.e., all the participating developers and the event staffs) would be registered to the PZC contract. The PZC contract allows a group of developers create and join a team. Any authorized staff is able to perform operations such as kicking some developer from a team, kicking a whole team, changing contract states, etc. All participants would receive equal voting tokens. With the PZC contract, a participating developer is able to give votes to his/her favourite projects developed by other different teams whereas a staff has freedom to vote to any teams. Each voter can spend voting tokens according to his/her own balance. Specifically, all the voting results would be transacted and recorded on the blockchain. As a result, the winner team who gets a maximum voting tokens would be judged transparently by the developed PZC contract without any possible interference even by any event staff.
-
-## Workflow Design of Pizza Coin Contract
-
-One of the biggest challenges when developing an Ethereum smart contract is the way to handle 'Out-of-Gas' error while deploying the contract to the blockchain network, due to the block gas limit on Ethereum blockchain. The prototype of our PZC contract also confronted with this limitation since our contract requires several functional subsystems such as staff management, team and player management and voting management subsystems. To avoid the block gas limit problem, we decided to develop the PZC contract using the contract factory method (we will describe the brief details later).
-
-The PZC contract consists of eight dependencies including Staff contract, Player contract, Team contract, Staff Deployer library, Player Deployer library, Team Deployer library, CodeLib library and CodeLib2 library.
-
-The PZC contract acts as the mother contract of all dependencies. the PZC has three children contracts, namely Staff, Player and Team contracts which would be deployed by the libraries named Staff Deployer, Player Deployer and Team Deployer respectively. Furthermore, the PZC also has another two libraries named CodeLib and CodeLib2 which would be used as the external source code libraries for the PZC mother contract itself.
-
-<br /><p align="center"><img src="doc/Diagrams/PZC contract deployment (transparent).png" width="600"></p>
-<h3 align="center">Figure 1. Deployment of Pizza Coin contract</h3><br />
-
-There were two stages when deploying the PZC contract to the blockchain. In the first stage, the PZC contract's dependencies including Staff Deployer, Player Deployer, Team Deployer, CodeLib and CodeLib2 libraries had to be deployed to the blockchain as seperate transactions. The previously deployed libraries' addresses would then be linked and injected as dependency instances in order to deploy the PZC mother contract to Ethereum network as shown in Figure 1. 
-    
-<br /><p align="center"><img src="doc/Diagrams/PZC contract initialization (transparent).png"></p>
-<h3 align="center">Figure 2. Initialization of Pizza Coin contract</h3><br />
-
-In the second stage, the deployed PZC mother contract had to be initialized by creating its children contracts--including Staff, Player and Team contracts--as shown in Figure 2. At this point, we employed the contract factory method using the contract deployer libraries, i.e. Staff Deployer, Player Deployer and Team Deployer, to deploy each corresponding child contract. The resulting children contracts' addresses would then be returned to store on the PZC contract. This way make the PZC contract know where its children contracts were located.
-
-<br /><p align="center"><img src="doc/Diagrams/PZC contract with its children contracts and libs (transparent).png" width="800"></p>
-<h3 align="center">Figure 3. Pizza Coin contract acts as a contract coordinator for Staff, Player and Team contracts</h3><br />
-
-The PZC contract would be considered as a contract coordinator or a reverse proxy contract for Staff, Player and Team contracts. When a user needs to interact with any contract function, he/she just makes a call to the PZC contract right away. For example, a user wants to join some specific team, he/she can achieve this by invoking the registerPlayer() function of the PZC contract. The PZC contract would then interact with its children contracts in order to do register the calling user as a player to the specified team.
-
-On the prototype of our PZC contract, we faced 'Out-of-Gas' error when deploying the contract because the contract contains too many functions. The solution to avoiding such the error we have used on a production version is to migrate almost all the logical source code of each function in the PZC contract to store on another external libraries named CodeLib and CodeLib2 instead as shown in Figure 3. 
-
-For example, when a user makes a call to the registerPlayer() function of the PZC contract (let's call PZC.registerPlayer() for short), the PZC.registerPlayer() will forward the request to CodeLib.registerPlayer() in order to process the requesting transaction on behalf of the PZC contract instead. Note that, the CodeLib.registerPlayer() in question is the mapped function of the PZC.registerPlayer() which is stored on the external CodeLib library. Then, the CodeLib.registerPlayer() will hand over the process to the real worker function called Player.registerPlayer(). With this code migration method, we can significantly reduce a gas consumption when deploying the PZC mother contract.
+To find the winning team, we developed a voting system named PizzaCoin. PizzaCoin is a voting system based on <a href="https://www.ethereum.org/">Ethereum</a> blockchain’s <a href="https://solidity.readthedocs.io/en/latest/">smart contract</a> compatible with <a href="https://en.wikipedia.org/wiki/ERC-20">ERC-20 token standard</a>. Each event participant (i.e., all participating developers and all event staffs) would be registered to PizzaCoin contract. The contract allowed a group of developers create and join a team. Meanwhile, any authorized staff was able to perform operations such as revoking some developer from a team, revoking a whole team, changing contract states, etc. All participants would receive equal voting tokens. With PizzaCoin contract, a participating developer was able to give his/her votes to any favourite projects developed by other different teams whereas a staff had freedom to vote to any teams. Each voter could spend voting tokens according to his/her own balance. Specifically, all voting results would be transacted and recorded on the blockchain. As a result, the winning team, who got maximum voting tokens, was judged transparently by the developed PizzaCoin contract automatically without any possible interference even by any event staff.
 
 <br />
 
-## Deploy PizzaCoin contract
+## Workflow Design for PizzaCoin Contract
+
+One of the biggest challenges when developing Ethereum smart contract is to find a solution to handling ‘***Out-of-Gas***’ error during deploying the contract onto the blockchain network, due to some block gas limits on Ethereum blockchain. The prototype of our PizzaCoin contract also confronted with these limitations since our contract requires several functional subsystems such as staff management, team and player management, and voting management subsystems. To avoid block gas limit problems, PizzaCoin contract was designed and developed using several advanced concepts and techniques.
+
+PizzaCoin contract consists of eight dependencies including **three contracts**: ***PizzaCoinStaff***, ***PizzaCoinPlayer*** and ***PizzaCoinTeam***, and **five libraries**: ***PizzaCoinStaffDeployer***, ***PizzaCoinPlayerDeployer***, ***PizzaCoinTeamDeployer***, ***PizzaCoinCodeLib*** and ***PizzaCoinCodeLib2***.
+
+PizzaCoin contract acts as a mother contract of all dependencies. In more detail, the contract has three special children contracts, namely **PizzaCoinStaff**, **PizzaCoinPlayer** and **PizzaCoinTeam** contracts which would be deployed by the three deployer libraries named **PizzaCoinStaffDeployer**, **PizzaCoinPlayerDeployer** and **PizzaCoinTeamDeployer** respectively. Furthermore, PizzaCoin contract also has another two proxy libraries named **PizzaCoinCodeLib** and **PizzaCoinCodeLib2** which would be used as libraries for migrating source code of PizzaCoin mother contract.
+
+<br />
+<p align="center"><img src="doc/Diagrams/PZC contract deployment (transparent).png" width="600"></p>
+<h3 align="center">Figure 1. Deployment of PizzaCoin contract</h3><br />
+
+There are two stages when deploying PizzaCoin contract onto the blockchain. In the first stage, PizzaCoin contract's dependencies including **PizzaCoinStaffDeployer**, **PizzaCoinPlayerDeployer**, **PizzaCoinTeamDeployer**, **PizzaCoinCodeLib** and **PizzaCoinCodeLib2** libraries have to be deployed onto the blockchain one by one as separate transactions. The previously deployed libraries' addresses would then be linked and injected as dependency instances in order to deploy PizzaCoin mother contract to the ethereum network as illustrated in Figure 1.
+
+<br />
+<p align="center"><img src="doc/Diagrams/PZC contract initialization-2 (transparent).png"></p>
+<h3 align="center">Figure 2. Initialization of PizzaCoin contract</h3><br />
+
+In the second stage, the previously deployed PizzaCoin mother contract must get initialized by a project deployer (a staff who previously deployed PizzaCoin contract). A project deployer initiates three transactions (steps 1.1, 2.1 and 3.1) in order to deploy PizzaCoin children contracts--including **PizzaCoinStaff**, **PizzaCoinPlayer** and **PizzaCoinTeam** contracts--as shown in Figure 2. At this point, we employed a contract factory pattern using the deployer libraries, i.e. **PizzaCoinStaffDeployer**, **PizzaCoinPlayerDeployer** and **PizzaCoinTeamDeployer**, to deploy each corresponding child contract (steps 1.2 - 1.3, 2.2 - 2.3 and 3.2 - 3.3). The resulting children contracts' addresses would then be returned to store on PizzaCoin contract (steps 1.4, 2.4 and 3.4). This way makes PizzaCoin contract know where its children contracts are located on the ethereum blockchain.
+
+<p align="center"><img src="doc/Diagrams/PZC contract with its children contracts and libs (transparent).png" width="800"></p>
+<h3 align="center">Figure 3. PizzaCoin contract acts as a contract coordinator for PizzaCoinStaff, PizzaCoinPlayer and PizzaCoinTeam contracts</h3><br />
+
+On the prototype of PizzaCoin contract, we faced '***Out-of-Gas***' error when deploying the contract because the contract contains too many function definitions. The solution to avoiding such the error we have used on a production version is `to migrate almost all the logical source code of each function on PizzaCoin contract to store on proxy libraries named PizzaCoinCodeLib and PizzaCoinCodeLib2 instead` as depicted in Figure 3.
+
+`PizzaCoin contract is considered as a contract coordinator or a reverse proxy contract` for PizzaCoinStaff, PizzaCoinPlayer and PizzaCoinTeam contracts. When a user needs to interact with any contract function, a user just makes a call to PizzaCoin contract right away. For example, a user wants to join some specific team, he/she can achieve this by invoking **registerPlayer** function on PizzaCoin contract. The contract would then interact with its children contracts in order to do register the calling user as a player to the specified team.
+
+In more technical detail when a user makes a call to **PizzaCoin.registerPlayer()** function on PizzaCoin contract, the function will instead forward the request to the delegated function named **PizzaCoinCodeLib.registerPlayer()** on the proxy library PizzaCoinCodeLib in order to process the requesting transaction on behalf of PizzaCoin contract. Next, the delegated function will hand over the process to the real worker function named **PizzaCoinPlayer.registerPlayer()** which is on PizzaCoinPlayer child contract. With these code migration techniques, we can significantly reduce gas consumption when deploying the PizzaCoin mother contract.
+
+<br />
+
+## State Transition on PizzaCoin Contract
+
+<p align="center"><img src="doc/Diagrams/States on the PZC contract (transparent).png"></p>
+<h3 align="center">Figure 4. State transition on PizzaCoin contract</h3><br />
+
+There are five states representing the status of PizzaCoin contract including **Initial**, **Registration**, **Registration Locked**, **Voting** and **Voting Finished**. Each state defines a different working context to the contract and it is changable by a staff privilege only. The contract state is unidirectional as illustrated in Figure 4. This means that if the state has been changed from one to another, we cannot change it back to any previous state. 
+
+**Initial** is the first state that is automatically set during PizzaCoin contract getting deployed. The contract state can be changed from Initial to Registration if and only if all the three children contracts (i.e., PizzaCoinStaff, PizzaCoinPlayer and PizzaCoinTeam contracts) have been created by a project deployer (a staff who deployed PizzaCoin contract). A project deployer can create the children contracts by invoking the following functions on PizzaCoin contract in no particular order: **createStaffContract**, **createPlayerContract** and **createTeamContract** (steps 1.1, 2.1 and 3.1 in Figure 2).
+
+Once PizzaCoin contract's state is changed to **Registration**, the contract is opened for registration. During this state, a staff can register a selected user as a new staff. A player can create a team and/or join to an existing team. Furthermore, a staff is allowed to revoke some player from a specific team or even revoke a whole team if necessary. PizzaCoin contract would be closed for registration once the state is changed to **Registration Locked**. Later, a staff can enable voting by changing the contract state to **Voting**. The vote would be opened until the contract state is moved to **Voting Finished**. In this state, PizzaCoin contract would determine the winning team automatically.
+
+<p align="center"><img src="doc/Diagrams/Staff changes the contract state (transparent).png" width="800"></p>
+<h3 align="center">Figure 5. An interaction among contracts when a staff changes the contract state</h3><br />
+
+Let's say a staff changes PizzaCoin contract's state from **Registration Locked** to **Voting**. Figure 5 illustrates how PizzaCoin contract interacts with its children contracts. What happens is that as soon as a staff executes **PizzaCoin.startVoting()** function on PizzaCoin contract (step 1), the function would call to the delegated function **PizzaCoinCodeLib2.signalChildrenContractsToStartVoting()** on PizzaCoinCodeLib2 library (step 2). Later, the delegated function would order all the three children contracts to change their state to **Voting** by respectively executing **PizzaCoinStaff.startVoting()**, **PizzaCoinPlayer.startVoting()** and **PizzaCoinTeam.startVoting()** (steps 3.1 - 3.3).
+
+<br />
+
+## Deploy PizzaCoin Contract
 
 ### To install Truffle Framework
 &emsp;<a href="https://truffleframework.com/docs/truffle/getting-started/installation">Follow this link</a>
@@ -112,7 +134,7 @@ node web3-demo.js  // This script supports a connection to Ganache or local Geth
 
 <br />
 
-## List of PizzaCoin contract address and its dependency addresses
+## List of PizzaCoin Contract Address and Its Dependency Addresses
 The following addresses point to PizzaCoin contract as well as its dependencies that were used at the hackathon event.
 
 - <b>Ethereum network:</b> <a href="https://kovan.etherscan.io/">Kovan</a>
