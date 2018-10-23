@@ -26,18 +26,17 @@ interface IPlayerContract {
     function registerPlayer(address _player, string _playerName, string _teamName) external;
     function kickPlayer(address _player, string _teamName) external;
     function getTotalPlayers() external view returns (uint256 _total);
-    function getFirstFoundPlayerInfo(uint256 _startSearchingIndex) 
+    function getPlayerInfoAtIndex(uint256 _playerIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _player,
             string _name,
-            uint256 _tokensBalance,
+            uint256 _tokenBalance,
             string _teamName
         );
     function getTotalTeamsVotedByPlayer(address _player) external view returns (uint256 _total);
-    function getVoteResultAtIndexByPlayer(address _player, uint256 _votingIndex) 
+    function getVotingResultByPlayerAtIndex(address _player, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -45,7 +44,7 @@ interface IPlayerContract {
             uint256 _voteWeight
         );
     function getTokenBalance(address _player) external view returns (uint256 _tokenBalance);
-    function commitToVote(string _teamName, address _player, uint256 _votingWeight) external;
+    function commitToVote(address _player, string _teamName, uint256 _votingWeight) external;
 }
 
 
@@ -55,7 +54,7 @@ interface IPlayerContract {
 contract PizzaCoinPlayer is IPlayerContract, Owned {
     /*
     * Owner of the contract is PizzaCoin contract, 
-    * not a project deployer (or PizzaCoin's owner)
+    * not a project deployer who is PizzaCoin owner
     */
 
     using SafeMath for uint256;
@@ -63,17 +62,17 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
 
 
     struct PlayerInfo {
-        bool wasRegistered;    // Check if a specific player is being registered or not
-        string name;
-        uint256 tokensBalance; // Amount of tokens left for voting
-        string teamName;       // A team this player associates with
-        string[] teamsVoted;   // Record all the teams voted by this player
-        
-        // mapping(team => votes)
-        mapping(string => uint256) votesWeight;  // A collection of teams with voting weight approved by this player
+        // This is used to reduce potential gas cost consumption when kicking a player
+        uint256 index;  // A pointing index to a particular player on the 'players' array
 
-        // The following is used to reduce the potential gas cost consumption when kicking a player
-        uint256 id;  // A pointing index to a particular player on the 'players' array
+        string name;
+        bool wasRegistered;    // Check if a specific player is being registered
+        string teamName;       // A team this player associates with
+        uint256 tokenBalance;  // Amount of tokens left for voting
+        string[] teamsVoted;   // A collection of teams voted by this player
+        
+        // mapping(team => votingWeight)
+        mapping(string => uint256) votesWeight;  // Teams with voting weight approved by this player
     }
 
     address[] private players;
@@ -300,13 +299,13 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
         playersInfo[_player] = PlayerInfo({
             wasRegistered: true,
             name: _playerName,
-            tokensBalance: voterInitialTokens,
+            tokenBalance: voterInitialTokens,
             teamName: _teamName,
             teamsVoted: new string[](0),
             /*
                 Omit 'votesWeight'
             */
-            id: players.length - 1
+            index: players.length - 1
         });
 
         totalSupply = totalSupply.add(voterInitialTokens);
@@ -331,17 +330,19 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
             "Cannot find the specified player in a given team."
         );
 
-        bool found;
-        uint256 playerIndex;
+        uint256 playerIndex = getPlayerIndex(_player);
 
-        (found, playerIndex) = getPlayerIndex(_player);
-        if (!found) {
-            revert("Cannot find the specified player.");
-        }
+        // Remove the specified player from an array by moving 
+        // the last array element to the element pointed by playerIndex
+        players[playerIndex] = players[players.length - 1];
 
-        // Reset the element pointed by playerIndex to 0. However,
-        // that array element never get really removed. (beware!!)
-        delete players[playerIndex];
+        // Since we have just moved the last array element to 
+        // the element pointed by playerIndex, we have to update 
+        // the newly moved player's index to playerIndex too
+        playersInfo[players[playerIndex]].index = playerIndex;
+
+        // Remove the last element
+        players.length--;
 
         // Remove the specified player from a mapping
         delete playersInfo[_player];
@@ -350,68 +351,49 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get an index pointed to a specific player on the mapping 'playersInfo'
+    // Get an index pointing to the specified player on the array 'players'
     // ------------------------------------------------------------------------
-    function getPlayerIndex(address _player) internal view returns (bool _found, uint256 _playerIndex) {
+    function getPlayerIndex(address _player) internal view returns (uint256 _playerIndex) {
         assert(_player != address(0));
-
-        _found = playersInfo[_player].wasRegistered;
-        _playerIndex = playersInfo[_player].id;
+        assert(playersInfo[_player].wasRegistered);
+        return playersInfo[_player].index;
     }
 
     // ------------------------------------------------------------------------
     // Get a total number of players
     // ------------------------------------------------------------------------
     function getTotalPlayers() external view returns (uint256 _total) {
-        _total = 0;
-        for (uint256 i = 0; i < players.length; i++) {
-            // Player might not be removed before
-            if (players[i] != address(0) && playersInfo[players[i]].wasRegistered) {
-                _total++;
-            }
-        }
+        return players.length;
     }
 
     // ------------------------------------------------------------------------
-    // Get an info of the first found player 
-    // (start searching at _startSearchingIndex)
+    // Get a player info at the specified index '_playerIndex'
     // ------------------------------------------------------------------------
-    function getFirstFoundPlayerInfo(uint256 _startSearchingIndex) 
+    function getPlayerInfoAtIndex(uint256 _playerIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _player,
             string _name,
-            uint256 _tokensBalance,
+            uint256 _tokenBalance,
             string _teamName
-        ) 
+        )
     {
-        _endOfList = true;
-        _nextStartSearchingIndex = players.length;
-        _player = address(0);
-        _name = "";
-        _tokensBalance = 0;
-        _teamName = "";
-
-        if (_startSearchingIndex >= players.length) {
+        if (_playerIndex >= players.length) {
+            _endOfList = true;
+            _player = address(0);
+            _name = "";
+            _tokenBalance = 0;
+            _teamName = "";
             return;
         }  
 
-        for (uint256 i = _startSearchingIndex; i < players.length; i++) {
-            address player = players[i];
-
-            // Player might not be removed before
-            if (player != address(0) && playersInfo[player].wasRegistered) {
-                _endOfList = false;
-                _nextStartSearchingIndex = i + 1;
-                _player = player;
-                _name = playersInfo[player].name;
-                _tokensBalance = playersInfo[player].tokensBalance;
-                _teamName = playersInfo[player].teamName;
-                return;
-            }
-        }
+        address player = players[_playerIndex];
+        _endOfList = false;
+        _player = player;
+        _name = playersInfo[player].name;
+        _tokenBalance = playersInfo[player].tokenBalance;
+        _teamName = playersInfo[player].teamName;
     }
 
     // ------------------------------------------------------------------------
@@ -434,7 +416,7 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
     // ------------------------------------------------------------------------
     // Get a voting result to a team pointed by _votingIndex committed by the specified player
     // ------------------------------------------------------------------------
-    function getVoteResultAtIndexByPlayer(address _player, uint256 _votingIndex) 
+    function getVotingResultByPlayerAtIndex(address _player, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -478,23 +460,23 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
             "Cannot find the specified player."
         );
 
-        return playersInfo[_player].tokensBalance;
+        return playersInfo[_player].tokenBalance;
     }
 
     // ------------------------------------------------------------------------
-    // Allow a player in other different teams vote to the specified team
+    // Allow a player vote to other different teams
     // ------------------------------------------------------------------------
-    function commitToVote(string _teamName, address _player, uint256 _votingWeight) 
+    function commitToVote(address _player, string _teamName, uint256 _votingWeight) 
         external onlyVotingState onlyPizzaCoin 
     {
         require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
-        );
-        
-        require(
             _player != address(0),
             "'_player' contains an invalid address."
+        );
+
+        require(
+            _teamName.isNotEmpty(),
+            "'_teamName' might not be empty."
         );
 
         require(
@@ -513,14 +495,14 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
         );
 
         require(
-            _votingWeight <= playersInfo[_player].tokensBalance,
+            _votingWeight <= playersInfo[_player].tokenBalance,
             "Insufficient voting balance."
         );
 
-        playersInfo[_player].tokensBalance = playersInfo[_player].tokensBalance.sub(_votingWeight);
+        playersInfo[_player].tokenBalance = playersInfo[_player].tokenBalance.sub(_votingWeight);
 
         // If playersInfo[_player].votesWeight[_teamName] > 0 is true, this implies that 
-        // the player was used to give a vote to the specified team previously
+        // the player used to give a vote to the specified team previously
         if (playersInfo[_player].votesWeight[_teamName] == 0) {
             // The player has never given a vote to the specified team before
             // We, therefore, have to add a new team to the 'teamsVoted' array

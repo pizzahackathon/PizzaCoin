@@ -142,17 +142,16 @@ interface IStaffContract {
     function registerStaff(address _staff, string _staffName) external;
     function kickStaff(address _staff) external;
     function getTotalStaffs() external view returns (uint256 _total);
-    function getFirstFoundStaffInfo(uint256 _startSearchingIndex) 
+    function getStaffInfoAtIndex(uint256 _staffIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _staff,
             string _name,
-            uint256 _tokensBalance
+            uint256 _tokenBalance
         );
     function getTotalTeamsVotedByStaff(address _staff) external view returns (uint256 _total);
-    function getVoteResultAtIndexByStaff(address _staff, uint256 _votingIndex) 
+    function getVotingResultByStaffAtIndex(address _staff, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -160,7 +159,7 @@ interface IStaffContract {
             uint256 _voteWeight
         );
     function getTokenBalance(address _staff) external view returns (uint256 _tokenBalance);
-    function commitToVote(string _teamName, address _staff, uint256 _votingWeight) external;
+    function commitToVote(address _staff, string _teamName, uint256 _votingWeight) external;
 }
 
 
@@ -170,9 +169,9 @@ interface IStaffContract {
 contract PizzaCoinStaff is IStaffContract, Owned {
     /*
     * Owner of the contract is PizzaCoin contract, 
-    * not a project deployer (or PizzaCoin's owner)
+    * not a project deployer who is PizzaCoin owner
     *
-    * Let staffs[0] denote a project deployer (i.e., PizzaCoin's owner)
+    * Let staffs[0] denote a project deployer (i.e., PizzaCoin owner)
     */
 
     using SafeMath for uint256;
@@ -180,19 +179,19 @@ contract PizzaCoinStaff is IStaffContract, Owned {
 
 
     struct StaffInfo {
-        bool wasRegistered;    // Check if a specific staff is being registered or not
-        string name;
-        uint256 tokensBalance; // Amount of tokens left for voting
-        string[] teamsVoted;   // Record all the teams voted by this staff
-        
-        // mapping(team => votes)
-        mapping(string => uint256) votesWeight;  // A collection of teams with voting weight approved by this staff
+        // This is used to reduce potential gas cost consumption when kicking a staff
+        uint256 index;  // A pointing index to a particular staff on the 'staffs' array
 
-        // The following is used to reduce the potential gas cost consumption when kicking a staff
-        uint256 id;  // A pointing index to a particular staff on the 'staffs' array
+        string name;
+        bool wasRegistered;    // Check if a specific staff is being registered
+        uint256 tokenBalance;  // Amount of tokens left for voting
+        string[] teamsVoted;   // A collection of teams voted by this staff
+        
+        // mapping(team => votingWeight)
+        mapping(string => uint256) votesWeight;  // Teams with voting weight approved by this staff
     }
 
-    address[] private staffs;                          // staffs[0] denotes a project deployer (i.e., PizzaCoin's owner)
+    address[] private staffs;                          // staffs[0] denotes a project deployer (i.e., PizzaCoin owner)
     mapping(address => StaffInfo) private staffsInfo;  // mapping(staff => StaffInfo)
 
     uint256 private voterInitialTokens;
@@ -306,20 +305,18 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Determine if _user is a project deployer (i.e., PizzaCoin's owner) or not
+    // Determine if _user is a project deployer (i.e., PizzaCoin owner) or not
     // ------------------------------------------------------------------------
     function isProjectDeployer(address _user) internal view returns (bool _bDeployer) {
         /*
         * Owner of the contract is PizzaCoin contract, 
-        * not a project deployer (or PizzaCoin's owner)
+        * not a project deployer who is PizzaCoin owner
         *
-        * Let staffs[0] denote a project deployer (i.e., PizzaCoin's owner)
+        * Let staffs[0] denote a project deployer (i.e., PizzaCoin owner)
         */
 
         assert(_user != address(0));
-
-        address deployer = staffs[0];
-        return deployer == _user && staffsInfo[deployer].wasRegistered;
+        return staffs[0] == _user;
     }
 
     // ------------------------------------------------------------------------
@@ -382,12 +379,12 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         staffsInfo[_staff] = StaffInfo({
             wasRegistered: true,
             name: _staffName,
-            tokensBalance: voterInitialTokens,
+            tokenBalance: voterInitialTokens,
             teamsVoted: new string[](0),
             /*
                 Omit 'votesWeight'
             */
-            id: staffs.length - 1
+            index: staffs.length - 1
         });
 
         totalSupply = totalSupply.add(voterInitialTokens);
@@ -412,17 +409,19 @@ contract PizzaCoinStaff is IStaffContract, Owned {
             "Project deployer is not kickable."
         );
 
-        bool found;
-        uint256 staffIndex;
+        uint256 staffIndex = getStaffIndex(_staff);
 
-        (found, staffIndex) = getStaffIndex(_staff);
-        if (!found) {
-            revert("Cannot find the specified staff.");
-        }
+        // Remove the specified staff from an array by moving 
+        // the last array element to the element pointed by staffIndex
+        staffs[staffIndex] = staffs[staffs.length - 1];
 
-        // Reset the element pointed by staffIndex to 0. However,
-        // that array element never get really removed. (beware!!)
-        delete staffs[staffIndex];
+        // Since we have just moved the last array element to 
+        // the element pointed by staffIndex, we have to update 
+        // the newly moved staff's index to staffIndex too
+        staffsInfo[staffs[staffIndex]].index = staffIndex;
+
+        // Remove the last element
+        staffs.length--;
 
         // Remove the specified staff from a mapping
         delete staffsInfo[_staff];
@@ -431,65 +430,46 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get an index pointed to a specific staff on the mapping 'staffsInfo'
+    // Get an index pointing to the specified staff on the array 'staffs'
     // ------------------------------------------------------------------------
-    function getStaffIndex(address _staff) internal view returns (bool _found, uint256 _staffIndex) {
+    function getStaffIndex(address _staff) internal view returns (uint256 _staffIndex) {
         assert(_staff != address(0));
-
-        _found = staffsInfo[_staff].wasRegistered;
-        _staffIndex = staffsInfo[_staff].id;
+        assert(staffsInfo[_staff].wasRegistered);
+        return staffsInfo[_staff].index;
     }
 
     // ------------------------------------------------------------------------
     // Get a total number of staffs
     // ------------------------------------------------------------------------
     function getTotalStaffs() external view returns (uint256 _total) {
-        _total = 0;
-        for (uint256 i = 0; i < staffs.length; i++) {
-            // Staff might not be removed before
-            if (staffs[i] != address(0) && staffsInfo[staffs[i]].wasRegistered) {
-                _total++;
-            }
-        }
+        return staffs.length;
     }
 
     // ------------------------------------------------------------------------
-    // Get an info of the first found staff 
-    // (start searching at _startSearchingIndex)
+    // Get a staff info at the specified index '_staffIndex'
     // ------------------------------------------------------------------------
-    function getFirstFoundStaffInfo(uint256 _startSearchingIndex) 
+    function getStaffInfoAtIndex(uint256 _staffIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _staff,
             string _name,
-            uint256 _tokensBalance
+            uint256 _tokenBalance
         ) 
     {
-        _endOfList = true;
-        _nextStartSearchingIndex = staffs.length;
-        _staff = address(0);
-        _name = "";
-        _tokensBalance = 0;
-
-        if (_startSearchingIndex >= staffs.length) {
+        if (_staffIndex >= staffs.length) {
+            _endOfList = true;
+            _staff = address(0);
+            _name = "";
+            _tokenBalance = 0;
             return;
         }
 
-        for (uint256 i = _startSearchingIndex; i < staffs.length; i++) {
-            address staff = staffs[i];
-
-            // Staff might not be removed before
-            if (staff != address(0) && staffsInfo[staff].wasRegistered) {
-                _endOfList = false;
-                _nextStartSearchingIndex = i + 1;
-                _staff = staff;
-                _name = staffsInfo[staff].name;
-                _tokensBalance = staffsInfo[staff].tokensBalance;
-                return;
-            }
-        }
+        address staff = staffs[_staffIndex];
+        _endOfList = false;
+        _staff = staff;
+        _name = staffsInfo[staff].name;
+        _tokenBalance = staffsInfo[staff].tokenBalance;
     }
 
     // ------------------------------------------------------------------------
@@ -512,7 +492,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     // ------------------------------------------------------------------------
     // Get a voting result to a team pointed by _votingIndex committed by the specified staff
     // ------------------------------------------------------------------------
-    function getVoteResultAtIndexByStaff(address _staff, uint256 _votingIndex) 
+    function getVotingResultByStaffAtIndex(address _staff, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -556,23 +536,23 @@ contract PizzaCoinStaff is IStaffContract, Owned {
             "Cannot find the specified staff."
         );
 
-        return staffsInfo[_staff].tokensBalance;
+        return staffsInfo[_staff].tokenBalance;
     }
 
     // ------------------------------------------------------------------------
     // Allow a staff give a vote to the specified team
     // ------------------------------------------------------------------------
-    function commitToVote(string _teamName, address _staff, uint256 _votingWeight) 
+    function commitToVote(address _staff, string _teamName, uint256 _votingWeight) 
         external onlyVotingState onlyPizzaCoin 
     {
         require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
+            _staff != address(0),
+            "'_staff' contains an invalid address."
         );
 
         require(
-            _staff != address(0),
-            "'_staff' contains an invalid address."
+            _teamName.isNotEmpty(),
+            "'_teamName' might not be empty."
         );
 
         require(
@@ -586,14 +566,14 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            _votingWeight <= staffsInfo[_staff].tokensBalance,
+            _votingWeight <= staffsInfo[_staff].tokenBalance,
             "Insufficient voting balance."
         );
 
-        staffsInfo[_staff].tokensBalance = staffsInfo[_staff].tokensBalance.sub(_votingWeight);
+        staffsInfo[_staff].tokenBalance = staffsInfo[_staff].tokenBalance.sub(_votingWeight);
 
         // If staffsInfo[_staff].votesWeight[_teamName] > 0 is true, this implies that 
-        // the staff was used to give a vote to the specified team previously
+        // the staff used to give a vote to the specified team previously
         if (staffsInfo[_staff].votesWeight[_teamName] == 0) {
             // The staff has never given a vote to the specified team before
             // We, therefore, have to add a new team to the 'teamsVoted' array
@@ -620,18 +600,17 @@ interface IPlayerContract {
     function registerPlayer(address _player, string _playerName, string _teamName) external;
     function kickPlayer(address _player, string _teamName) external;
     function getTotalPlayers() external view returns (uint256 _total);
-    function getFirstFoundPlayerInfo(uint256 _startSearchingIndex) 
+    function getPlayerInfoAtIndex(uint256 _playerIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _player,
             string _name,
-            uint256 _tokensBalance,
+            uint256 _tokenBalance,
             string _teamName
         );
     function getTotalTeamsVotedByPlayer(address _player) external view returns (uint256 _total);
-    function getVoteResultAtIndexByPlayer(address _player, uint256 _votingIndex) 
+    function getVotingResultByPlayerAtIndex(address _player, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -639,7 +618,7 @@ interface IPlayerContract {
             uint256 _voteWeight
         );
     function getTokenBalance(address _player) external view returns (uint256 _tokenBalance);
-    function commitToVote(string _teamName, address _player, uint256 _votingWeight) external;
+    function commitToVote(address _player, string _teamName, uint256 _votingWeight) external;
 }
 
 
@@ -649,7 +628,7 @@ interface IPlayerContract {
 contract PizzaCoinPlayer is IPlayerContract, Owned {
     /*
     * Owner of the contract is PizzaCoin contract, 
-    * not a project deployer (or PizzaCoin's owner)
+    * not a project deployer who is PizzaCoin owner
     */
 
     using SafeMath for uint256;
@@ -657,17 +636,17 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
 
 
     struct PlayerInfo {
-        bool wasRegistered;    // Check if a specific player is being registered or not
-        string name;
-        uint256 tokensBalance; // Amount of tokens left for voting
-        string teamName;       // A team this player associates with
-        string[] teamsVoted;   // Record all the teams voted by this player
-        
-        // mapping(team => votes)
-        mapping(string => uint256) votesWeight;  // A collection of teams with voting weight approved by this player
+        // This is used to reduce potential gas cost consumption when kicking a player
+        uint256 index;  // A pointing index to a particular player on the 'players' array
 
-        // The following is used to reduce the potential gas cost consumption when kicking a player
-        uint256 id;  // A pointing index to a particular player on the 'players' array
+        string name;
+        bool wasRegistered;    // Check if a specific player is being registered
+        string teamName;       // A team this player associates with
+        uint256 tokenBalance;  // Amount of tokens left for voting
+        string[] teamsVoted;   // A collection of teams voted by this player
+        
+        // mapping(team => votingWeight)
+        mapping(string => uint256) votesWeight;  // Teams with voting weight approved by this player
     }
 
     address[] private players;
@@ -894,13 +873,13 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
         playersInfo[_player] = PlayerInfo({
             wasRegistered: true,
             name: _playerName,
-            tokensBalance: voterInitialTokens,
+            tokenBalance: voterInitialTokens,
             teamName: _teamName,
             teamsVoted: new string[](0),
             /*
                 Omit 'votesWeight'
             */
-            id: players.length - 1
+            index: players.length - 1
         });
 
         totalSupply = totalSupply.add(voterInitialTokens);
@@ -925,17 +904,19 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
             "Cannot find the specified player in a given team."
         );
 
-        bool found;
-        uint256 playerIndex;
+        uint256 playerIndex = getPlayerIndex(_player);
 
-        (found, playerIndex) = getPlayerIndex(_player);
-        if (!found) {
-            revert("Cannot find the specified player.");
-        }
+        // Remove the specified player from an array by moving 
+        // the last array element to the element pointed by playerIndex
+        players[playerIndex] = players[players.length - 1];
 
-        // Reset the element pointed by playerIndex to 0. However,
-        // that array element never get really removed. (beware!!)
-        delete players[playerIndex];
+        // Since we have just moved the last array element to 
+        // the element pointed by playerIndex, we have to update 
+        // the newly moved player's index to playerIndex too
+        playersInfo[players[playerIndex]].index = playerIndex;
+
+        // Remove the last element
+        players.length--;
 
         // Remove the specified player from a mapping
         delete playersInfo[_player];
@@ -944,68 +925,49 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get an index pointed to a specific player on the mapping 'playersInfo'
+    // Get an index pointing to the specified player on the array 'players'
     // ------------------------------------------------------------------------
-    function getPlayerIndex(address _player) internal view returns (bool _found, uint256 _playerIndex) {
+    function getPlayerIndex(address _player) internal view returns (uint256 _playerIndex) {
         assert(_player != address(0));
-
-        _found = playersInfo[_player].wasRegistered;
-        _playerIndex = playersInfo[_player].id;
+        assert(playersInfo[_player].wasRegistered);
+        return playersInfo[_player].index;
     }
 
     // ------------------------------------------------------------------------
     // Get a total number of players
     // ------------------------------------------------------------------------
     function getTotalPlayers() external view returns (uint256 _total) {
-        _total = 0;
-        for (uint256 i = 0; i < players.length; i++) {
-            // Player might not be removed before
-            if (players[i] != address(0) && playersInfo[players[i]].wasRegistered) {
-                _total++;
-            }
-        }
+        return players.length;
     }
 
     // ------------------------------------------------------------------------
-    // Get an info of the first found player 
-    // (start searching at _startSearchingIndex)
+    // Get a player info at the specified index '_playerIndex'
     // ------------------------------------------------------------------------
-    function getFirstFoundPlayerInfo(uint256 _startSearchingIndex) 
+    function getPlayerInfoAtIndex(uint256 _playerIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _player,
             string _name,
-            uint256 _tokensBalance,
+            uint256 _tokenBalance,
             string _teamName
-        ) 
+        )
     {
-        _endOfList = true;
-        _nextStartSearchingIndex = players.length;
-        _player = address(0);
-        _name = "";
-        _tokensBalance = 0;
-        _teamName = "";
-
-        if (_startSearchingIndex >= players.length) {
+        if (_playerIndex >= players.length) {
+            _endOfList = true;
+            _player = address(0);
+            _name = "";
+            _tokenBalance = 0;
+            _teamName = "";
             return;
         }  
 
-        for (uint256 i = _startSearchingIndex; i < players.length; i++) {
-            address player = players[i];
-
-            // Player might not be removed before
-            if (player != address(0) && playersInfo[player].wasRegistered) {
-                _endOfList = false;
-                _nextStartSearchingIndex = i + 1;
-                _player = player;
-                _name = playersInfo[player].name;
-                _tokensBalance = playersInfo[player].tokensBalance;
-                _teamName = playersInfo[player].teamName;
-                return;
-            }
-        }
+        address player = players[_playerIndex];
+        _endOfList = false;
+        _player = player;
+        _name = playersInfo[player].name;
+        _tokenBalance = playersInfo[player].tokenBalance;
+        _teamName = playersInfo[player].teamName;
     }
 
     // ------------------------------------------------------------------------
@@ -1028,7 +990,7 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
     // ------------------------------------------------------------------------
     // Get a voting result to a team pointed by _votingIndex committed by the specified player
     // ------------------------------------------------------------------------
-    function getVoteResultAtIndexByPlayer(address _player, uint256 _votingIndex) 
+    function getVotingResultByPlayerAtIndex(address _player, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -1072,23 +1034,23 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
             "Cannot find the specified player."
         );
 
-        return playersInfo[_player].tokensBalance;
+        return playersInfo[_player].tokenBalance;
     }
 
     // ------------------------------------------------------------------------
-    // Allow a player in other different teams vote to the specified team
+    // Allow a player vote to other different teams
     // ------------------------------------------------------------------------
-    function commitToVote(string _teamName, address _player, uint256 _votingWeight) 
+    function commitToVote(address _player, string _teamName, uint256 _votingWeight) 
         external onlyVotingState onlyPizzaCoin 
     {
         require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
-        );
-        
-        require(
             _player != address(0),
             "'_player' contains an invalid address."
+        );
+
+        require(
+            _teamName.isNotEmpty(),
+            "'_teamName' might not be empty."
         );
 
         require(
@@ -1107,14 +1069,14 @@ contract PizzaCoinPlayer is IPlayerContract, Owned {
         );
 
         require(
-            _votingWeight <= playersInfo[_player].tokensBalance,
+            _votingWeight <= playersInfo[_player].tokenBalance,
             "Insufficient voting balance."
         );
 
-        playersInfo[_player].tokensBalance = playersInfo[_player].tokensBalance.sub(_votingWeight);
+        playersInfo[_player].tokenBalance = playersInfo[_player].tokenBalance.sub(_votingWeight);
 
         // If playersInfo[_player].votesWeight[_teamName] > 0 is true, this implies that 
-        // the player was used to give a vote to the specified team previously
+        // the player used to give a vote to the specified team previously
         if (playersInfo[_player].votesWeight[_teamName] == 0) {
             // The player has never given a vote to the specified team before
             // We, therefore, have to add a new team to the 'teamsVoted' array
@@ -1138,15 +1100,7 @@ interface ITeamContract {
     function kickTeam(string _teamName) external;
     function kickPlayerOutOfTeam(address _player, string _teamName) external;
     function doesTeamExist(string _teamName) external view returns (bool bTeamExist);
-    function getArrayLengthOfPlayersInTeam(string _teamName) external view returns (uint256 _length);
     function getTotalPlayersInTeam(string _teamName) external view returns (uint256 _total);
-    function getFirstFoundPlayerInTeam(string _teamName, uint256 _startSearchingIndex) 
-        external view
-        returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
-            address _player
-        );
     function getPlayerInTeamAtIndex(string _teamName, uint256 _playerIndex) 
         external view 
         returns (
@@ -1154,28 +1108,26 @@ interface ITeamContract {
             address _player
         );
     function getTotalTeams() external view returns (uint256 _total);
-    function getTeamArrayLength() external view returns (uint256 _length);
-    function getFirstFoundTeamInfo(uint256 _startSearchingIndex) 
+    function getTeamInfoAtIndex(uint256 _teamIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             string _teamName,
             uint256 _totalVoted
         );
-    function getVotingPointForTeam(string _teamName) external view returns (uint256 _totalVoted);
+    function getVotingPointsOfTeam(string _teamName) external view returns (uint256 _totalVoted);
     function getTotalVotersToTeam(string _teamName) external view returns (uint256 _total);
-    function getVoteResultAtIndexToTeam(string _teamName, uint256 _voterIndex) 
+    function getVotingResultToTeamAtIndex(string _teamName, uint256 _voterIndex) 
         external view
         returns (
             bool _endOfList,
             address _voter,
             uint256 _voteWeight
         );
-    function voteToTeam(string _teamName, address _voter, uint256 _votingWeight) external;
-    function getMaxTeamVotingPoint() external view returns (uint256 _maxTeamVotingPoint);
-    function getTotalWinnerTeams() external view returns (uint256 _total);
-    function getFirstFoundWinnerTeam(uint256 _startSearchingIndex) 
+    function voteToTeam(address _voter, string _teamName, uint256 _votingWeight) external;
+    function getMaxTeamVotingPoints() external view returns (uint256 _maxTeamVotingPoints);
+    function getTotalWinningTeams() external view returns (uint256 _total);
+    function getFirstFoundWinningTeam(uint256 _startSearchingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -1192,7 +1144,7 @@ interface ITeamContract {
 contract PizzaCoinTeam is ITeamContract, Owned {
     /*
     * Owner of the contract is PizzaCoin contract, 
-    * not a project deployer (or PizzaCoin's owner)
+    * not a project deployer who is PizzaCoin owner
     */
 
     using SafeMath for uint256;
@@ -1201,19 +1153,21 @@ contract PizzaCoinTeam is ITeamContract, Owned {
 
     // Team with players
     struct TeamInfo {
-        bool wasCreated;    // Check if the team was created or not (for uniqueness)
-        address[] players;  // A list of team members (the first list member is the team leader who creates the team)
-        address[] voters;   // A list of staffs and other teams' members who gave votes to this team
+        // This is used to reduce potential gas cost consumption when kicking a team
+        uint256 index;  // A pointing index to a particular team on the 'teams' array
 
-        // mapping(voter => votes)
-        mapping(address => uint256) votesWeight;  // A collection of team voting weights from each voter (i.e., staffs + other teams' members)
+        bool wasCreated;    // Check if a team is being created
+        address[] players;  // A list of team members (the first member is the one who creates a team)
+
+        // mapping(player => playerIndex)
+        mapping(address => uint256) playerIndexMap;  // This is used to reduce potential gas cost consumption when kicking a player in a team
+
+        address[] voters;  // A list of staffs and other teams' members who have ever voted to a team
+
+        // mapping(voter => votingWeight)
+        mapping(address => uint256) votesWeight;  // Voting weight from each voter
         
-        uint256 totalVoted;  // Total voting weight got from all voters
-
-        // The following are used to reduce the potential gas cost consumption when kicking a team and/or a player in a team
-        uint256 id;            // A pointing index to a particular team on the 'teams' array
-        uint256 totalPlayers;  // Total players in a team
-        mapping(address => uint256) playerIdMap;  // mapping(player => id)
+        uint256 totalVoted;  // Total voting weight from all voters
     }
 
     string[] private teams;
@@ -1326,7 +1280,7 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Team leader creates a team
+    // Player creates a new team
     // ------------------------------------------------------------------------
     function createTeam(string _teamName) external onlyRegistrationState onlyPizzaCoin {
         require(
@@ -1349,10 +1303,9 @@ contract PizzaCoinTeam is ITeamContract, Owned {
             /*
                 Omit 'votesWeight'
             */
-            id: teams.length - 1,
-            totalPlayers: 0
+            index: teams.length - 1
             /*
-                Omit 'playerIdMap'
+                Omit 'playerIndexMap'
             */
         });
     }
@@ -1378,11 +1331,9 @@ contract PizzaCoinTeam is ITeamContract, Owned {
             "The given team does not exist."
         );
 
-        // Add a player to a team that he/she is associating with
+        // Add a player to the specified team
         teamsInfo[_teamName].players.push(_player);
-
-        teamsInfo[_teamName].totalPlayers = teamsInfo[_teamName].totalPlayers.add(1);
-        teamsInfo[_teamName].playerIdMap[_player] = teamsInfo[_teamName].players.length - 1;
+        teamsInfo[_teamName].playerIndexMap[_player] = teamsInfo[_teamName].players.length - 1;
     }
 
     // ------------------------------------------------------------------------
@@ -1403,20 +1354,22 @@ contract PizzaCoinTeam is ITeamContract, Owned {
 
         // The team can be removed if and only if it has 0 player left
         if (totalPlayers != 0) {
-            revert("Team is not empty.");
+            revert("The specified team is not empty.");
         }
 
-        bool found;
-        uint256 teamIndex;
+        uint256 teamIndex = getTeamIndex(_teamName);
 
-        (found, teamIndex) = getTeamIndex(_teamName);
-        if (!found) {
-            revert("Cannot find the specified team.");
-        }
+        // Remove the specified team from an array by moving 
+        // the last array element to the element pointed by teamIndex
+        teams[teamIndex] = teams[teams.length - 1];
 
-        // Reset the element pointed by teamIndex to 0. However,
-        // that array element never get really removed. (beware!!)
-        delete teams[teamIndex];
+        // Since we have just moved the last array element to 
+        // the element pointed by teamIndex, we have to update 
+        // the newly moved team's index to teamIndex too
+        teamsInfo[teams[teamIndex]].index = teamIndex;
+
+        // Remove the last element
+        teams.length--;
 
         // Remove the specified team from a mapping
         delete teamsInfo[_teamName];
@@ -1451,14 +1404,24 @@ contract PizzaCoinTeam is ITeamContract, Owned {
             revert("Cannot find the specified player in a given team.");
         }
 
-        // Reset the element pointed by playerIndex to 0. However,
-        // that array element never get really removed. (beware!!)
-        delete teamsInfo[_teamName].players[playerIndex];
-        teamsInfo[_teamName].totalPlayers = teamsInfo[_teamName].totalPlayers.sub(1);
+        // Remove the specified player from an array by moving 
+        // the last array element to the element pointed by playerIndex
+        teamsInfo[_teamName].players[playerIndex] = teamsInfo[_teamName].players[teamsInfo[_teamName].players.length - 1];
+
+        // Since we have just moved the last array element to 
+        // the element pointed by playerIndex, we have to update 
+        // the newly moved player's index to playerIndex too
+        teamsInfo[_teamName].playerIndexMap[teamsInfo[_teamName].players[playerIndex]] = playerIndex;
+
+        // Remove the last element
+        teamsInfo[_teamName].players.length--;
+
+        // Remove the specified player from a mapping
+        delete teamsInfo[_teamName].playerIndexMap[_player];
     }
 
     // ------------------------------------------------------------------------
-    // Get an index pointed to a specific player on the mapping 'playerIdMap' in a given team
+    // Get an index pointing to a specific player on the array 'players' of a given team
     // ------------------------------------------------------------------------
     function getPlayerIndexInTeam(address _player, string _teamName) 
         internal view 
@@ -1471,14 +1434,21 @@ contract PizzaCoinTeam is ITeamContract, Owned {
         assert(_teamName.isNotEmpty());
         assert(teamsInfo[_teamName].wasCreated);
 
-        _playerIndex = teamsInfo[_teamName].playerIdMap[_player];
+        _playerIndex = teamsInfo[_teamName].playerIndexMap[_player];
         _found = teamsInfo[_teamName].players[_playerIndex] == _player;
     }
 
     // ------------------------------------------------------------------------
-    // Get an array length of players in a specified team (including all ever removal players)
+    // Get a total number of players in the specified team (external)
     // ------------------------------------------------------------------------
-    function getArrayLengthOfPlayersInTeam(string _teamName) external view returns (uint256 _length) {
+    function getTotalPlayersInTeam(string _teamName) external view returns (uint256 _total) {
+        return __getTotalPlayersInTeam(_teamName);
+    }
+
+    // ------------------------------------------------------------------------
+    // Get a total number of players in the specified team (internal)
+    // ------------------------------------------------------------------------
+    function __getTotalPlayersInTeam(string _teamName) internal view returns (uint256 _total) {
         require(
             _teamName.isNotEmpty(),
             "'_teamName' might not be empty."
@@ -1493,74 +1463,7 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get a total number of players in a specified team (external)
-    // ------------------------------------------------------------------------
-    function getTotalPlayersInTeam(string _teamName) external view returns (uint256 _total) {
-        return __getTotalPlayersInTeam(_teamName);
-    }
-
-    // ------------------------------------------------------------------------
-    // Get a total number of players in a specified team (internal)
-    // ------------------------------------------------------------------------
-    function __getTotalPlayersInTeam(string _teamName) internal view returns (uint256 _total) {
-        require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
-        );
-
-        require(
-            teamsInfo[_teamName].wasCreated,
-            "Cannot find the specified team."
-        );
-
-        _total = teamsInfo[_teamName].totalPlayers;
-    }
-
-    // ------------------------------------------------------------------------
-    // Get the first found player of a specified team
-    // (start searching at _startSearchingIndex)
-    // ------------------------------------------------------------------------
-    function getFirstFoundPlayerInTeam(string _teamName, uint256 _startSearchingIndex) 
-        external view
-        returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
-            address _player
-        ) 
-    {
-        require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
-        );
-
-        require(
-            teamsInfo[_teamName].wasCreated,
-            "Cannot find the specified team."
-        );
-        
-        _endOfList = true;
-        _nextStartSearchingIndex = teamsInfo[_teamName].players.length;
-        _player = address(0);
-
-        if (_startSearchingIndex >= teamsInfo[_teamName].players.length) {
-            return;
-        }  
-
-        for (uint256 i = _startSearchingIndex; i < teamsInfo[_teamName].players.length; i++) {
-            address player = teamsInfo[_teamName].players[i];
-
-            // Player might not be removed before
-            if (player != address(0)) {
-                _endOfList = false;
-                _nextStartSearchingIndex = i + 1;
-                _player = player;
-                return;
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // Get a player in a specified team at a given index (including all ever removal players)
+    // Get a player address in the specified team at the given player index
     // ------------------------------------------------------------------------
     function getPlayerInTeamAtIndex(string _teamName, uint256 _playerIndex) 
         external view 
@@ -1590,75 +1493,49 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get an index pointed to a specific team on the mapping 'teamsInfo'
+    // Get an index pointing to the specified team on the array 'teams'
     // ------------------------------------------------------------------------
-    function getTeamIndex(string _teamName) internal view returns (bool _found, uint256 _teamIndex) {
+    function getTeamIndex(string _teamName) internal view returns (uint256 _teamIndex) {
         assert(_teamName.isNotEmpty());
-
-        _found = teamsInfo[_teamName].wasCreated;
-        _teamIndex = teamsInfo[_teamName].id;
+        assert(teamsInfo[_teamName].wasCreated);
+        return teamsInfo[_teamName].index;
     }
 
     // ------------------------------------------------------------------------
     // Get a total number of teams
     // ------------------------------------------------------------------------
     function getTotalTeams() external view returns (uint256 _total) {
-        _total = 0;
-        for (uint256 i = 0; i < teams.length; i++) {
-            // Team might not be removed before
-            if (teams[i].isNotEmpty() && teamsInfo[teams[i]].wasCreated) {
-                _total++;
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // Get a length of 'team' array (including all ever removal teams)
-    // ------------------------------------------------------------------------
-    function getTeamArrayLength() external view returns (uint256 _length) {
         return teams.length;
     }
 
     // ------------------------------------------------------------------------
-    // Get an info of the first found team 
-    // (start searching at _startSearchingIndex)
+    // Get a team info at the specified index '_teamIndex'
     // ------------------------------------------------------------------------
-    function getFirstFoundTeamInfo(uint256 _startSearchingIndex) 
+    function getTeamInfoAtIndex(uint256 _teamIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             string _teamName,
             uint256 _totalVoted
         ) 
     {
-        _endOfList = true;
-        _nextStartSearchingIndex = teams.length;
-        _teamName = "";
-        _totalVoted = 0;
-
-        if (_startSearchingIndex >= teams.length) {
+        if (_teamIndex >= teams.length) {
+            _endOfList = true;
+            _teamName = "";
+            _totalVoted = 0;
             return;
-        }  
+        } 
 
-        for (uint256 i = _startSearchingIndex; i < teams.length; i++) {
-            string memory teamName = teams[i];
-
-            // Team might not be removed before
-            if (teamName.isNotEmpty() && teamsInfo[teamName].wasCreated) {
-                _endOfList = false;
-                _nextStartSearchingIndex = i + 1;
-                _teamName = teamName;
-                _totalVoted = teamsInfo[teamName].totalVoted;
-                return;
-            }
-        }
+        string memory teamName = teams[_teamIndex];
+        _endOfList = false;
+        _teamName = teamName;
+        _totalVoted = teamsInfo[teamName].totalVoted;
     }
 
     // ------------------------------------------------------------------------
-    // Get a voting point for a specified team
+    // Get voting points of the specified team
     // ------------------------------------------------------------------------
-    function getVotingPointForTeam(string _teamName) external view returns (uint256 _totalVoted) {
+    function getVotingPointsOfTeam(string _teamName) external view returns (uint256 _totalVoted) {
         require(
             _teamName.isNotEmpty(),
             "'_teamName' might not be empty."
@@ -1673,7 +1550,7 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get a total number of all voters to a specified team
+    // Get a total number of voters to the specified team
     // ------------------------------------------------------------------------
     function getTotalVotersToTeam(string _teamName) external view returns (uint256 _total) {
         require(
@@ -1690,9 +1567,9 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get a voting result to a specified team pointed by _voterIndex
+    // Get a voting result to the specified team pointed by '_voterIndex'
     // ------------------------------------------------------------------------
-    function getVoteResultAtIndexToTeam(string _teamName, uint256 _voterIndex) 
+    function getVotingResultToTeamAtIndex(string _teamName, uint256 _voterIndex) 
         external view
         returns (
             bool _endOfList,
@@ -1723,19 +1600,19 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Allow a staff or a player to give a vote to the specified team
+    // Allow a staff or player to give a vote to the specified team
     // ------------------------------------------------------------------------
-    function voteToTeam(string _teamName, address _voter, uint256 _votingWeight) 
+    function voteToTeam(address _voter, string _teamName, uint256 _votingWeight) 
         external onlyVotingState onlyPizzaCoin 
     {
         require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
+            _voter != address(0),
+            "'_voter' contains an invalid address."
         );
 
         require(
-            _voter != address(0),
-            "'_voter' contains an invalid address."
+            _teamName.isNotEmpty(),
+            "'_teamName' might not be empty."
         );
 
         require(
@@ -1749,7 +1626,7 @@ contract PizzaCoinTeam is ITeamContract, Owned {
         );
 
         // If teamsInfo[_teamName].votesWeight[_voter] > 0 is true, this implies that 
-        // the voter was used to give a vote to the specified team previously
+        // the voter used to give a vote to the specified team previously
         if (teamsInfo[_teamName].votesWeight[_voter] == 0) {
             // The voter has never given a vote to the specified team before
             // We, therefore, have to add a new voter to the 'voters' array
@@ -1762,53 +1639,46 @@ contract PizzaCoinTeam is ITeamContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Find a maximum voting point from each team after voting is finished (external)
+    // Find maximum voting points from all teams after voting is finished (external)
     // ------------------------------------------------------------------------
-    function getMaxTeamVotingPoint() external view onlyVotingFinishedState returns (uint256 _maxTeamVotingPoint) {
-        return __getMaxTeamVotingPoint();
+    function getMaxTeamVotingPoints() external view onlyVotingFinishedState returns (uint256 _maxTeamVotingPoints) {
+        return __getMaxTeamVotingPoints();
     }
 
     // ------------------------------------------------------------------------
-    // Find a maximum voting point from each team after voting is finished (internal)
+    // Find maximum voting points from all teams after voting is finished (internal)
     // ------------------------------------------------------------------------
-    function __getMaxTeamVotingPoint() internal view onlyVotingFinishedState returns (uint256 _maxTeamVotingPoint) {
-        _maxTeamVotingPoint = 0;
+    function __getMaxTeamVotingPoints() internal view onlyVotingFinishedState returns (uint256 _maxTeamVotingPoints) {
+        _maxTeamVotingPoints = 0;
         for (uint256 i = 0; i < teams.length; i++) {
-            // Team might not be removed before
-            if (teams[i].isNotEmpty() && teamsInfo[teams[i]].wasCreated) {
-                // Find a new maximum point
-                if (teamsInfo[teams[i]].totalVoted > _maxTeamVotingPoint) {
-                    _maxTeamVotingPoint = teamsInfo[teams[i]].totalVoted;
-                }
+            // Find new maximum points
+            if (teamsInfo[teams[i]].totalVoted > _maxTeamVotingPoints) {
+                _maxTeamVotingPoints = teamsInfo[teams[i]].totalVoted;
             }
         }
     }
 
     // ------------------------------------------------------------------------
-    // Get a total number of winner teams after voting is finished
-    // It is possible to have several teams that get the equal maximum voting points 
+    // Get a total number of winning teams after voting is finished
+    // It is possible to have several teams that get equal maximum voting points 
     // ------------------------------------------------------------------------
-    function getTotalWinnerTeams() external view onlyVotingFinishedState returns (uint256 _total) {
-        uint256 maxTeamVotingPoint = __getMaxTeamVotingPoint();
+    function getTotalWinningTeams() external view onlyVotingFinishedState returns (uint256 _total) {
+        uint256 maxTeamVotingPoints = __getMaxTeamVotingPoints();
 
         _total = 0;
         for (uint256 i = 0; i < teams.length; i++) {
-            // Team might not be removed before
-            if (teams[i].isNotEmpty() && teamsInfo[teams[i]].wasCreated) {
-                // Count the winner teams up
-                if (teamsInfo[teams[i]].totalVoted == maxTeamVotingPoint) {
-                    _total++;
-                }
+            // Count up the winning teams
+            if (teamsInfo[teams[i]].totalVoted == maxTeamVotingPoints) {
+                _total++;
             }
         }
     }
 
     // ------------------------------------------------------------------------
-    // Get the first found winner team
-    // (start searching at _startSearchingIndex)
-    // It is possible to have several teams that get the equal maximum voting points 
+    // Get the first found winning team by starting the search at '_startSearchingIndex'
+    // It is possible to have several teams that get equal maximum voting points 
     // ------------------------------------------------------------------------
-    function getFirstFoundWinnerTeam(uint256 _startSearchingIndex) 
+    function getFirstFoundWinningTeam(uint256 _startSearchingIndex) 
         external view onlyVotingFinishedState
         returns (
             bool _endOfList,
@@ -1826,20 +1696,17 @@ contract PizzaCoinTeam is ITeamContract, Owned {
             return;
         }
 
-        uint256 maxTeamVotingPoint = __getMaxTeamVotingPoint();
+        uint256 maxTeamVotingPoints = __getMaxTeamVotingPoints();
         for (uint256 i = _startSearchingIndex; i < teams.length; i++) {
             string memory teamName = teams[i];
 
-            // Team might not be removed before
-            if (teamName.isNotEmpty() && teamsInfo[teamName].wasCreated) {
-                // Find a winner team
-                if (teamsInfo[teamName].totalVoted == maxTeamVotingPoint) {
-                    _endOfList = false;
-                    _nextStartSearchingIndex = i + 1;
-                    _teamName = teamName;
-                    _totalVoted = teamsInfo[teamName].totalVoted;
-                    return;
-                }
+            // Find a winning team
+            if (teamsInfo[teamName].totalVoted == maxTeamVotingPoints) {
+                _endOfList = false;
+                _nextStartSearchingIndex = i + 1;
+                _teamName = teamName;
+                _totalVoted = teamsInfo[teamName].totalVoted;
+                return;
             }
         }
     }
@@ -1959,7 +1826,7 @@ library PizzaCoinCodeLib {
 
         playerContractInstance.registerPlayer(player, _playerName, _teamName);
 
-        // Add a player to a team that he/she is associating with
+        // Add a player to the specified team
         teamContractInstance.registerPlayerToTeam(player, _teamName);
     }
 
@@ -2019,51 +1886,33 @@ library PizzaCoinCodeLib {
     }
 
     // ------------------------------------------------------------------------
-    // Remove the first found player of a particular team 
-    // (start searching at _startSearchingIndex)
+    // Remove the first player on the list from a particular team 
     // ------------------------------------------------------------------------
-    function kickFirstFoundPlayerInTeam(
+    function kickFirstPlayerInTeam(
         string _teamName, 
-        uint256 _startSearchingIndex,
         address _playerContract,
         address _teamContract
     ) 
-        public returns (uint256 _nextStartSearchingIndex) 
+    public
     {
         assert(_playerContract != address(0));
         assert(_teamContract != address(0));
 
-        // Get contract instances from the deployed addresses
-        IPlayerContract playerContractInstance = IPlayerContract(_playerContract);
+        // Get a contract instance from the deployed addresses
         ITeamContract teamContractInstance = ITeamContract(_teamContract);
 
-        // Get the array length of players in the specific team, 
-        // including all ever removal players
-        uint256 noOfAllEverTeamPlayers = teamContractInstance.getArrayLengthOfPlayersInTeam(_teamName);
+        bool endOfList;
+        address player;
 
-        require(
-            _startSearchingIndex < noOfAllEverTeamPlayers,
-            "'_startSearchingIndex' is out of bound."
-        );
+        // Get the first player in the specified team
+        (endOfList, player) = teamContractInstance.getPlayerInTeamAtIndex(_teamName, 0);
 
-        _nextStartSearchingIndex = noOfAllEverTeamPlayers;
-
-        for (uint256 i = _startSearchingIndex; i < noOfAllEverTeamPlayers; i++) {
-            bool endOfList;  // used as a temporary variable
-            address player;
-
-            (endOfList, player) = teamContractInstance.getPlayerInTeamAtIndex(_teamName, i);
-            
-            // player == address(0) if a player was kicked previously
-            if (player != address(0) && playerContractInstance.isPlayerInTeam(player, _teamName)) {
-                // Remove a specific player
-                kickPlayer(player, _teamName, _playerContract, _teamContract);
-
-                // Start next searching at the next array element
-                _nextStartSearchingIndex = i + 1;
-                return;     
-            }
+        if (endOfList) {
+            revert("There is no player in the specified team.");
         }
+        
+        // Remove a specific player
+        kickPlayer(player, _teamName, _playerContract, _teamContract);
     }
     
     // ------------------------------------------------------------------------
@@ -2097,7 +1946,7 @@ library PizzaCoinCodeLib {
     }
 
     // ------------------------------------------------------------------------
-    // Allow any staff or any player in other different teams to vote to a team
+    // Allow any staff or any player vote to a favourite team
     // ------------------------------------------------------------------------
     function voteTeam(
         string _teamName, 
@@ -2136,7 +1985,7 @@ library PizzaCoinCodeLib {
             return voteTeamByStaff(_teamName, _votingWeight, _staffContract, _teamContract);
         }
         else {
-            // Voter is a team player
+            // Voter is a player
             return voteTeamByDifferentTeamPlayer(_teamName, _votingWeight, _playerContract, _teamContract);
         }
     }
@@ -2172,15 +2021,15 @@ library PizzaCoinCodeLib {
         );
 
         // Staff commits to vote to the team
-        staffContractInstance.commitToVote(_teamName, voter, _votingWeight);
-        teamContractInstance.voteToTeam(_teamName, voter, _votingWeight);
+        staffContractInstance.commitToVote(voter, _teamName, _votingWeight);
+        teamContractInstance.voteToTeam(voter, _teamName, _votingWeight);
 
-        // Get a current voting point for the team
-        _totalVoted = teamContractInstance.getVotingPointForTeam(_teamName);
+        // Get the current voting points of the team
+        _totalVoted = teamContractInstance.getVotingPointsOfTeam(_teamName);
     }
 
     // ------------------------------------------------------------------------
-    // Vote for a team by a different team player
+    // Vote for a team by a different team's player
     // ------------------------------------------------------------------------
     function voteTeamByDifferentTeamPlayer(
         string _teamName, 
@@ -2214,11 +2063,11 @@ library PizzaCoinCodeLib {
         );
 
         // Player commits to vote to the team
-        playerContractInstance.commitToVote(_teamName, voter, _votingWeight);
-        teamContractInstance.voteToTeam(_teamName, voter, _votingWeight);
+        playerContractInstance.commitToVote(voter, _teamName, _votingWeight);
+        teamContractInstance.voteToTeam(voter, _teamName, _votingWeight);
 
-        // Get a current voting point for the team
-        _totalVoted = teamContractInstance.getVotingPointForTeam(_teamName);
+        // Get the current voting points of the team
+        _totalVoted = teamContractInstance.getVotingPointsOfTeam(_teamName);
     }
 }
 
@@ -2332,7 +2181,7 @@ library PizzaCoinCodeLib2 {
     /*
     *
     * This contract is partially compatible with ERC token standard #20 interface.
-    * That is, only the balanceOf() and totalSupply() would be implemented.
+    * That is, only balanceOf() and totalSupply() would really be implemented.
     *
     */
 
@@ -2449,7 +2298,6 @@ contract PizzaCoin is ERC20, Owned {
     event PlayerRegistered();
     event TeamCreated();
     event PlayerKicked();
-    event FirstFoundPlayerInTeamKicked(uint256 _nextStartSearchingIndex);
     event TeamKicked();
     event TeamVoted(string _teamName, uint256 _totalVoted);
 
@@ -2503,25 +2351,25 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Guarantee that _user has not been registered before
+    // Guarantee that _user is not registered
     // ------------------------------------------------------------------------
     modifier notRegistered(address _user) {
         require(
             PizzaCoinCodeLib2.isStaff(_user, staffContract) == false && 
             PizzaCoinCodeLib2.isPlayer(_user, playerContract) == false,
-            "This address was registered already."
+            "This address is registered already."
         );
         _;
     }
 
     // ------------------------------------------------------------------------
-    // Guarantee that msg.sender has already been registered
+    // Guarantee that msg.sender is already registered
     // ------------------------------------------------------------------------
     modifier onlyRegistered {
         require(
             PizzaCoinCodeLib2.isStaff(msg.sender, staffContract) ||
             PizzaCoinCodeLib2.isPlayer(msg.sender, playerContract),
-            "This address was not being registered."
+            "This address is not being registered."
         );
         _;
     }
@@ -2593,7 +2441,7 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Initial a state mapping
+    // Initial the state mapping
     // ------------------------------------------------------------------------
     function initStateMap() internal onlyInitialState onlyOwner {
         stateMap[keccak256(abi.encodePacked(State.Initial))] = "Initial";
@@ -2695,7 +2543,7 @@ contract PizzaCoin is ERC20, Owned {
 
         // Register an owner as a staff. Note that, we cannot make a call to 
         // PizzaCoin.registerStaff() directly at this moment because 
-        // the contract state is Initial.
+        // the contract is in Initial state.
         PizzaCoinCodeLib.registerStaff(owner, ownerName, staffContract);
 
         emit ChildContractCreated(staffContract);
@@ -2789,25 +2637,18 @@ contract PizzaCoin is ERC20, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Remove the first found player of a particular team 
-    // (start searching at _startSearchingIndex)
+    // Remove the first player on the list from a particular team 
     // ------------------------------------------------------------------------
-    function kickFirstFoundPlayerInTeam(string _teamName, uint256 _startSearchingIndex) 
-        public onlyRegistrationState onlyStaff returns (uint256 _nextStartSearchingIndex) {
-
-        _nextStartSearchingIndex = PizzaCoinCodeLib.kickFirstFoundPlayerInTeam(
-            _teamName, _startSearchingIndex, playerContract, teamContract);
-
+    function kickFirstPlayerInTeam(string _teamName) public onlyRegistrationState onlyStaff {
+        PizzaCoinCodeLib.kickFirstPlayerInTeam(_teamName, playerContract, teamContract);
         emit PlayerKicked();
-        emit FirstFoundPlayerInTeamKicked(_nextStartSearchingIndex);
     }
 
     // ------------------------------------------------------------------------
-    // Allow any staff or any player in other different teams to vote to a team
+    // Allow any staff or any player vote to a favourite team
     // ------------------------------------------------------------------------
     function voteTeam(string _teamName, uint256 _votingWeight) public onlyVotingState onlyRegistered {
-        uint256 totalVoted;
-        totalVoted = PizzaCoinCodeLib.voteTeam(
+        uint256 totalVoted = PizzaCoinCodeLib.voteTeam(
             _teamName, 
             _votingWeight, 
             staffContract, 
@@ -2821,7 +2662,7 @@ contract PizzaCoin is ERC20, Owned {
     /*
     *
     * This contract is partially compatible with ERC token standard #20 interface.
-    * That is, only the balanceOf() and totalSupply() would be implemented.
+    * That is, only balanceOf() and totalSupply() would really be implemented.
     *
     */
 

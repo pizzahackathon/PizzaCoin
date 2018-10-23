@@ -121,7 +121,7 @@ library PizzaCoinCodeLib2 {
     /*
     *
     * This contract is partially compatible with ERC token standard #20 interface.
-    * That is, only the balanceOf() and totalSupply() would be implemented.
+    * That is, only balanceOf() and totalSupply() would really be implemented.
     *
     */
 

@@ -24,17 +24,16 @@ interface IStaffContract {
     function registerStaff(address _staff, string _staffName) external;
     function kickStaff(address _staff) external;
     function getTotalStaffs() external view returns (uint256 _total);
-    function getFirstFoundStaffInfo(uint256 _startSearchingIndex) 
+    function getStaffInfoAtIndex(uint256 _staffIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _staff,
             string _name,
-            uint256 _tokensBalance
+            uint256 _tokenBalance
         );
     function getTotalTeamsVotedByStaff(address _staff) external view returns (uint256 _total);
-    function getVoteResultAtIndexByStaff(address _staff, uint256 _votingIndex) 
+    function getVotingResultByStaffAtIndex(address _staff, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -42,7 +41,7 @@ interface IStaffContract {
             uint256 _voteWeight
         );
     function getTokenBalance(address _staff) external view returns (uint256 _tokenBalance);
-    function commitToVote(string _teamName, address _staff, uint256 _votingWeight) external;
+    function commitToVote(address _staff, string _teamName, uint256 _votingWeight) external;
 }
 
 
@@ -52,9 +51,9 @@ interface IStaffContract {
 contract PizzaCoinStaff is IStaffContract, Owned {
     /*
     * Owner of the contract is PizzaCoin contract, 
-    * not a project deployer (or PizzaCoin's owner)
+    * not a project deployer who is PizzaCoin owner
     *
-    * Let staffs[0] denote a project deployer (i.e., PizzaCoin's owner)
+    * Let staffs[0] denote a project deployer (i.e., PizzaCoin owner)
     */
 
     using SafeMath for uint256;
@@ -62,19 +61,19 @@ contract PizzaCoinStaff is IStaffContract, Owned {
 
 
     struct StaffInfo {
-        bool wasRegistered;    // Check if a specific staff is being registered or not
-        string name;
-        uint256 tokensBalance; // Amount of tokens left for voting
-        string[] teamsVoted;   // Record all the teams voted by this staff
-        
-        // mapping(team => votes)
-        mapping(string => uint256) votesWeight;  // A collection of teams with voting weight approved by this staff
+        // This is used to reduce potential gas cost consumption when kicking a staff
+        uint256 index;  // A pointing index to a particular staff on the 'staffs' array
 
-        // The following is used to reduce the potential gas cost consumption when kicking a staff
-        uint256 id;  // A pointing index to a particular staff on the 'staffs' array
+        string name;
+        bool wasRegistered;    // Check if a specific staff is being registered
+        uint256 tokenBalance;  // Amount of tokens left for voting
+        string[] teamsVoted;   // A collection of teams voted by this staff
+        
+        // mapping(team => votingWeight)
+        mapping(string => uint256) votesWeight;  // Teams with voting weight approved by this staff
     }
 
-    address[] private staffs;                          // staffs[0] denotes a project deployer (i.e., PizzaCoin's owner)
+    address[] private staffs;                          // staffs[0] denotes a project deployer (i.e., PizzaCoin owner)
     mapping(address => StaffInfo) private staffsInfo;  // mapping(staff => StaffInfo)
 
     uint256 private voterInitialTokens;
@@ -188,20 +187,18 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Determine if _user is a project deployer (i.e., PizzaCoin's owner) or not
+    // Determine if _user is a project deployer (i.e., PizzaCoin owner) or not
     // ------------------------------------------------------------------------
     function isProjectDeployer(address _user) internal view returns (bool _bDeployer) {
         /*
         * Owner of the contract is PizzaCoin contract, 
-        * not a project deployer (or PizzaCoin's owner)
+        * not a project deployer who is PizzaCoin owner
         *
-        * Let staffs[0] denote a project deployer (i.e., PizzaCoin's owner)
+        * Let staffs[0] denote a project deployer (i.e., PizzaCoin owner)
         */
 
         assert(_user != address(0));
-
-        address deployer = staffs[0];
-        return deployer == _user && staffsInfo[deployer].wasRegistered;
+        return staffs[0] == _user;
     }
 
     // ------------------------------------------------------------------------
@@ -264,12 +261,12 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         staffsInfo[_staff] = StaffInfo({
             wasRegistered: true,
             name: _staffName,
-            tokensBalance: voterInitialTokens,
+            tokenBalance: voterInitialTokens,
             teamsVoted: new string[](0),
             /*
                 Omit 'votesWeight'
             */
-            id: staffs.length - 1
+            index: staffs.length - 1
         });
 
         totalSupply = totalSupply.add(voterInitialTokens);
@@ -294,17 +291,19 @@ contract PizzaCoinStaff is IStaffContract, Owned {
             "Project deployer is not kickable."
         );
 
-        bool found;
-        uint256 staffIndex;
+        uint256 staffIndex = getStaffIndex(_staff);
 
-        (found, staffIndex) = getStaffIndex(_staff);
-        if (!found) {
-            revert("Cannot find the specified staff.");
-        }
+        // Remove the specified staff from an array by moving 
+        // the last array element to the element pointed by staffIndex
+        staffs[staffIndex] = staffs[staffs.length - 1];
 
-        // Reset the element pointed by staffIndex to 0. However,
-        // that array element never get really removed. (beware!!)
-        delete staffs[staffIndex];
+        // Since we have just moved the last array element to 
+        // the element pointed by staffIndex, we have to update 
+        // the newly moved staff's index to staffIndex too
+        staffsInfo[staffs[staffIndex]].index = staffIndex;
+
+        // Remove the last element
+        staffs.length--;
 
         // Remove the specified staff from a mapping
         delete staffsInfo[_staff];
@@ -313,65 +312,46 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     }
 
     // ------------------------------------------------------------------------
-    // Get an index pointed to a specific staff on the mapping 'staffsInfo'
+    // Get an index pointing to the specified staff on the array 'staffs'
     // ------------------------------------------------------------------------
-    function getStaffIndex(address _staff) internal view returns (bool _found, uint256 _staffIndex) {
+    function getStaffIndex(address _staff) internal view returns (uint256 _staffIndex) {
         assert(_staff != address(0));
-
-        _found = staffsInfo[_staff].wasRegistered;
-        _staffIndex = staffsInfo[_staff].id;
+        assert(staffsInfo[_staff].wasRegistered);
+        return staffsInfo[_staff].index;
     }
 
     // ------------------------------------------------------------------------
     // Get a total number of staffs
     // ------------------------------------------------------------------------
     function getTotalStaffs() external view returns (uint256 _total) {
-        _total = 0;
-        for (uint256 i = 0; i < staffs.length; i++) {
-            // Staff might not be removed before
-            if (staffs[i] != address(0) && staffsInfo[staffs[i]].wasRegistered) {
-                _total++;
-            }
-        }
+        return staffs.length;
     }
 
     // ------------------------------------------------------------------------
-    // Get an info of the first found staff 
-    // (start searching at _startSearchingIndex)
+    // Get a staff info at the specified index '_staffIndex'
     // ------------------------------------------------------------------------
-    function getFirstFoundStaffInfo(uint256 _startSearchingIndex) 
+    function getStaffInfoAtIndex(uint256 _staffIndex) 
         external view
         returns (
-            bool _endOfList, 
-            uint256 _nextStartSearchingIndex,
+            bool _endOfList,
             address _staff,
             string _name,
-            uint256 _tokensBalance
+            uint256 _tokenBalance
         ) 
     {
-        _endOfList = true;
-        _nextStartSearchingIndex = staffs.length;
-        _staff = address(0);
-        _name = "";
-        _tokensBalance = 0;
-
-        if (_startSearchingIndex >= staffs.length) {
+        if (_staffIndex >= staffs.length) {
+            _endOfList = true;
+            _staff = address(0);
+            _name = "";
+            _tokenBalance = 0;
             return;
         }
 
-        for (uint256 i = _startSearchingIndex; i < staffs.length; i++) {
-            address staff = staffs[i];
-
-            // Staff might not be removed before
-            if (staff != address(0) && staffsInfo[staff].wasRegistered) {
-                _endOfList = false;
-                _nextStartSearchingIndex = i + 1;
-                _staff = staff;
-                _name = staffsInfo[staff].name;
-                _tokensBalance = staffsInfo[staff].tokensBalance;
-                return;
-            }
-        }
+        address staff = staffs[_staffIndex];
+        _endOfList = false;
+        _staff = staff;
+        _name = staffsInfo[staff].name;
+        _tokenBalance = staffsInfo[staff].tokenBalance;
     }
 
     // ------------------------------------------------------------------------
@@ -394,7 +374,7 @@ contract PizzaCoinStaff is IStaffContract, Owned {
     // ------------------------------------------------------------------------
     // Get a voting result to a team pointed by _votingIndex committed by the specified staff
     // ------------------------------------------------------------------------
-    function getVoteResultAtIndexByStaff(address _staff, uint256 _votingIndex) 
+    function getVotingResultByStaffAtIndex(address _staff, uint256 _votingIndex) 
         external view
         returns (
             bool _endOfList,
@@ -438,23 +418,23 @@ contract PizzaCoinStaff is IStaffContract, Owned {
             "Cannot find the specified staff."
         );
 
-        return staffsInfo[_staff].tokensBalance;
+        return staffsInfo[_staff].tokenBalance;
     }
 
     // ------------------------------------------------------------------------
     // Allow a staff give a vote to the specified team
     // ------------------------------------------------------------------------
-    function commitToVote(string _teamName, address _staff, uint256 _votingWeight) 
+    function commitToVote(address _staff, string _teamName, uint256 _votingWeight) 
         external onlyVotingState onlyPizzaCoin 
     {
         require(
-            _teamName.isNotEmpty(),
-            "'_teamName' might not be empty."
+            _staff != address(0),
+            "'_staff' contains an invalid address."
         );
 
         require(
-            _staff != address(0),
-            "'_staff' contains an invalid address."
+            _teamName.isNotEmpty(),
+            "'_teamName' might not be empty."
         );
 
         require(
@@ -468,14 +448,14 @@ contract PizzaCoinStaff is IStaffContract, Owned {
         );
 
         require(
-            _votingWeight <= staffsInfo[_staff].tokensBalance,
+            _votingWeight <= staffsInfo[_staff].tokenBalance,
             "Insufficient voting balance."
         );
 
-        staffsInfo[_staff].tokensBalance = staffsInfo[_staff].tokensBalance.sub(_votingWeight);
+        staffsInfo[_staff].tokenBalance = staffsInfo[_staff].tokenBalance.sub(_votingWeight);
 
         // If staffsInfo[_staff].votesWeight[_teamName] > 0 is true, this implies that 
-        // the staff was used to give a vote to the specified team previously
+        // the staff used to give a vote to the specified team previously
         if (staffsInfo[_staff].votesWeight[_teamName] == 0) {
             // The staff has never given a vote to the specified team before
             // We, therefore, have to add a new team to the 'teamsVoted' array
