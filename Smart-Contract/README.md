@@ -59,6 +59,18 @@ Let's say a staff changes PizzaCoin contract's state from **Registration Locked*
 
 <br />
 
+In addition to understanding the detailed implementation of PizzaCoin voting system, please check out the series of articles named "**PizzaCoin the series**" below.
+
+**PizzaCoin the series consists of 6 articles as follows.**<br />
+Part 1: <a href="https://www.serial-coder.com/post/pizza-coin-how-did-we-develop-ethereum-based-voting-system-for-pizza-hackathon/">How Did We Develop Ethereum-based Voting System for Pizza Hackathon?</a><br />
+Part 2: <a href="https://www.serial-coder.com/post/pizza-coin-workflow-design-for-pizzacoin-voting-system/">Workflow Design for PizzaCoin Voting System</a><br />
+Part 3: <a href="https://www.serial-coder.com/post/pizza-coin-detailed-implementation-of-staff-and-player-contracts/">Detailed Implementation of Staff and Player Contracts</a><br />
+Part 4: <a href="https://www.serial-coder.com/post/pizza-coin-detailed-implementation-of-team-contract/">Detailed Implementation of Team Contract</a><br />
+Part 5: <a href="https://www.serial-coder.com/post/pizza-coin-deploying-children-contracts-with-contract-factories/">Deploying Children Contracts with Contract Factories</a><br />
+Part 6: <a href="https://www.serial-coder.com/post/pizza-coin-integrating-pizzacoin-contract-with-dependencies/">Integrating PizzaCoin Contract with Dependencies</a>
+
+<br />
+
 ## Deploy PizzaCoin Contract
 
 ### To install Truffle Framework
